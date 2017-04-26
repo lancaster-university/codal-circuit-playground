@@ -23,7 +23,8 @@ DEALINGS IN THE SOFTWARE.
 */
 
 #include "DeviceConfig.h"
-#include "TimedInterruptIn.h"
+#include "MbedTimedInterruptIn.h"
+
 /**
   * Constructor.
   *
