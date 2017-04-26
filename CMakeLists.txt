@@ -25,3 +25,11 @@ target_link_libraries(
 
 # expose it to parent cmake.
 target_include_directories(codal-samd21-mbed PUBLIC ${INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/")
+
+if(CODAL_HEADER_EXTRACTION)
+    RECURSIVE_FIND_FILE(INCLUDE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${codal.target.device}" "*.h")
+    HEADER_FILES(INCLUDE_FILES2 ".")
+
+    file(COPY ${INCLUDE_FILES} DESTINATION "../../build/codal-samd21-mbed/includes")
+    file(COPY ${INCLUDE_FILES2} DESTINATION "../../build/codal-samd21-mbed/includes")
+endif()
