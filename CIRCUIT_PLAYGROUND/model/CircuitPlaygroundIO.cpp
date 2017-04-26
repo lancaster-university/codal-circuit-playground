@@ -31,6 +31,8 @@ DEALINGS IN THE SOFTWARE.
 #include "DeviceConfig.h"
 #include "CircuitPlaygroundIO.h"
 
+using namespace codal;
+
 /**
   * Constructor.
   *
@@ -40,13 +42,13 @@ DEALINGS IN THE SOFTWARE.
   * by MicroBitPin instances on the default EventModel.
   */
 CircuitPlaygroundIO::CircuitPlaygroundIO() :
-    rx (ID_PIN_RX, RXD, PIN_CAPABILITY_DIGITAL),            
-    tx (ID_PIN_TX, TXD, PIN_CAPABILITY_DIGITAL),            
-    sda (ID_PIN_SDA, SDA, PIN_CAPABILITY_DIGITAL),            
-    scl (ID_PIN_SCL, SCL, PIN_CAPABILITY_DIGITAL),            
-    d6 (ID_PIN_D6, A3, PIN_CAPABILITY_DIGITAL),            
-    d9 (ID_PIN_D9, D9, PIN_CAPABILITY_DIGITAL),            
-    d10 (ID_PIN_D10, D8, PIN_CAPABILITY_DIGITAL),            
+    rx (ID_PIN_RX, RXD, PIN_CAPABILITY_DIGITAL),
+    tx (ID_PIN_TX, TXD, PIN_CAPABILITY_DIGITAL),
+    sda (ID_PIN_SDA, SDA, PIN_CAPABILITY_DIGITAL),
+    scl (ID_PIN_SCL, SCL, PIN_CAPABILITY_DIGITAL),
+    d6 (ID_PIN_D6, A3, PIN_CAPABILITY_DIGITAL),
+    d9 (ID_PIN_D9, D9, PIN_CAPABILITY_DIGITAL),
+    d10 (ID_PIN_D10, D8, PIN_CAPABILITY_DIGITAL),
     d12 (ID_PIN_D12, A4, PIN_CAPABILITY_DIGITAL),
     speaker (ID_PIN_SPEAKER, SPEAKER, PIN_CAPABILITY_AD),
     led (ID_PIN_LED, LED, PIN_CAPABILITY_DIGITAL),

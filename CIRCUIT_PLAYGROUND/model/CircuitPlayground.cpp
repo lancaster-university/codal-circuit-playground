@@ -24,9 +24,9 @@ DEALINGS IN THE SOFTWARE.
 
 #include "DeviceConfig.h"
 #include "CircuitPlayground.h"
-#include "DeviceSystemTimer.h"
+#include "Timer.h"
 
-CodalDevice device;
+CodalDevice& device;
 
 #ifdef DEVICE_DBG
 RawSerial *SERIAL_DEBUG;
@@ -58,9 +58,9 @@ CircuitPlayground::CircuitPlayground() :
 
     // Bring up fiber scheduler.
     scheduler_init(messageBus);
-    
+
     messageBus.listen(DEVICE_ID_MESSAGE_BUS_LISTENER, DEVICE_EVT_ANY, this, &CircuitPlayground::onListenerRegisteredEvent);
-    
+
     for(int i = 0; i < DEVICE_COMPONENT_COUNT; i++)
     {
         if(DeviceComponent::components[i])
@@ -73,9 +73,9 @@ CircuitPlayground::CircuitPlayground() :
 
     // Seed our random number generator
     device.seedRandom(thermometer.getValue() * lightSensor.getValue());
-    
+
     // light sensor is very stable, so reflect this in the tuning parameters of the driver.
-    lightSensor.setSensitivity(0.9);          
+    lightSensor.setSensitivity(0.9);
 }
 
 /**

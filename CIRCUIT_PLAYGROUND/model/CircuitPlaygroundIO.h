@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "mbed.h"
 #include "DeviceConfig.h"
-#include "Pin.h"
+#include "MbedPin.h"
 
 //
 // Component IDs for each pin.

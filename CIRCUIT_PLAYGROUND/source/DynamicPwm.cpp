@@ -32,9 +32,9 @@ DEALINGS IN THE SOFTWARE.
 
 #include "DeviceConfig.h"
 #include "DynamicPwm.h"
-#include "DevicePin.h"
+#include "Pin.h"
 #include "ErrorNo.h"
-#include "Glue.h"
+//#include "Glue.h"
 
 /**
   * An internal constructor used when allocating a new DynamicPwm instance.
