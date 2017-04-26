@@ -1,22 +1,27 @@
-project(CODAL_SAMD21_MBED)
+project(codal-samd21-mbed)
 
-include(${PROJECT_SOURCE_DIR}/utils/cmake/util.cmake)
+include(../../utils/cmake/util.cmake)
 
 # find sources and headers
-RECURSIVE_FIND_DIR(INCLUDE_DIRS "./${codal.target.device}" "*.h")
-RECURSIVE_FIND_FILE(SOURCE_FILES "./${codal.target.device}" "*.c??")
+RECURSIVE_FIND_DIR(INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/${codal.target.device}" "*.h")
+RECURSIVE_FIND_FILE(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${codal.target.device}" "*.c??")
+
+# force include conf_clocks...
+set(CMAKE_C_FLAGS      "${CMAKE_C_FLAGS} -imacros \"${CMAKE_CURRENT_SOURCE_DIR}/conf_clocks.h\"" PARENT_SCOPE)
+set(CMAKE_CXX_FLAGS    "${CMAKE_CXX_FLAGS} -imacros \"${CMAKE_CURRENT_SOURCE_DIR}/conf_clocks.h\"" PARENT_SCOPE)
 
 # add them
 include_directories("${INCLUDE_DIRS}")
 
 # create our target
-add_library(MBED_CLASSIC "${SOURCE_FILES}")
+add_library(codal-samd21-mbed "${SOURCE_FILES}")
 
 target_link_libraries(
-    CODAL_SAMD21_MBED
-    mbed-classic
+    codal-samd21-mbed
     codal
+    mbed-classic
+    codal-mbed
 )
 
 # expose it to parent cmake.
-target_include_directories(CODAL_SAMD21_MBED PUBLIC ${INCLUDE_DIRS})
+target_include_directories(codal-samd21-mbed PUBLIC ${INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/")
