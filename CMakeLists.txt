@@ -1,6 +1,6 @@
-project(codal-samd21-mbed)
+project(codal-target)
 
-include(../../utils/cmake/util.cmake)
+include("${CODAL_UTILS_LOCATION}")
 
 # find sources and headers
 RECURSIVE_FIND_DIR(INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/${codal.target.device}" "*.h")
@@ -14,17 +14,17 @@ set(CMAKE_CXX_FLAGS    "${CMAKE_CXX_FLAGS} -imacros \"${CMAKE_CURRENT_SOURCE_DIR
 include_directories("${INCLUDE_DIRS}")
 
 # create our target
-add_library(codal-samd21-mbed "${SOURCE_FILES}")
+add_library(codal-target "${SOURCE_FILES}")
 
 target_link_libraries(
-    codal-samd21-mbed
-    codal
+    codal-target
+    codal-core
     mbed-classic
     codal-mbed
 )
 
 # expose it to parent cmake.
-target_include_directories(codal-samd21-mbed PUBLIC ${INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/")
+target_include_directories(codal-target PUBLIC ${INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/")
 
 if(CODAL_HEADER_EXTRACTION)
     RECURSIVE_FIND_FILE(INCLUDE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${codal.target.device}" "*.h")
