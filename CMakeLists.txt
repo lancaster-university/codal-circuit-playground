@@ -18,8 +18,6 @@ add_library(codal-samd21-mbed "${SOURCE_FILES}")
 
 target_link_libraries(
     codal-samd21-mbed
-    codal-core
-    mbed-classic
     codal-mbed
 )
 
