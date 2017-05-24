@@ -128,7 +128,7 @@ public:
 private:
 
     void startDMA();
-    void decimate(DeviceEvent);
+    void decimate(Event);
 };
 
 #endif

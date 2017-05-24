@@ -160,7 +160,7 @@ CircuitPlayground::CircuitPlayground() :
   * the compass and the accelerometer, where we only want to add them to the idle
   * fiber when someone has the intention of using these components.
   */
-void CircuitPlayground::onListenerRegisteredEvent(DeviceEvent evt)
+void CircuitPlayground::onListenerRegisteredEvent(Event evt)
 {
     switch(evt.value)
     {

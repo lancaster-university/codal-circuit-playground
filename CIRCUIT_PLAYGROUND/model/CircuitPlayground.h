@@ -37,7 +37,7 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalComponent.h"
 #include "ManagedType.h"
 #include "ManagedString.h"
-#include "DeviceEvent.h"
+#include "Event.h"
 #include "NotifyEvents.h"
 
 #include "Button.h"
@@ -74,7 +74,7 @@ class CircuitPlayground
       * the compass and the accelerometer, where we only want to add them to the idle
       * fiber when someone has the intention of using these components.
       */
-    void                        onListenerRegisteredEvent(DeviceEvent evt);
+    void                        onListenerRegisteredEvent(Event evt);
     uint8_t                     status;
 
     public:
@@ -151,6 +151,6 @@ inline void CircuitPlayground::sleep(uint32_t milliseconds)
   * the compass and the accelerometer, where we only want to add them to the idle
   * fiber when someone has the intention of using these components.
   */
-void onListenerRegisteredEvent(DeviceEvent evt);
+void onListenerRegisteredEvent(Event evt);
 
 #endif

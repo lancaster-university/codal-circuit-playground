@@ -22,7 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
-#include "DeviceEvent.h"
+#include "Event.h"
 #include "CodalCompat.h"
 #include "SAMD21PDM.h"
 #include "Pin.h"
@@ -193,7 +193,7 @@ ManagedBuffer SAMD21PDM::pull()
  * Based on a very well optimised and documented implementation from here:
  * https://curiouser.cheshireeng.com/2015/01/16/pdm-in-a-tiny-cpu/
  */
-void SAMD21PDM::decimate(DeviceEvent)
+void SAMD21PDM::decimate(Event)
 {
     uint8_t *b = pdmDataBuffer;
 
@@ -262,7 +262,7 @@ void SAMD21PDM::dmaTransferComplete()
     if (pdmDataBuffer == NULL)
     {
         pdmDataBuffer = pdmReceiveBuffer;
-        DeviceEvent(id, SAMD21_PDM_DATA_READY);
+        Event(id, SAMD21_PDM_DATA_READY);
 
         pdmReceiveBuffer = pdmReceiveBuffer == rawPDM1 ? rawPDM2 : rawPDM1;
     }

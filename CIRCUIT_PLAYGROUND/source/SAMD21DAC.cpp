@@ -1,5 +1,5 @@
 #include "Timer.h"
-#include "DeviceEvent.h"
+#include "Event.h"
 #include "CodalCompat.h"
 #include "SAMD21DAC.h"
 
