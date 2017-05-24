@@ -27,7 +27,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "mbed.h"
 
-#include "DeviceConfig.h"
+#include "CodalConfig.h"
 #include "DeviceHeapAllocator.h"
 #include "CodalDevice.h"
 #include "ErrorNo.h"

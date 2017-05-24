@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
   * Represents a collection of all I/O pins on the device.
   */
 
-#include "DeviceConfig.h"
+#include "CodalConfig.h"
 #include "CircuitPlaygroundIO.h"
 
 using namespace codal;

@@ -24,7 +24,7 @@ DEALINGS IN THE SOFTWARE.
 */
 
 #include "mbed.h"
-#include "DeviceConfig.h"
+#include "CodalConfig.h"
 
 #ifndef DEVICE_DYNAMIC_PWM_H
 #define DEVICE_DYNAMIC_PWM_H

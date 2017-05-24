@@ -1,4 +1,4 @@
-#include "DeviceConfig.h"
+#include "CodalConfig.h"
 #include "Timer.h"
 #include "Pin.h"
 #include "SAMD21DMAC.h"

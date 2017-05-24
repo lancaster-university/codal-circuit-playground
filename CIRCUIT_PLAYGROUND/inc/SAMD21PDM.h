@@ -22,7 +22,7 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 */
 
-#include "DeviceConfig.h"
+#include "CodalConfig.h"
 #include "Pin.h"
 #include "SAMD21DMAC.h"
 #include "DataStream.h"

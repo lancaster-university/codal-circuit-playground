@@ -30,7 +30,7 @@ DEALINGS IN THE SOFTWARE.
   * This provides the ability for a neat, clean swap between PWM channels.
   */
 
-#include "DeviceConfig.h"
+#include "CodalConfig.h"
 #include "DynamicPwm.h"
 #include "Pin.h"
 #include "ErrorNo.h"

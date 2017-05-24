@@ -27,7 +27,7 @@ DEALINGS IN THE SOFTWARE.
 #define CIRCUIT_PLAYGROUND_IO_H
 
 #include "mbed.h"
-#include "DeviceConfig.h"
+#include "CodalConfig.h"
 #include "Pin.h"
 
 //
