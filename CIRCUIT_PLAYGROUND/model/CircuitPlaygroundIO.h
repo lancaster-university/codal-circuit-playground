@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "mbed.h"
 #include "DeviceConfig.h"
-#include "MbedPin.h"
+#include "Pin.h"
 
 //
 // Component IDs for each pin.
@@ -40,24 +40,12 @@ DEALINGS IN THE SOFTWARE.
 #define ID_PIN_A3           (DEVICE_ID_IO_P0 + 3)
 #define ID_PIN_A4           (DEVICE_ID_IO_P0 + 4)
 #define ID_PIN_A5           (DEVICE_ID_IO_P0 + 5)
-#define ID_PIN_D0           (DEVICE_ID_IO_P0 + 6)
-#define ID_PIN_RX           (DEVICE_ID_IO_P0 + 6)
-#define ID_PIN_D1           (DEVICE_ID_IO_P0 + 7)
-#define ID_PIN_TX           (DEVICE_ID_IO_P0 + 7)
-#define ID_PIN_D2           (DEVICE_ID_IO_P0 + 8)
-#define ID_PIN_SDA          (DEVICE_ID_IO_P0 + 8)
-#define ID_PIN_D3           (DEVICE_ID_IO_P0 + 9)
-#define ID_PIN_SCL          (DEVICE_ID_IO_P0 + 9)
-#define ID_PIN_D4           (DEVICE_ID_IO_P0 + 10)
-#define ID_PIN_D5           (DEVICE_ID_IO_P0 + 11)
-#define ID_PIN_D6           (DEVICE_ID_IO_P0 + 12)
-#define ID_PIN_D7           (DEVICE_ID_IO_P0 + 13)
-#define ID_PIN_D8           (DEVICE_ID_IO_P0 + 14)
-#define ID_PIN_D9           (DEVICE_ID_IO_P0 + 15)
-#define ID_PIN_D10          (DEVICE_ID_IO_P0 + 16)
-#define ID_PIN_D11          (DEVICE_ID_IO_P0 + 17)
-#define ID_PIN_D12          (DEVICE_ID_IO_P0 + 18)
-#define ID_PIN_D13          (DEVICE_ID_IO_P0 + 19)
+#define ID_PIN_A6           (DEVICE_ID_IO_P0 + 6)
+#define ID_PIN_A7           (DEVICE_ID_IO_P0 + 7)
+#define ID_PIN_SCL          (ID_PIN_A4)
+#define ID_PIN_SDA          (ID_PIN_A5)
+#define ID_PIN_RX           (ID_PIN_A6)
+#define ID_PIN_TX           (ID_PIN_A7)
 #define ID_PIN_LED          (DEVICE_ID_IO_P0 + 19)
 #define ID_PIN_SPEAKER      (DEVICE_ID_IO_P0 + 20)
 #define ID_PIN_THERMISTOR   (DEVICE_ID_IO_P0 + 21)
@@ -67,8 +55,13 @@ DEALINGS IN THE SOFTWARE.
 #define ID_PIN_BUTTONB      (DEVICE_ID_IO_P0 + 25)
 #define ID_PIN_BUTTONC      (DEVICE_ID_IO_P0 + 26)
 #define ID_PIN_TOUCHDRIVE   (DEVICE_ID_IO_P0 + 27)
+#define ID_PIN_MIC_DATA     (DEVICE_ID_IO_P0 + 28)
+#define ID_PIN_MIC_CLOCK    (DEVICE_ID_IO_P0 + 29)
 
 #define DEVICE_ID_BUTTON_C            1024
+
+using namespace codal;
+
 /**
   * Represents a collection of all I/O pins exposed by the device.
   */
@@ -76,24 +69,25 @@ class CircuitPlaygroundIO
 {
     public:
 
-    codal::mbed::Pin          pin[0];
-    codal::mbed::Pin          rx;
-    codal::mbed::Pin          tx;
-    codal::mbed::Pin          sda;
-    codal::mbed::Pin          scl;
-    codal::mbed::Pin          d6;
-    codal::mbed::Pin          d9;
-    codal::mbed::Pin          d10;
-    codal::mbed::Pin          d12;
-    codal::mbed::Pin          speaker;
-    codal::mbed::Pin          led;
-    codal::mbed::Pin          int1;
-    codal::mbed::Pin          temperature;
-    codal::mbed::Pin          light;
-    codal::mbed::Pin          buttonA;
-    codal::mbed::Pin          buttonB;
-    codal::mbed::Pin          buttonC;
-    codal::mbed::Pin          touchDrive;
+    Pin          pin[0];
+    Pin          a0;
+    Pin          a1;
+    Pin          a2;
+    Pin          a3;
+    Pin          a4;
+    Pin          a5;
+    Pin          a6;
+    Pin          a7;
+    Pin          speaker;
+    Pin          microphoneData;
+    Pin          microphoneClock;
+    Pin          led;
+    Pin          int1;
+    Pin          temperature;
+    Pin          light;
+    Pin          buttonA;
+    Pin          buttonB;
+    Pin          buttonC;
 
     /**
       * Constructor.

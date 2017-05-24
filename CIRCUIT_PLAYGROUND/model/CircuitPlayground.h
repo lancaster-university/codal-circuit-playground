@@ -40,7 +40,7 @@ DEALINGS IN THE SOFTWARE.
 #include "DeviceEvent.h"
 #include "NotifyEvents.h"
 
-#include "DeviceButton.h"
+#include "Button.h"
 #include "MultiButton.h"
 #include "MbedPin.h"
 #include "MbedI2C.h"
@@ -83,16 +83,15 @@ class CircuitPlayground
     codal::mbed::Timer          timer;
     codal::mbed::Serial         serial;
     CircuitPlaygroundIO         io;
-    DeviceButton                buttonA;
-    DeviceButton                buttonB;
-    DeviceButton                buttonC;
+    Button                      buttonA;
+    Button                      buttonB;
+    Button                      buttonC;
     MultiButton                 buttonAB;
 
     codal::mbed::I2C            i2c;
     LIS3DH                      accelerometer;
     NonLinearAnalogSensor       thermometer;
     AnalogSensor                lightSensor;
-    TouchSensor                 touchSensor;
 
     /**
       * Constructor.

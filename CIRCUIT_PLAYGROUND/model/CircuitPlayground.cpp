@@ -26,11 +26,85 @@ DEALINGS IN THE SOFTWARE.
 #include "CircuitPlayground.h"
 #include "Timer.h"
 
+using namespace codal;
+
 CodalDevice& device;
 
 #ifdef DEVICE_DBG
 RawSerial *SERIAL_DEBUG;
 #endif
+static void gclk_sync(void)
+{
+    while (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY)
+        ;
+}
+
+static void dfll_sync(void)
+{
+    while ((SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY) == 0)
+        ;
+}
+
+#undef ENABLE
+
+#define CPU_FREQUENCY 48000000
+#define NVM_SW_CALIB_DFLL48M_COARSE_VAL 58
+#define NVM_SW_CALIB_DFLL48M_FINE_VAL 64
+
+static void mysystem_init(void)
+{
+    NVMCTRL->CTRLB.bit.RWS = 1;
+
+    // Turn on DFLL with USB correction and sync to internal 8 mhz oscillator
+    SYSCTRL->DFLLCTRL.bit.ONDEMAND = 0;
+    dfll_sync();
+
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+
+    SYSCTRL_DFLLCTRL_Type dfllctrl_conf = {0};
+    SYSCTRL_DFLLVAL_Type dfllval_conf = {0};
+    uint32_t coarse = (*((uint32_t *)(NVMCTRL_OTP4) + (NVM_SW_CALIB_DFLL48M_COARSE_VAL / 32)) >>
+                       (NVM_SW_CALIB_DFLL48M_COARSE_VAL % 32)) &
+                      ((1 << 6) - 1);
+    if (coarse == 0x3f)
+    {
+        coarse = 0x1f;
+    }
+    uint32_t fine = (*((uint32_t *)(NVMCTRL_OTP4) + (NVM_SW_CALIB_DFLL48M_FINE_VAL / 32)) >>
+                     (NVM_SW_CALIB_DFLL48M_FINE_VAL % 32)) &
+                    ((1 << 10) - 1);
+    if (fine == 0x3ff)
+    {
+        fine = 0x1ff;
+    }
+    dfllval_conf.bit.COARSE = coarse;
+    dfllval_conf.bit.FINE = fine;
+    dfllctrl_conf.bit.USBCRM = 1; // usb correction
+    dfllctrl_conf.bit.BPLCKC = 0;
+    dfllctrl_conf.bit.QLDIS = 0;
+    dfllctrl_conf.bit.CCDIS = 1;
+    dfllctrl_conf.bit.ENABLE = 1;
+
+    SYSCTRL->DFLLMUL.reg = 48000;
+    SYSCTRL->DFLLVAL.reg = dfllval_conf.reg;
+    SYSCTRL->DFLLCTRL.reg = dfllctrl_conf.reg;
+
+    GCLK->CLKCTRL.bit.ID = 0; // GCLK_ID - DFLL48M Reference
+    gclk_sync();
+
+    GCLK->CLKCTRL.bit.CLKEN = 1;
+    GCLK->CLKCTRL.bit.WRTLOCK = 0;
+    GCLK->CLKCTRL.bit.GEN = 0;
+
+    // Configure DFLL48M as source for GCLK_GEN 0
+    GCLK->GENDIV.bit.ID = 0;
+    gclk_sync();
+    GCLK->GENDIV.reg = 0;
+
+    GCLK->GENCTRL.bit.ID = 0;
+    gclk_sync();
+    GCLK->GENCTRL.reg = GCLK_GENCTRL_ID(0) | GCLK_GENCTRL_SRC_DFLL48M | GCLK_GENCTRL_IDC | GCLK_GENCTRL_GENEN;
+}
 
 /**
   * Constructor.
@@ -48,13 +122,13 @@ CircuitPlayground::CircuitPlayground() :
     buttonC(io.buttonC, DEVICE_ID_BUTTON_C, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_LOW, PullUp),
     buttonAB(DEVICE_ID_BUTTON_A, DEVICE_ID_BUTTON_B, DEVICE_ID_BUTTON_AB),
     i2c(LIS_SDA, LIS_SCL),
-    accelerometer(i2c, io.int1),
+    accelerometer(i2c, io.int1, LIS3DH_DEFAULT_ADDR, DEVICE_ID_ACCELEROMETER, NORTH_EAST_UP),
     thermometer(io.temperature, DEVICE_ID_THERMOMETER, 25, 10000, 3380, 10000, 273.5),
-    lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR),
-    touchSensor(io.touchDrive)
+    lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR)
 {
     // Clear our status
     status = 0;
+    mysystem_init();
 
     // Bring up fiber scheduler.
     scheduler_init(messageBus);
@@ -75,7 +149,8 @@ CircuitPlayground::CircuitPlayground() :
     device.seedRandom(thermometer.getValue() * lightSensor.getValue());
 
     // light sensor is very stable, so reflect this in the tuning parameters of the driver.
-    lightSensor.setSensitivity(0.9);
+    lightSensor.setSensitivity(912);
+    lightSensor.setPeriod(50);
 }
 
 /**
