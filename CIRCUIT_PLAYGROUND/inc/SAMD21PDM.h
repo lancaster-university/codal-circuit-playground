@@ -50,7 +50,7 @@ DEALINGS IN THE SOFTWARE.
 
 using namespace codal;
 
-class SAMD21PDM : public DeviceComponent, public DmaComponent, public DataSource
+class SAMD21PDM : public CodalComponent, public DmaComponent, public DataSource
 {
 
 private:

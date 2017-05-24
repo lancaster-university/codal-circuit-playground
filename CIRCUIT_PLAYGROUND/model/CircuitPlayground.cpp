@@ -137,8 +137,8 @@ CircuitPlayground::CircuitPlayground() :
 
     for(int i = 0; i < DEVICE_COMPONENT_COUNT; i++)
     {
-        if(DeviceComponent::components[i])
-            DeviceComponent::components[i]->init();
+        if(CodalComponent::components[i])
+            CodalComponent::components[i]->init();
     }
 
     //

@@ -34,7 +34,7 @@ DEALINGS IN THE SOFTWARE.
 #include "MbedTimer.h"
 #include "Matrix4.h"
 #include "CodalCompat.h"
-#include "DeviceComponent.h"
+#include "CodalComponent.h"
 #include "ManagedType.h"
 #include "ManagedString.h"
 #include "DeviceEvent.h"

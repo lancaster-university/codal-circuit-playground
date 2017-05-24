@@ -13,7 +13,7 @@
 
 using namespace codal;
 
-class SAMD21DAC : public DeviceComponent, public DmaComponent, public DataSink
+class SAMD21DAC : public CodalComponent, public DmaComponent, public DataSink
 {
 
 private:
