@@ -52,7 +52,7 @@ DEALINGS IN THE SOFTWARE.
 #include "MbedSerial.h"
 #include "CircuitPlaygroundIO.h"
 
-#include "DeviceFiber.h"
+#include "CodalFiber.h"
 #include "MessageBus.h"
 
 using namespace codal;
@@ -102,6 +102,49 @@ class CircuitPlayground
     CircuitPlayground();
 
     /**
+      * Perform a hard reset of the device.
+      * default: Use CMSIS NVIC reset vector.
+      */
+    virtual void reset()
+    {
+        NVIC_SystemReset();
+    }
+
+    /**
+      * Disable global interrupts.
+      */
+    inline void disableInterrupts()
+    {
+        __disable_irq();
+    }
+
+    /**
+      * Enable global interrupts.
+      */
+    inline void enableInterrupts()
+    {
+        __enable_irq();
+    }
+
+    /**
+      * Enable global interrupts.
+      */
+    inline void waitForEvent()
+    {
+        __WFE();
+    }
+
+    /**
+      * A blocking pause without using the fiber scheduler
+      *
+      * @param milliseconds the time to wait in milliseconds
+      */
+    void wait(uint32_t milliseconds)
+    {
+        wait_ms(milliseconds);
+    }
+
+    /**
      * Delay execution for the given amount of time.
      *
      * If the scheduler is running, this will deschedule the current fiber and perform
@@ -114,35 +157,12 @@ class CircuitPlayground
      * operation.
      *
      * @param milliseconds the amount of time, in ms, to wait for. This number cannot be negative.
-     *
-     * @return MICROBIT_OK on success, MICROBIT_INVALID_PARAMETER milliseconds is less than zero.
-     *
      */
-    void sleep(uint32_t milliseconds);
+    virtual void sleep(uint32_t milliseconds)
+    {
+        fiber_sleep(milliseconds);
+    }
 };
-
-
-/**
- * Delay execution for the given amount of time.
- *
- * If the scheduler is running, this will deschedule the current fiber and perform
- * a power efficient, concurrent sleep operation.
- *
- * If the scheduler is disabled or we're running in an interrupt context, this
- * will revert to a busy wait.
- *
- * Alternatively: wait, wait_ms, wait_us can be used which will perform a blocking sleep
- * operation.
- *
- * @param milliseconds the amount of time, in ms, to wait for. This number cannot be negative.
- *
- * @return MICROBIT_OK on success, MICROBIT_INVALID_PARAMETER milliseconds is less than zero.
- *
- */
-inline void CircuitPlayground::sleep(uint32_t milliseconds)
-{
-    fiber_sleep(milliseconds);
-}
 
 /**
   * A listener to perform actions as a result of Message Bus reflection.
