@@ -53,9 +53,10 @@ DEALINGS IN THE SOFTWARE.
 #include "CircuitPlaygroundIO.h"
 
 #include "DeviceFiber.h"
-#include "DeviceMessageBus.h"
+#include "MessageBus.h"
 
 using namespace codal;
+
 /**
   * Class definition for a CircuitPlayground device.
   *
@@ -78,7 +79,7 @@ class CircuitPlayground
 
     public:
 
-    DeviceMessageBus            messageBus;
+    MessageBus                  messageBus;
     codal::mbed::Timer          timer;
     codal::mbed::Serial         serial;
     CircuitPlaygroundIO         io;
