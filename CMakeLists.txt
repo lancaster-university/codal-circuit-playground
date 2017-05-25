@@ -10,6 +10,10 @@ RECURSIVE_FIND_FILE(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${codal.target.dev
 set(CMAKE_C_FLAGS      "${CMAKE_C_FLAGS} -imacros \"${CMAKE_CURRENT_SOURCE_DIR}/conf_clocks.h\"" PARENT_SCOPE)
 set(CMAKE_CXX_FLAGS    "${CMAKE_CXX_FLAGS} -imacros \"${CMAKE_CURRENT_SOURCE_DIR}/conf_clocks.h\"" PARENT_SCOPE)
 
+string(TOLOWER "${CODAL_TARGET_PROCESSOR}" TARGET_PROCESSOR)
+
+set(CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS} -mcpu=cortex-m0plus -mthumb -T\"${CMAKE_CURRENT_LIST_DIR}/ld/${TARGET_PROCESSOR}.ld\"  -imacros \"${CMAKE_CURRENT_SOURCE_DIR}/conf_clocks.h\"" PARENT_SCOPE)
+
 # add them
 include_directories("${INCLUDE_DIRS}")
 
