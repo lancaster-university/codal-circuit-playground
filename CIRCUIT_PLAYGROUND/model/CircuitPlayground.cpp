@@ -28,8 +28,6 @@ DEALINGS IN THE SOFTWARE.
 
 using namespace codal;
 
-CodalDevice& device;
-
 #ifdef DEVICE_DBG
 RawSerial *SERIAL_DEBUG;
 #endif
@@ -126,6 +124,7 @@ CircuitPlayground::CircuitPlayground() :
     thermometer(io.temperature, DEVICE_ID_THERMOMETER, 25, 10000, 3380, 10000, 273.5),
     lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR)
 {
+
     // Clear our status
     status = 0;
     mysystem_init();
@@ -146,7 +145,7 @@ CircuitPlayground::CircuitPlayground() :
     //
 
     // Seed our random number generator
-    device.seedRandom(thermometer.getValue() * lightSensor.getValue());
+    this->seedRandom(thermometer.getValue() * lightSensor.getValue());
 
     // light sensor is very stable, so reflect this in the tuning parameters of the driver.
     lightSensor.setSensitivity(912);
