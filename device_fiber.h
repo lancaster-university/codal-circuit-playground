@@ -4,8 +4,6 @@
 #include "device_types.h"
 #include "CodalDevice.h"
 
-extern CodalDevice& device;
-
 /**
   *  Thread Context for an ARM Cortex M0 core.
   *
@@ -71,7 +69,7 @@ inline PROCESSOR_WORD_TYPE tcb_get_stack_base(PROCESSOR_TCB* tcb)
 
 inline PROCESSOR_WORD_TYPE get_current_sp()
 {
-    return device.getMSP();
+    return __get_MSP();
 }
 
 inline PROCESSOR_WORD_TYPE tcb_get_sp(PROCESSOR_TCB* tcb)
