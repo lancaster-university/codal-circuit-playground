@@ -54,20 +54,56 @@ DEALINGS IN THE SOFTWARE.
 
 #include "CodalFiber.h"
 #include "MessageBus.h"
+#include "device_types.h"
 
-using namespace codal;
-
-/**
-  * Class definition for a CircuitPlayground device.
-  *
-  * Represents the device as a whole, and includes member variables that represent various device drivers
-  * used to control aspects of the device.
-  */
-class CircuitPlayground : public CodalDevice
+namespace codal
 {
-    private:
+    /**
+      * Class definition for a CircuitPlayground device.
+      *
+      * Represents the device as a whole, and includes member variables that represent various device drivers
+      * used to control aspects of the device.
+      */
+    class CircuitPlayground : public CodalDevice
+    {
+        private:
 
 
+
+        /**
+          * A listener to perform actions as a result of Message Bus reflection.
+          *
+          * In some cases we want to perform lazy instantiation of components, such as
+          * the compass and the accelerometer, where we only want to add them to the idle
+          * fiber when someone has the intention of using these components.
+          */
+        void                        onListenerRegisteredEvent(Event evt);
+        uint8_t                     status;
+
+        public:
+
+        MessageBus                  messageBus;
+        mbed::Timer                 timer;
+        mbed::Serial                serial;
+        CircuitPlaygroundIO         io;
+        Button                      buttonA;
+        Button                      buttonB;
+        Button                      buttonC;
+        MultiButton                 buttonAB;
+
+        mbed::I2C                   i2c;
+        LIS3DH                      accelerometer;
+        NonLinearAnalogSensor       thermometer;
+        AnalogSensor                lightSensor;
+
+        /**
+          * Constructor.
+          *
+          * Create a representation of a Genuino Zero device, which includes member variables
+          * that represent various device drivers used to control aspects of the board.
+          */
+        CircuitPlayground();
+    };
 
     /**
       * A listener to perform actions as a result of Message Bus reflection.
@@ -76,41 +112,9 @@ class CircuitPlayground : public CodalDevice
       * the compass and the accelerometer, where we only want to add them to the idle
       * fiber when someone has the intention of using these components.
       */
-    void                        onListenerRegisteredEvent(Event evt);
-    uint8_t                     status;
+    void onListenerRegisteredEvent(Event evt);
+}
 
-    public:
-
-    MessageBus                  messageBus;
-    codal::mbed::Timer          timer;
-    codal::mbed::Serial         serial;
-    CircuitPlaygroundIO         io;
-    Button                      buttonA;
-    Button                      buttonB;
-    Button                      buttonC;
-    MultiButton                 buttonAB;
-
-    codal::mbed::I2C            i2c;
-    LIS3DH                      accelerometer;
-    NonLinearAnalogSensor       thermometer;
-    AnalogSensor                lightSensor;
-
-    /**
-      * Constructor.
-      *
-      * Create a representation of a Genuino Zero device, which includes member variables
-      * that represent various device drivers used to control aspects of the board.
-      */
-    CircuitPlayground();
-};
-
-/**
-  * A listener to perform actions as a result of Message Bus reflection.
-  *
-  * In some cases we want to perform lazy instantiation of components, such as
-  * the compass and the accelerometer, where we only want to add them to the idle
-  * fiber when someone has the intention of using these components.
-  */
-void onListenerRegisteredEvent(Event evt);
+using namespace codal;
 
 #endif

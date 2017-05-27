@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "mbed.h"
 #include "CodalConfig.h"
-#include "Pin.h"
+#include "MbedPin.h"
 
 //
 // Component IDs for each pin.
@@ -60,42 +60,43 @@ DEALINGS IN THE SOFTWARE.
 
 #define DEVICE_ID_BUTTON_C            1024
 
-using namespace codal;
-
-/**
-  * Represents a collection of all I/O pins exposed by the device.
-  */
-class CircuitPlaygroundIO
+namespace codal
 {
-    public:
-
-    Pin          pin[0];
-    Pin          a0;
-    Pin          a1;
-    Pin          a2;
-    Pin          a3;
-    Pin          a4;
-    Pin          a5;
-    Pin          a6;
-    Pin          a7;
-    Pin          speaker;
-    Pin          microphoneData;
-    Pin          microphoneClock;
-    Pin          led;
-    Pin          int1;
-    Pin          temperature;
-    Pin          light;
-    Pin          buttonA;
-    Pin          buttonB;
-    Pin          buttonC;
-
     /**
-      * Constructor.
-      *
-      * Create a representation of all given I/O pins on the edge connector
-      *
+      * Represents a collection of all I/O pins exposed by the device.
       */
-    CircuitPlaygroundIO();
-};
+    class CircuitPlaygroundIO
+    {
+        public:
+
+        mbed::Pin          pin[0];
+        mbed::Pin          a0;
+        mbed::Pin          a1;
+        mbed::Pin          a2;
+        mbed::Pin          a3;
+        mbed::Pin          a4;
+        mbed::Pin          a5;
+        mbed::Pin          a6;
+        mbed::Pin          a7;
+        mbed::Pin          speaker;
+        mbed::Pin          microphoneData;
+        mbed::Pin          microphoneClock;
+        mbed::Pin          led;
+        mbed::Pin          int1;
+        mbed::Pin          temperature;
+        mbed::Pin          light;
+        mbed::Pin          buttonA;
+        mbed::Pin          buttonB;
+        mbed::Pin          buttonC;
+
+        /**
+          * Constructor.
+          *
+          * Create a representation of all given I/O pins on the edge connector
+          *
+          */
+        CircuitPlaygroundIO();
+    };
+}
 
 #endif
