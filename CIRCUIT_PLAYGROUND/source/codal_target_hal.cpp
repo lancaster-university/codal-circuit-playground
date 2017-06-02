@@ -3,7 +3,6 @@
 
 void target_enable_irq()
 {
-    #warning "COMPILING"
     __enable_irq();
 }
 
