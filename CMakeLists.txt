@@ -10,8 +10,8 @@ RECURSIVE_FIND_DIR(TOP_LEVEL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/inc" "*.h
 RECURSIVE_FIND_DIR(TOP_LEVEL_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/source" "*.c??")
 
 # force include conf_clocks...
-set(CMAKE_C_FLAGS      "${CMAKE_C_FLAGS} -imacros \"${CMAKE_CURRENT_SOURCE_DIR}/conf_clocks.h\"" PARENT_SCOPE)
-set(CMAKE_CXX_FLAGS    "${CMAKE_CXX_FLAGS} -imacros \"${CMAKE_CURRENT_SOURCE_DIR}/conf_clocks.h\"" PARENT_SCOPE)
+set(CMAKE_C_FLAGS      "${CMAKE_C_FLAGS} -I\"${CMAKE_CURRENT_SOURCE_DIR}/inc\"" PARENT_SCOPE)
+set(CMAKE_CXX_FLAGS    "${CMAKE_CXX_FLAGS} -I\"${CMAKE_CURRENT_SOURCE_DIR}/inc/\"" PARENT_SCOPE)
 
 string(TOLOWER "${CODAL_TARGET_PROCESSOR}" TARGET_PROCESSOR)
 
@@ -20,10 +20,10 @@ set(CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS} -mcpu=cortex-m0plus -mt
 set(CMAKE_SYSTEM_PROCESSOR "armv7-m" PARENT_SCOPE)
 
 # add them
-include_directories("${INCLUDE_DIRS}" "${TOP_LEVEL_INCLUDE_DIRS}")
+include_directories(${INCLUDE_DIRS} ${TOP_LEVEL_INCLUDE_DIRS})
 
 # create our target
-add_library(codal-samd21-mbed "${SOURCE_FILES}" "${TOP_LEVEL_SOURCE_FILES}")
+add_library(codal-samd21-mbed ${SOURCE_FILES} ${TOP_LEVEL_SOURCE_FILES})
 
 target_link_libraries(
     codal-samd21-mbed
@@ -31,7 +31,7 @@ target_link_libraries(
 )
 
 # expose it to parent cmake.
-target_include_directories(codal-samd21-mbed PUBLIC ${INCLUDE_DIRS} "${CMAKE_CURRENT_SOURCE_DIR}/")
+target_include_directories(codal-samd21-mbed PUBLIC ${INCLUDE_DIRS} ${TOP_LEVEL_INCLUDE_DIRS})
 
 if(CODAL_HEADER_EXTRACTION)
     RECURSIVE_FIND_FILE(INCLUDE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${codal.target.device}" "*.h")
