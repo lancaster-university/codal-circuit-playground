@@ -3,7 +3,7 @@
 
 // The timings are taken from Adafruit's NeoPixel library
 
-#include "DevicePin.h"
+#include "Pin.h"
 
 static void neopixel_send_buffer_core(volatile uint32_t *clraddr, uint32_t pinMask,
                                       const uint8_t *ptr, int numBytes) __attribute__((naked));
@@ -43,7 +43,7 @@ static void neopixel_send_buffer_core(volatile uint32_t *clraddr, uint32_t pinMa
 }
 
 // this assumes the pin has been configured correctly
-static inline void neopixel_send_buffer(DevicePin &pin, const uint8_t *ptr, int numBytes)
+static inline void neopixel_send_buffer(codal::Pin &pin, const uint8_t *ptr, int numBytes)
 {
     int pinid = (int)pin.name;
 
