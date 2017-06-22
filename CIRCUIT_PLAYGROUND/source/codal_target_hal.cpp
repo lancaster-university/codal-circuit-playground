@@ -1,5 +1,6 @@
 #include "mbed.h"
 #include "codal_target_hal.h"
+#include "CodalDmesg.h"
 
 void target_enable_irq()
 {
