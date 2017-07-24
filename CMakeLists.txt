@@ -1,4 +1,5 @@
 project(codal-samd21-mbed)
+enable_language(ASM)
 
 include("${CODAL_UTILS_LOCATION}")
 
@@ -21,6 +22,9 @@ set(CMAKE_SYSTEM_PROCESSOR "armv7-m" PARENT_SCOPE)
 
 # add them
 include_directories(${INCLUDE_DIRS} ${TOP_LEVEL_INCLUDE_DIRS})
+
+# add our assembly file for context switching.
+list(APPEND SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/asm/CortexContextSwitch.S")
 
 # create our target
 add_library(codal-samd21-mbed ${SOURCE_FILES} ${TOP_LEVEL_SOURCE_FILES})
