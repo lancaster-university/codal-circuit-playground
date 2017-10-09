@@ -88,6 +88,8 @@ namespace codal
         mbed::Pin          buttonA;
         mbed::Pin          buttonB;
         mbed::Pin          buttonC;
+        mbed::Pin          sda;
+        mbed::Pin          scl;
 
         /**
           * Constructor.

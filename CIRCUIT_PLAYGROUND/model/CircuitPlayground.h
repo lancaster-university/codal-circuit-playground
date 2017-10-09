@@ -54,7 +54,6 @@ DEALINGS IN THE SOFTWARE.
 
 #include "CodalFiber.h"
 #include "MessageBus.h"
-#include "device_types.h"
 
 namespace codal
 {
@@ -64,7 +63,7 @@ namespace codal
       * Represents the device as a whole, and includes member variables that represent various device drivers
       * used to control aspects of the device.
       */
-    class CircuitPlayground : public CodalDevice
+    class CircuitPlayground : public CodalDevice, public CodalComponent
     {
         private:
 
@@ -103,6 +102,8 @@ namespace codal
           * that represent various device drivers used to control aspects of the board.
           */
         CircuitPlayground();
+
+        void idleCallback();
     };
 
     /**

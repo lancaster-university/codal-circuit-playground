@@ -24,6 +24,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include "CodalConfig.h"
 #include "CircuitPlayground.h"
+#include "CodalDmesg.h"
 #include "Timer.h"
 
 using namespace codal;
@@ -31,6 +32,10 @@ using namespace codal;
 #ifdef DEVICE_DBG
 RawSerial *SERIAL_DEBUG;
 #endif
+
+void cplay_dmesg_flush();
+CircuitPlayground* cplay_device_instance = NULL;
+
 static void gclk_sync(void)
 {
     while (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY)
@@ -115,19 +120,22 @@ CircuitPlayground::CircuitPlayground() :
     timer(),
     serial(TXD, RXD),
     io(),
-    buttonA(io.buttonA, DEVICE_ID_BUTTON_A, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullDown),
-    buttonB(io.buttonB, DEVICE_ID_BUTTON_B, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullDown),
-    buttonC(io.buttonC, DEVICE_ID_BUTTON_C, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_LOW, PullUp),
+    buttonA(io.buttonA, DEVICE_ID_BUTTON_A, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
+    buttonB(io.buttonB, DEVICE_ID_BUTTON_B, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
+    buttonC(io.buttonC, DEVICE_ID_BUTTON_C, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_LOW, PullMode::Up),
     buttonAB(DEVICE_ID_BUTTON_A, DEVICE_ID_BUTTON_B, DEVICE_ID_BUTTON_AB),
-    i2c(LIS_SDA, LIS_SCL),
+    i2c(io.sda, io.scl),
     accelerometer(i2c, io.int1, LIS3DH_DEFAULT_ADDR, DEVICE_ID_ACCELEROMETER, NORTH_EAST_UP),
     thermometer(io.temperature, DEVICE_ID_THERMOMETER, 25, 10000, 3380, 10000, 273.5),
     lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR)
 {
 
+    cplay_device_instance = this;
     // Clear our status
     status = 0;
     mysystem_init();
+
+    codal_dmesg_set_flush_fn(cplay_dmesg_flush);
 
     // Bring up fiber scheduler.
     scheduler_init(messageBus);
@@ -196,3 +204,30 @@ void CircuitPlayground::onListenerRegisteredEvent(Event evt)
             break;
     }
 }
+
+/**
+ * A periodic callback invoked by the fiber scheduler idle thread.
+* We use this for any low priority, backgrounf housekeeping.
+*
+*/
+void CircuitPlayground::idleCallback()
+{
+    codal_dmesg_flush();
+}
+
+void cplay_dmesg_flush()
+{
+#if CONFIG_ENABLED(DMESG_SERIAL_DEBUG)
+#if DEVICE_DMESG_BUFFER_SIZE > 0
+
+    if (codalLogStore.ptr > 0 && cplay_device_instance)
+    {
+        for (uint32_t i=0; i<codalLogStore.ptr; i++)
+            ((CircuitPlayground *)cplay_device_instance)->serial.putc(codalLogStore.buffer[i]);
+
+        codalLogStore.ptr = 0;
+    }
+#endif
+#endif
+}
+
