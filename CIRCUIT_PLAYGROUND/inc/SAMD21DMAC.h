@@ -1,6 +1,7 @@
 #include "CodalConfig.h"
 #include "Timer.h"
 #include "Pin.h"
+#include "samd21.h"
 
 #ifndef SAMD21DMAC_H
 #define SAMD21DMAC_H
