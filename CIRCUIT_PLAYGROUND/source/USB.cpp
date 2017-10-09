@@ -1,7 +1,9 @@
 #include "CodalUSB.h"
-#include "USB.h"
 
 #if CONFIG_ENABLED(DEVICE_USB)
+#include "samd21.h"
+#include "CodalDmesg.h"
+#include "system_interrupt.h"
 
 static UsbDeviceDescriptor *usb_endpoints;
 static uint8_t usb_num_endpoints;
@@ -78,11 +80,11 @@ static void mysystem_init(void)
     GCLK->CLKCTRL.bit.GEN = 0;
 
     // Configure DFLL48M as source for GCLK_GEN 0
-    GCLK->GENDIV.bit.ID = 0; 
+    GCLK->GENDIV.bit.ID = 0;
     gclk_sync();
     GCLK->GENDIV.reg = 0;
 
-    GCLK->GENCTRL.bit.ID = 0; 
+    GCLK->GENCTRL.bit.ID = 0;
     gclk_sync();
     GCLK->GENCTRL.reg = GCLK_GENCTRL_ID(0) | GCLK_GENCTRL_SRC_DFLL48M | GCLK_GENCTRL_IDC | GCLK_GENCTRL_GENEN;
 }
