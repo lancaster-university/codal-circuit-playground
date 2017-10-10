@@ -3,14 +3,12 @@ project(codal-circuit-playground)
 include("${CODAL_UTILS_LOCATION}")
 
 # find sources and headers
-RECURSIVE_FIND_DIR(INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/${CODAL_TARGET_DEVICE}" "*.h")
-RECURSIVE_FIND_FILE(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${CODAL_TARGET_DEVICE}" "*.c??")
 list(APPEND SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/asm/CortexContextSwitch.s")
 
 RECURSIVE_FIND_DIR(TOP_LEVEL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/inc" "*.h")
-RECURSIVE_FIND_DIR(TOP_LEVEL_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/source" "*.c??")
+RECURSIVE_FIND_FILE(TOP_LEVEL_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/source" "*.c??")
 RECURSIVE_FIND_DIR(MODEL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/model" "*.h")
-RECURSIVE_FIND_DIR(MODEL_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/model" "*.c??")
+RECURSIVE_FIND_FILE(MODEL_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/model" "*.c??")
 
 # force include conf_clocks...
 set(CMAKE_C_FLAGS      "${CMAKE_C_FLAGS} -include \"${CMAKE_CURRENT_SOURCE_DIR}/inc/conf_clocks.h\"" PARENT_SCOPE)
@@ -30,16 +28,8 @@ add_library(codal-circuit-playground ${SOURCE_FILES} ${TOP_LEVEL_SOURCE_FILES} $
 
 target_link_libraries(
     codal-circuit-playground
-    codal-mbed
+    codal-samd21
 )
 
 # expose it to parent cmake.
-target_include_directories(codal-circuit-playground PUBLIC ${INCLUDE_DIRS} ${TOP_LEVEL_INCLUDE_DIRS})
-
-if(CODAL_HEADER_EXTRACTION)
-    RECURSIVE_FIND_FILE(INCLUDE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${codal.target.device}" "*.h")
-    HEADER_FILES(INCLUDE_FILES2 ".")
-
-    file(COPY ${INCLUDE_FILES} DESTINATION "../../build/codal-samd21-mbed/includes")
-    file(COPY ${INCLUDE_FILES2} DESTINATION "../../build/codal-samd21-mbed/includes")
-endif()
+target_include_directories(codal-circuit-playground PUBLIC ${MODEL_INCLUDE_DIRS} ${TOP_LEVEL_INCLUDE_DIRS})
