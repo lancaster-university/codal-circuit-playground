@@ -1,14 +1,16 @@
-project(codal-samd21-mbed)
+project(codal-circuit-playground)
 
 include("${CODAL_UTILS_LOCATION}")
 
 # find sources and headers
 RECURSIVE_FIND_DIR(INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/${CODAL_TARGET_DEVICE}" "*.h")
 RECURSIVE_FIND_FILE(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${CODAL_TARGET_DEVICE}" "*.c??")
-list(APPEND SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${CODAL_OUTPUT_NAME}/asm/CortexContextSwitch.s")
+list(APPEND SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/asm/CortexContextSwitch.s")
 
 RECURSIVE_FIND_DIR(TOP_LEVEL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/inc" "*.h")
 RECURSIVE_FIND_DIR(TOP_LEVEL_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/source" "*.c??")
+RECURSIVE_FIND_DIR(MODEL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/model" "*.h")
+RECURSIVE_FIND_DIR(MODEL_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/model" "*.c??")
 
 # force include conf_clocks...
 set(CMAKE_C_FLAGS      "${CMAKE_C_FLAGS} -include \"${CMAKE_CURRENT_SOURCE_DIR}/inc/conf_clocks.h\"" PARENT_SCOPE)
@@ -21,18 +23,18 @@ set(CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS} -mcpu=cortex-m0plus -mt
 set(CMAKE_SYSTEM_PROCESSOR "armv7-m" PARENT_SCOPE)
 
 # add them
-include_directories(${INCLUDE_DIRS} ${TOP_LEVEL_INCLUDE_DIRS})
+include_directories(${INCLUDE_DIRS} ${TOP_LEVEL_INCLUDE_DIRS} ${MODEL_INCLUDE_DIRS})
 
 # create our target
-add_library(codal-samd21-mbed ${SOURCE_FILES} ${TOP_LEVEL_SOURCE_FILES})
+add_library(codal-circuit-playground ${SOURCE_FILES} ${TOP_LEVEL_SOURCE_FILES} ${MODEL_SOURCE_FILES})
 
 target_link_libraries(
-    codal-samd21-mbed
+    codal-circuit-playground
     codal-mbed
 )
 
 # expose it to parent cmake.
-target_include_directories(codal-samd21-mbed PUBLIC ${INCLUDE_DIRS} ${TOP_LEVEL_INCLUDE_DIRS})
+target_include_directories(codal-circuit-playground PUBLIC ${INCLUDE_DIRS} ${TOP_LEVEL_INCLUDE_DIRS})
 
 if(CODAL_HEADER_EXTRACTION)
     RECURSIVE_FIND_FILE(INCLUDE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${codal.target.device}" "*.h")
