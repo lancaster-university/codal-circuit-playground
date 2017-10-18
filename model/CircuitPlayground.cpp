@@ -126,7 +126,7 @@ CircuitPlayground::CircuitPlayground() :
     buttonAB(DEVICE_ID_BUTTON_A, DEVICE_ID_BUTTON_B, DEVICE_ID_BUTTON_AB),
     i2c(io.sda, io.scl),
     accelerometer(i2c, io.int1, LIS3DH_DEFAULT_ADDR, DEVICE_ID_ACCELEROMETER, NORTH_EAST_UP),
-    thermometer(io.temperature, DEVICE_ID_THERMOMETER, 25, 10000, 3380, 10000, 273.5),
+    thermometer(io.temperature, DEVICE_ID_THERMOMETER, 20, 10000, 3380, 10000, 273.5),
     lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR)
 {
 
