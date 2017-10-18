@@ -91,6 +91,7 @@ namespace codal
         MultiButton                 buttonAB;
 
         mbed::I2C                   i2c;
+        CoordinateSpace             coordinateSpace;
         LIS3DH                      accelerometer;
         NonLinearAnalogSensor       thermometer;
         AnalogSensor                lightSensor;
