@@ -4,13 +4,13 @@
             "url": "https://github.com/lancaster-university/codal-core", 
             "type": "git", 
             "name": "codal-core", 
-            "branch": "2bc13bd2f6244e52faba6d0639c64e7d90505f49"
+            "branch": "641d7e124bb4ddb604735183e39c1a09f3c957c5"
         }, 
         {
             "url": "https://github.com/lancaster-university/mbed-classic", 
             "type": "git", 
             "name": "mbed-classic", 
-            "branch": "f72a33bbf96b25144c3b6f71322b363733706218"
+            "branch": "d1caa9dac5cfbd334d2e9ed46a70f12ffb8229f9"
         }, 
         {
             "url": "https://github.com/lancaster-university/codal-samd21", 
@@ -22,7 +22,7 @@
             "url": "https://github.com/lancaster-university/codal-mbed", 
             "type": "git", 
             "name": "codal-mbed", 
-            "branch": "28b6127d13ac4bb5f573552cbbd5847da38c2272"
+            "branch": "1eb7077cb3b4bd6ef28f8157727928e6e7f67511"
         }
     ], 
     "generate_hex": true, 
