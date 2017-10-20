@@ -41,7 +41,7 @@
     "generate_hex": true, 
     "libraries": [
         {
-            "branch": "641d7e124bb4ddb604735183e39c1a09f3c957c5", 
+            "branch": "1f752584b7d6917c22007b0e9d35c10d8e7510bd", 
             "name": "codal-core", 
             "type": "git", 
             "url": "https://github.com/lancaster-university/codal-core"
@@ -53,13 +53,13 @@
             "url": "https://github.com/lancaster-university/mbed-classic"
         }, 
         {
-            "branch": "e36b8a7fe9a06945e05a2cd1a5dfddd7b12b8008", 
+            "branch": "88f19af8b21d61f973c99a3e27ab9cf95ddc10ca", 
             "name": "codal-samd21", 
             "type": "git", 
             "url": "https://github.com/lancaster-university/codal-samd21"
         }, 
         {
-            "branch": "1eb7077cb3b4bd6ef28f8157727928e6e7f67511", 
+            "branch": "1130fcd8a26337b6111f12ed0249aac8490ad532", 
             "name": "codal-mbed", 
             "type": "git", 
             "url": "https://github.com/lancaster-university/codal-mbed"
@@ -68,6 +68,6 @@
     "linker_flags": "-Wl,--no-wchar-size-warning,-wrap,main", 
     "post_process": "python ./utils/uf2conv.py -o <OUTPUT_HEX_DESTINATION>/<OUTPUT_HEX_NAME>.uf2 -c <OUTPUT_BIN_LOCATION>", 
     "processor": "SAMD21G18A", 
-    "snapshot_version": "v1.1.0", 
+    "snapshot_version": "v1.2.0", 
     "toolchain": "ARM_GCC"
 }
