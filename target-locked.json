@@ -1,73 +1,73 @@
 {
-    "libraries": [
-        {
-            "url": "https://github.com/lancaster-university/codal-core", 
-            "type": "git", 
-            "name": "codal-core", 
-            "branch": "641d7e124bb4ddb604735183e39c1a09f3c957c5"
-        }, 
-        {
-            "url": "https://github.com/lancaster-university/mbed-classic", 
-            "type": "git", 
-            "name": "mbed-classic", 
-            "branch": "d1caa9dac5cfbd334d2e9ed46a70f12ffb8229f9"
-        }, 
-        {
-            "url": "https://github.com/lancaster-university/codal-samd21", 
-            "type": "git", 
-            "name": "codal-samd21", 
-            "branch": "e36b8a7fe9a06945e05a2cd1a5dfddd7b12b8008"
-        }, 
-        {
-            "url": "https://github.com/lancaster-university/codal-mbed", 
-            "type": "git", 
-            "name": "codal-mbed", 
-            "branch": "1eb7077cb3b4bd6ef28f8157727928e6e7f67511"
-        }
-    ], 
-    "generate_hex": true, 
-    "toolchain": "ARM_GCC", 
-    "linker_flags": "-Wl,--no-wchar-size-warning,-wrap,main", 
-    "snapshot_version": "v1.0.2", 
-    "generate_bin": true, 
-    "asm_flags": "-fno-exceptions -fno-unwind-tables --specs=nosys.specs", 
-    "post_process": "python ./utils/uf2conv.py -o <OUTPUT_HEX_DESTINATION>/<OUTPUT_HEX_NAME>.uf2 -c <OUTPUT_BIN_LOCATION>", 
     "architecture": "CORTEX_M0_PLUS", 
-    "cpu_opts": "-mcpu=cortex-m0plus -mthumb", 
-    "device": "CIRCUIT_PLAYGROUND", 
-    "definitions": "-DCONF_CLOCKS_H_INCLUDED -DGCLK_PERIPHERAL_CLOCK=GCLK_GENERATOR_3 -DDEVICE_ANALOGIN -DDEVICE_ANALOGOUT -DDEVICE_I2C -DDEVICE_I2CSLAVE -DDEVICE_I2C_ASYNCH -DDEVICE_INTERRUPTIN -DDEVICE_PORTIN -DDEVICE_PORTINOUT -DDEVICE_PORTOUT -DDEVICE_RTC -DDEVICE_SERIAL -DDEVICE_SERIAL_ASYNCH -DDEVICE_SERIAL_FC -DDEVICE_SLEEP -DDEVICE_SPI -DDEVICE_PWMOUT -DDEVICE_SPISLAVE -DDEVICE_SPI_ASYNCH -DCONF_CLOCKS_H_INCLUDED -DGCLK_PERIPHERAL_CLOCK=GCLK_GENERATOR_3 -D__SAMD21G18A__ -D__CORTEX_M0PLUS -D__MBED__=1  -DTOOLCHAIN_GCC -DTOOLCHAIN_GCC_ARM -DMBED_OPERATORS -DTARGET_ADAFRUIT_CP_G18A -DI2C_MASTER_CALLBACK_MODE=true -DEXTINT_CALLBACK_MODE=true -DUSART_CALLBACK_MODE=true -DTC_ASYNC=true", 
+    "asm_flags": "-fno-exceptions -fno-unwind-tables --specs=nosys.specs", 
     "c_flags": "-std=c99 --specs=nosys.specs", 
-    "config": {
-        "EVENT_LISTENER_DEFAULT_FLAGS": "MESSAGE_BUS_LISTENER_QUEUE_IF_BUSY", 
-        "TARGET_DEBUG_CLASS": "NOT_IMPLEMENTED", 
-        "DEVICE_DMESG_BUFFER_SIZE": 1024, 
-        "SCHEDULER_TICK_PERIOD_US": 6000, 
-        "DEVICE_COMPONENT_COUNT": 30, 
-        "USB_EP_FLAG_NO_AUTO_ZLP": "0x01", 
-        "DEVICE_DEFAULT_SERIAL_MODE": "SYNC_SLEEP", 
-        "DEVICE_USB": 1, 
-        "DEVICE_DEFAULT_PULLMODE": "PullMode::None", 
-        "USB_DEFAULT_VID": "0x03EB", 
-        "CODAL_DEBUG": 0, 
-        "DEVICE_STACK_BASE": "DEVICE_SRAM_END", 
-        "USB_DEFAULT_PID": "0x2402", 
-        "DEVICE_SRAM_END": "0x20008000", 
-        "USE_ACCEL_LSB": 0, 
-        "USB_MAX_PKT_SIZE": 64, 
-        "DEVICE_SRAM_BASE": "0x20000000", 
-        "DEVICE_PANIC_HEAP_FULL": 1, 
-        "DEVICE_HEAP_ALLOCATOR": 1, 
-        "MESSAGE_BUS_LISTENER_MAX_QUEUE_DEPTH": 10, 
-        "DEVICE_USB_ENDPOINTS": 8, 
-        "DEVICE_STACK_SIZE": 2048, 
-        "PROCESSOR_WORD_TYPE": "uint32_t", 
-        "DEVICE_DMESG": 1, 
-        "DEVICE_TAG": 0
-    }, 
-    "processor": "SAMD21G18A", 
-    "cpp_flags": "-std=c++11 -fwrapv -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-unwind-tables -Wl,--gc-sections -Wl,--sort-common -Wl,--sort-section=alignment", 
     "cmake_definitions": {
         "MBED_LEGACY_TARGET_DEFINITIONS": "ADAFRUIT_CP_G18A;Atmel;SAM_CortexM0P;SAMD21", 
         "MBED_LEGACY_TOOLCHAIN": "GCC_ARM;"
-    }
+    }, 
+    "config": {
+        "CODAL_DEBUG": 0, 
+        "DEVICE_COMPONENT_COUNT": 30, 
+        "DEVICE_DEFAULT_PULLMODE": "PullMode::None", 
+        "DEVICE_DEFAULT_SERIAL_MODE": "SYNC_SLEEP", 
+        "DEVICE_DMESG": 1, 
+        "DEVICE_DMESG_BUFFER_SIZE": 1024, 
+        "DEVICE_HEAP_ALLOCATOR": 1, 
+        "DEVICE_PANIC_HEAP_FULL": 1, 
+        "DEVICE_SRAM_BASE": "0x20000000", 
+        "DEVICE_SRAM_END": "0x20008000", 
+        "DEVICE_STACK_BASE": "DEVICE_SRAM_END", 
+        "DEVICE_STACK_SIZE": 2048, 
+        "DEVICE_TAG": 0, 
+        "DEVICE_USB": 1, 
+        "DEVICE_USB_ENDPOINTS": 8, 
+        "EVENT_LISTENER_DEFAULT_FLAGS": "MESSAGE_BUS_LISTENER_QUEUE_IF_BUSY", 
+        "MESSAGE_BUS_LISTENER_MAX_QUEUE_DEPTH": 10, 
+        "PROCESSOR_WORD_TYPE": "uint32_t", 
+        "SCHEDULER_TICK_PERIOD_US": 6000, 
+        "TARGET_DEBUG_CLASS": "NOT_IMPLEMENTED", 
+        "USB_DEFAULT_PID": "0x2402", 
+        "USB_DEFAULT_VID": "0x03EB", 
+        "USB_EP_FLAG_NO_AUTO_ZLP": "0x01", 
+        "USB_MAX_PKT_SIZE": 64, 
+        "USE_ACCEL_LSB": 0
+    }, 
+    "cpp_flags": "-std=c++11 -fwrapv -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-unwind-tables -Wl,--gc-sections -Wl,--sort-common -Wl,--sort-section=alignment", 
+    "cpu_opts": "-mcpu=cortex-m0plus -mthumb", 
+    "definitions": "-DCONF_CLOCKS_H_INCLUDED -DGCLK_PERIPHERAL_CLOCK=GCLK_GENERATOR_3 -DDEVICE_ANALOGIN -DDEVICE_ANALOGOUT -DDEVICE_I2C -DDEVICE_I2CSLAVE -DDEVICE_I2C_ASYNCH -DDEVICE_INTERRUPTIN -DDEVICE_PORTIN -DDEVICE_PORTINOUT -DDEVICE_PORTOUT -DDEVICE_RTC -DDEVICE_SERIAL -DDEVICE_SERIAL_ASYNCH -DDEVICE_SERIAL_FC -DDEVICE_SLEEP -DDEVICE_SPI -DDEVICE_PWMOUT -DDEVICE_SPISLAVE -DDEVICE_SPI_ASYNCH -DCONF_CLOCKS_H_INCLUDED -DGCLK_PERIPHERAL_CLOCK=GCLK_GENERATOR_3 -D__SAMD21G18A__ -D__CORTEX_M0PLUS -D__MBED__=1  -DTOOLCHAIN_GCC -DTOOLCHAIN_GCC_ARM -DMBED_OPERATORS -DTARGET_ADAFRUIT_CP_G18A -DI2C_MASTER_CALLBACK_MODE=true -DEXTINT_CALLBACK_MODE=true -DUSART_CALLBACK_MODE=true -DTC_ASYNC=true", 
+    "device": "CIRCUIT_PLAYGROUND", 
+    "generate_bin": true, 
+    "generate_hex": true, 
+    "libraries": [
+        {
+            "branch": "641d7e124bb4ddb604735183e39c1a09f3c957c5", 
+            "name": "codal-core", 
+            "type": "git", 
+            "url": "https://github.com/lancaster-university/codal-core"
+        }, 
+        {
+            "branch": "d1caa9dac5cfbd334d2e9ed46a70f12ffb8229f9", 
+            "name": "mbed-classic", 
+            "type": "git", 
+            "url": "https://github.com/lancaster-university/mbed-classic"
+        }, 
+        {
+            "branch": "e36b8a7fe9a06945e05a2cd1a5dfddd7b12b8008", 
+            "name": "codal-samd21", 
+            "type": "git", 
+            "url": "https://github.com/lancaster-university/codal-samd21"
+        }, 
+        {
+            "branch": "1eb7077cb3b4bd6ef28f8157727928e6e7f67511", 
+            "name": "codal-mbed", 
+            "type": "git", 
+            "url": "https://github.com/lancaster-university/codal-mbed"
+        }
+    ], 
+    "linker_flags": "-Wl,--no-wchar-size-warning,-wrap,main", 
+    "post_process": "python ./utils/uf2conv.py -o <OUTPUT_HEX_DESTINATION>/<OUTPUT_HEX_NAME>.uf2 -c <OUTPUT_BIN_LOCATION>", 
+    "processor": "SAMD21G18A", 
+    "snapshot_version": "v1.0.3", 
+    "toolchain": "ARM_GCC"
 }
