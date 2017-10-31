@@ -53,7 +53,7 @@
             "url": "https://github.com/lancaster-university/mbed-classic"
         }, 
         {
-            "branch": "478ee81175dbee28724e778b9609f5556fb8d2ea", 
+            "branch": "87e1b872c041c9b21f575a1d6f3970c7e0a60d7c", 
             "name": "codal-samd21", 
             "type": "git", 
             "url": "https://github.com/lancaster-university/codal-samd21"
@@ -68,6 +68,6 @@
     "linker_flags": "-Wl,--no-wchar-size-warning,-wrap,main", 
     "post_process": "python ./utils/uf2conv.py -o <OUTPUT_HEX_DESTINATION>/<OUTPUT_HEX_NAME>.uf2 -c <OUTPUT_BIN_LOCATION>", 
     "processor": "SAMD21G18A", 
-    "snapshot_version": "v1.2.5", 
+    "snapshot_version": "v1.2.6", 
     "toolchain": "ARM_GCC"
 }
