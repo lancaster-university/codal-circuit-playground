@@ -8,6 +8,7 @@
     }, 
     "config": {
         "CODAL_DEBUG": 0, 
+        "CODAL_TIMESTAMP": "uint64_t", 
         "DEVICE_COMPONENT_COUNT": 30, 
         "DEVICE_DEFAULT_PULLMODE": "PullMode::None", 
         "DEVICE_DEFAULT_SERIAL_MODE": "SYNC_SLEEP", 
@@ -68,6 +69,6 @@
     "linker_flags": "-Wl,--no-wchar-size-warning,-wrap,main", 
     "post_process": "python ./utils/uf2conv.py -o <OUTPUT_HEX_DESTINATION>/<OUTPUT_HEX_NAME>.uf2 -c <OUTPUT_BIN_LOCATION>", 
     "processor": "SAMD21G18A", 
-    "snapshot_version": "v1.2.6", 
+    "snapshot_version": "v1.2.7", 
     "toolchain": "ARM_GCC"
 }
