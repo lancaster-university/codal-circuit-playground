@@ -31,7 +31,7 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalHeapAllocator.h"
 #include "CodalDevice.h"
 #include "ErrorNo.h"
-#include "MbedTimer.h"
+#include "CPlayTimer.h"
 #include "Matrix4.h"
 #include "CodalCompat.h"
 #include "CodalComponent.h"
@@ -82,7 +82,7 @@ namespace codal
         public:
 
         MessageBus                  messageBus;
-        mbed::Timer                 timer;
+        CPlayTimer                  timer;
         mbed::Serial                serial;
         CircuitPlaygroundIO         io;
         Button                      buttonA;
