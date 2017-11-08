@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 #include "CircuitPlayground.h"
 #include "CodalDmesg.h"
 #include "Timer.h"
+#include "neopixel.h"
 
 using namespace codal;
 
@@ -171,6 +172,14 @@ CircuitPlayground::CircuitPlayground() :
     // light sensor is very stable, so reflect this in the tuning parameters of the driver.
     lightSensor.setSensitivity(912);
     lightSensor.setPeriod(50);
+
+    // clear neopixels
+    uint8_t neopixelOff[30];
+    memset(neopixelOff, 0x00, sizeof(neopixelOff));
+    // for whatever reason to first send doesn't quite work
+    neopixel_send_buffer(io.neopixel, neopixelOff, sizeof(neopixelOff));
+    target_wait(1);
+    neopixel_send_buffer(io.neopixel, neopixelOff, sizeof(neopixelOff));
 }
 
 /**

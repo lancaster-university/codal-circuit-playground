@@ -56,6 +56,7 @@ DEALINGS IN THE SOFTWARE.
 #define ID_PIN_TOUCHDRIVE   (DEVICE_ID_IO_P0 + 27)
 #define ID_PIN_MIC_DATA     (DEVICE_ID_IO_P0 + 28)
 #define ID_PIN_MIC_CLOCK    (DEVICE_ID_IO_P0 + 29)
+#define ID_PIN_NEOPIXEL     (DEVICE_ID_IO_P0 + 30)
 
 #define DEVICE_ID_BUTTON_C            1024
 
@@ -89,6 +90,7 @@ namespace codal
         mbed::Pin          buttonC;
         mbed::Pin          sda;
         mbed::Pin          scl;
+        mbed::Pin          neopixel;
 
         /**
           * Constructor.
