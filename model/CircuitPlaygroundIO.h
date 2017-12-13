@@ -57,6 +57,10 @@ DEALINGS IN THE SOFTWARE.
 #define ID_PIN_MIC_DATA     (DEVICE_ID_IO_P0 + 28)
 #define ID_PIN_MIC_CLOCK    (DEVICE_ID_IO_P0 + 29)
 #define ID_PIN_NEOPIXEL     (DEVICE_ID_IO_P0 + 30)
+#define ID_PIN_FLASH_MISO   (DEVICE_ID_IO_P0 + 31)
+#define ID_PIN_FLASH_MOSI   (DEVICE_ID_IO_P0 + 32)
+#define ID_PIN_FLASH_SCLK   (DEVICE_ID_IO_P0 + 33)
+#define ID_PIN_FLASH_SSEL   (DEVICE_ID_IO_P0 + 34)
 
 #define DEVICE_ID_BUTTON_C            1024
 
@@ -91,6 +95,10 @@ namespace codal
         mbed::Pin          sda;
         mbed::Pin          scl;
         mbed::Pin          neopixel;
+        mbed::Pin          flashMISO;
+        mbed::Pin          flashMOSI;
+        mbed::Pin          flashSCLK;
+        mbed::Pin          flashSSEL;
 
         /**
           * Constructor.
