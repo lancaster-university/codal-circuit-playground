@@ -182,7 +182,6 @@ CircuitPlayground::CircuitPlayground() :
     target_wait(1);
     neopixel_send_buffer(io.neopixel, neopixelOff, sizeof(neopixelOff));
 
-    flashSPI.setSSEL(io.flashSSEL);
     flashSPI.setFrequency(12000000);
     flashSPI.setMode(0);
 }
