@@ -182,7 +182,7 @@ CircuitPlayground::CircuitPlayground() :
     target_wait(1);
     neopixel_send_buffer(io.neopixel, neopixelOff, sizeof(neopixelOff));
 
-    flashSPI.setFrequency(12000000);
+    flashSPI.setFrequency(4000000);
     flashSPI.setMode(0);
 }
 
