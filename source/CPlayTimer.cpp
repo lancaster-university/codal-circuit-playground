@@ -40,12 +40,12 @@ CPlayTimer::CPlayTimer() : codal::mbed::Timer()
 
 int CPlayTimer::disableInterrupts()
 {
-    NVIC_DisableIRQ(TC4_IRQn);
+    target_disable_irq();
     return DEVICE_OK;
 }
 
 int CPlayTimer::enableInterrupts()
 {
-    NVIC_EnableIRQ(TC4_IRQn);
+    target_enable_irq();
     return DEVICE_OK;
 }
