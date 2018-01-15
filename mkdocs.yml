@@ -22,8 +22,8 @@ pages:
   - io: cplay/io.md
 - _buttonAB: cplay/multibutton.md
 repo_url: https://github.com/lancaster-university/codal-circuit-playground/
-site_description: Full documentation on the micro:bit runtime which provides an easy
-  to use environment for programming the BBC micro:bit in the C/C++ language, written
+site_description: Full documentation on the CODAL runtime which provides an easy
+  to use environment for programming the CircuitPlayground Express in the C/C++ language, written
   by Lancaster University.
 site_name: CODAL Circuit Playground
 theme_dir: theme
