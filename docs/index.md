@@ -18,23 +18,6 @@ Just to show how easy it is to get started, view a <a href="#next-steps">sample 
 
 Developing with the CODAL runtime is simple, and there are multiple ways to create programs for your device.
 
-<div class="col-sm-6">
-    <center>
-        <h3 id="offline-environments">Offline development</h3>
-    </center>
-    <p>
-        A full guide to installing offline development tools, and a tutorial on getting
-        an example project building.
-    </p>
-    <p>
-        <center>
-            <a href="offline-toolchains" class="btn btn-lg btn-outline">
-                Offline development tools
-            </a>
-        </center>
-    </p>
-</div>
-
 ## Next Steps
 
 After you've chosen your development environment, the next step is obvious: **PROGRAM**!

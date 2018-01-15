@@ -1,6 +1,3 @@
-extra:
-  logo_author: Aluna Everitt (@AlunaEveritt on Twitter)
-  logo_url: ./img/logo[whiteruntime].png
 extra_css:
 - css/extra.css
 google_analytics:
