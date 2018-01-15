@@ -10,11 +10,7 @@ markdown_extensions:
 pages:
 - General:
   - Introduction: index.md
-  - Concepts: concepts.md
-  - Advanced: advanced.md
-  - Offline Development: offline-toolchains.md
   - Hardware: device.md
-  - Help: help.md
 - cplay:
   - Overview: cplay.md
   - i2c: cplay/i2c.md
@@ -24,10 +20,6 @@ pages:
   - accelerometer: cplay/accelerometer.md
   - thermometer: cplay/thermometer.md
   - io: cplay/io.md
-- Data Types:
-  - Image: data-types/image.md
-  - Event: data-types/event.md
-  - ManagedString: data-types/string.md
 - _buttonAB: cplay/multibutton.md
 repo_url: https://github.com/lancaster-university/codal-circuit-playground/
 site_description: Full documentation on the micro:bit runtime which provides an easy
