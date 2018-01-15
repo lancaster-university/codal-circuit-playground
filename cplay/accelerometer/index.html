@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        
+        <link rel="shortcut icon" href="../../img/favicon.ico">
+
+	<title>accelerometer - CODAL Circuit Playground</title>
+
+        <link href="../../css/bootstrap-custom.min.css" rel="stylesheet">
+        <link href="../../css/font-awesome-4.0.3.css" rel="stylesheet">
+        <link rel="stylesheet" href="../../css/highlight.css">
+        <link href="../../css/base.css" rel="stylesheet">
+        <link href="../../css/extra.css" rel="stylesheet">
+
+        <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        
+        <script>
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+            ga('create', 'UA-76156484-1', 'auto');
+            ga('send', 'pageview');
+        </script>
+        
+    </head>
+
+    <body>
+
+        <div class="navbar navbar-custom navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+
+        <!-- Collapsed navigation -->
+        <div class="navbar-header">
+            <!-- Expander button -->
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <!-- Main title -->
+            
+                <a class="navbar-brand" style="padding-top:25px; padding-bottom:25px" rel="home" href="../..">CODAL Circuit Playground</a>
+            
+        </div>
+
+        <!-- Expanded navigation -->
+        <div class="navbar-collapse collapse">
+            <!-- Main navigation -->
+            <ul class="nav navbar-nav">
+            
+
+            
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">General <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    
+                        
+<li >
+    <a href="../..">Introduction</a>
+</li>
+
+                    
+                        
+<li >
+    <a href="../../device/">Hardware</a>
+</li>
+
+                    
+                    </ul>
+                </li>
+            
+            
+
+            
+                <li class="dropdown active">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">cplay <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                    
+                        
+<li >
+    <a href="../">Overview</a>
+</li>
+
+                    
+                        
+<li >
+    <a href="../i2c/">i2c</a>
+</li>
+
+                    
+                        
+<li >
+    <a href="../serial/">serial</a>
+</li>
+
+                    
+                        
+<li >
+    <a href="../messageBus/">messageBus</a>
+</li>
+
+                    
+                        
+<li >
+    <a href="../button/">buttons</a>
+</li>
+
+                    
+                        
+<li class="active">
+    <a href="./">accelerometer</a>
+</li>
+
+                    
+                        
+<li >
+    <a href="../thermometer/">thermometer</a>
+</li>
+
+                    
+                        
+<li >
+    <a href="../io/">io</a>
+</li>
+
+                    
+                    </ul>
+                </li>
+            
+            
+
+            
+
+            
+            
+            </ul>
+
+            <!-- Search, Navigation and Repo links -->
+            <ul class="nav navbar-nav navbar-right hidden-md hidden-sm">
+                <li>
+                    <a href="#" data-toggle="modal" data-target="#mkdocs_search_modal">
+                        <i class="fa fa-search"></i> Search
+                    </a>
+                </li>
+                <li >
+                    <a rel="next" href="../button/">
+                        <i class="fa fa-arrow-left"></i> Previous
+                    </a>
+                </li>
+                <li >
+                    <a rel="prev" href="../thermometer/">
+                        Next <i class="fa fa-arrow-right"></i>
+                    </a>
+                </li>
+                
+                <li>
+                    <a href="https://github.com/lancaster-university/codal-circuit-playground/">
+                        
+                            <i class="fa fa-github"></i>
+                        
+                        GitHub
+                    </a>
+                </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+        <div class="container">
+            <div class="col-md-3"><div class="bs-sidebar hidden-print affix well" role="complementary">
+    <ul class="nav bs-sidenav">
+    
+        <li class="main active"><a href="#ubitaccelerometer">uBit.accelerometer</a></li>
+        
+            <li><a href="#overview">Overview</a></li>
+        
+            <li><a href="#message-bus-id">Message Bus ID</a></li>
+        
+            <li><a href="#message-bus-events">Message Bus Events:</a></li>
+        
+            <li><a href="#api">API</a></li>
+        
+            <li><a href="#constructor">Constructor</a></li>
+        
+            <li><a href="#setperiod">setPeriod</a></li>
+        
+            <li><a href="#getperiod">getPeriod</a></li>
+        
+            <li><a href="#setrange">setRange</a></li>
+        
+            <li><a href="#getrange">getRange</a></li>
+        
+            <li><a href="#whoami">whoAmI</a></li>
+        
+            <li><a href="#getsample">getSample</a></li>
+        
+            <li><a href="#configure">configure</a></li>
+        
+            <li><a href="#updatesample">updateSample</a></li>
+        
+            <li><a href="#requestupdate">requestUpdate</a></li>
+        
+    
+    </ul>
+</div></div>
+            <div class="col-md-9" role="main">
+
+<h1 id="ubitaccelerometer">uBit.accelerometer<a class="headerlink" href="#ubitaccelerometer" title="Permanent link">&para;</a></h1>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<h2 id="message-bus-id">Message Bus ID<a class="headerlink" href="#message-bus-id" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEVICE_ID_ACCELEROMETER</td>
+<td>4</td>
+</tr>
+<tr>
+<td>DEVICE_ID_GESTURE</td>
+<td>27</td>
+</tr>
+</tbody>
+</table>
+<h2 id="message-bus-events">Message Bus Events:<a class="headerlink" href="#message-bus-events" title="Permanent link">&para;</a></h2>
+<h3 id="device_id_accelerometer">DEVICE_ID_ACCELEROMETER<a class="headerlink" href="#device_id_accelerometer" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_DATA_UPDATE</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<h3 id="device_id_gesture">DEVICE_ID_GESTURE<a class="headerlink" href="#device_id_gesture" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_TILT_UP</td>
+<td>1</td>
+</tr>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_TILT_DOWN</td>
+<td>2</td>
+</tr>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_TILT_LEFT</td>
+<td>3</td>
+</tr>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_TILT_RIGHT</td>
+<td>4</td>
+</tr>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_FACE_UP</td>
+<td>5</td>
+</tr>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_FACE_DOWN</td>
+<td>6</td>
+</tr>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_FREEFALL</td>
+<td>7</td>
+</tr>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_3G</td>
+<td>8</td>
+</tr>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_6G</td>
+<td>9</td>
+</tr>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_8G</td>
+<td>10</td>
+</tr>
+<tr>
+<td>DEVICE_ACCELEROMETER_EVT_SHAKE</td>
+<td>11</td>
+</tr>
+</tbody>
+</table>
+<h2 id="api">API<a class="headerlink" href="#api" title="Permanent link">&para;</a></h2>
+<h2 id="constructor">Constructor<a class="headerlink" href="#constructor" title="Permanent link">&para;</a></h2>
+<p><br/></p>
+<h4 id="lis3dh-i2c-_i2c-pin-_int1-coordinatespace-coordinatespace">LIS3DH( <div style='color:#a71d5d; display:inline-block'>I2C  &amp;</div> _i2c,  <div style='color:#a71d5d; display:inline-block'>Pin  &amp;</div> _int1,  <div style='color:#a71d5d; display:inline-block'>CoordinateSpace  &amp;</div> coordinateSpace)<a class="headerlink" href="#lis3dh-i2c-_i2c-pin-_int1-coordinatespace-coordinatespace" title="Permanent link">&para;</a></h4>
+<h5 id="description">Description<a class="headerlink" href="#description" title="Permanent link">&para;</a></h5>
+<p>Constructor. Create a software abstraction of an accelerometer.</p>
+<h5 id="parameters">Parameters<a class="headerlink" href="#parameters" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><div style='color:#a71d5d; display:inline-block'>I2C  &amp;</div> _i2c - an instance of  I2C  used to communicate with the onboard accelerometer.</p>
+<p><div style='color:#a71d5d; display:inline-block'>Pin  &amp;</div> _int1</p>
+<p><div style='color:#a71d5d; display:inline-block'>CoordinateSpace  &amp;</div> coordinateSpace</p>
+</blockquote>
+<h5 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h5>
+<pre><code class="cpp"> I2C i2c = I2C(I2C_SDA0, I2C_SCL0);
+
+ Accelerometer accelerometer = Accelerometer(i2c);
+</code></pre>
+
+<p><br/></p>
+<h4 id="lis3dh-i2c-_i2c-pin-_int1-coordinatespace-coordinatespace-uint16_t-address">LIS3DH( <div style='color:#a71d5d; display:inline-block'>I2C  &amp;</div> _i2c,  <div style='color:#a71d5d; display:inline-block'>Pin  &amp;</div> _int1,  <div style='color:#a71d5d; display:inline-block'>CoordinateSpace  &amp;</div> coordinateSpace,  <div style='color:#a71d5d; display:inline-block'>uint16_t</div> address)<a class="headerlink" href="#lis3dh-i2c-_i2c-pin-_int1-coordinatespace-coordinatespace-uint16_t-address" title="Permanent link">&para;</a></h4>
+<h5 id="description_1">Description<a class="headerlink" href="#description_1" title="Permanent link">&para;</a></h5>
+<p>Constructor. Create a software abstraction of an accelerometer.</p>
+<h5 id="parameters_1">Parameters<a class="headerlink" href="#parameters_1" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><div style='color:#a71d5d; display:inline-block'>I2C  &amp;</div> _i2c - an instance of  I2C  used to communicate with the onboard accelerometer.</p>
+<p><div style='color:#a71d5d; display:inline-block'>Pin  &amp;</div> _int1</p>
+<p><div style='color:#a71d5d; display:inline-block'>CoordinateSpace  &amp;</div> coordinateSpace</p>
+<p><div style='color:#a71d5d; display:inline-block'>uint16_t</div> address - the default  I2C  address of the accelerometer. Defaults to: MMA8653_DEFAULT_ADDR.</p>
+</blockquote>
+<h5 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h5>
+<pre><code class="cpp"> I2C i2c = I2C(I2C_SDA0, I2C_SCL0);
+
+ Accelerometer accelerometer = Accelerometer(i2c);
+</code></pre>
+
+<p><br/></p>
+<h4 id="lis3dh-i2c-_i2c-pin-_int1-coordinatespace-coordinatespace-uint16_t-address-uint16_t-id">LIS3DH( <div style='color:#a71d5d; display:inline-block'>I2C  &amp;</div> _i2c,  <div style='color:#a71d5d; display:inline-block'>Pin  &amp;</div> _int1,  <div style='color:#a71d5d; display:inline-block'>CoordinateSpace  &amp;</div> coordinateSpace,  <div style='color:#a71d5d; display:inline-block'>uint16_t</div> address,  <div style='color:#a71d5d; display:inline-block'>uint16_t</div> id)<a class="headerlink" href="#lis3dh-i2c-_i2c-pin-_int1-coordinatespace-coordinatespace-uint16_t-address-uint16_t-id" title="Permanent link">&para;</a></h4>
+<h5 id="description_2">Description<a class="headerlink" href="#description_2" title="Permanent link">&para;</a></h5>
+<p>Constructor. Create a software abstraction of an accelerometer.</p>
+<h5 id="parameters_2">Parameters<a class="headerlink" href="#parameters_2" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><div style='color:#a71d5d; display:inline-block'>I2C  &amp;</div> _i2c - an instance of  I2C  used to communicate with the onboard accelerometer.</p>
+<p><div style='color:#a71d5d; display:inline-block'>Pin  &amp;</div> _int1</p>
+<p><div style='color:#a71d5d; display:inline-block'>CoordinateSpace  &amp;</div> coordinateSpace</p>
+<p><div style='color:#a71d5d; display:inline-block'>uint16_t</div> address - the default  I2C  address of the accelerometer. Defaults to: MMA8653_DEFAULT_ADDR.</p>
+<p><div style='color:#a71d5d; display:inline-block'>uint16_t</div> id - the unique  EventModel  id of this component. Defaults to: DEVICE_ID_ACCELEROMETER</p>
+</blockquote>
+<h5 id="example_2">Example<a class="headerlink" href="#example_2" title="Permanent link">&para;</a></h5>
+<pre><code class="cpp"> I2C i2c = I2C(I2C_SDA0, I2C_SCL0);
+
+ Accelerometer accelerometer = Accelerometer(i2c);
+</code></pre>
+
+<h2 id="setperiod">setPeriod<a class="headerlink" href="#setperiod" title="Permanent link">&para;</a></h2>
+<p><br/></p>
+<h4 id="int-setperiod-int-period"><div style='color:#a71d5d; display:inline-block'>int</div> <div style='color:#795da3; display:inline-block'>setPeriod</div>( <div style='color:#a71d5d; display:inline-block'>int</div> period)<a class="headerlink" href="#int-setperiod-int-period" title="Permanent link">&para;</a></h4>
+<h5 id="description_3">Description<a class="headerlink" href="#description_3" title="Permanent link">&para;</a></h5>
+<p>Attempts to set the sample rate of the accelerometer to the specified value (in ms).</p>
+<h5 id="parameters_3">Parameters<a class="headerlink" href="#parameters_3" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><div style='color:#a71d5d; display:inline-block'>int</div> period - the requested time between samples, in milliseconds.</p>
+</blockquote>
+<h5 id="returns">Returns<a class="headerlink" href="#returns" title="Permanent link">&para;</a></h5>
+<p>DEVICE_OK on success, DEVICE_I2C_ERROR is the request fails.</p>
+<h5 id="example_3">Example<a class="headerlink" href="#example_3" title="Permanent link">&para;</a></h5>
+<pre><code class="cpp"> // sample rate is now 20 ms.
+ accelerometer.setPeriod(20);
+</code></pre>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The requested rate may not be possible on the hardware. In this case, the nearest lower rate is chosen.</p>
+</div>
+<h2 id="getperiod">getPeriod<a class="headerlink" href="#getperiod" title="Permanent link">&para;</a></h2>
+<p><br/></p>
+<h4 id="int-getperiod"><div style='color:#a71d5d; display:inline-block'>int</div> <div style='color:#795da3; display:inline-block'>getPeriod</div>()<a class="headerlink" href="#int-getperiod" title="Permanent link">&para;</a></h4>
+<h5 id="description_4">Description<a class="headerlink" href="#description_4" title="Permanent link">&para;</a></h5>
+<p>Reads the currently configured sample rate of the accelerometer.</p>
+<h5 id="returns_1">Returns<a class="headerlink" href="#returns_1" title="Permanent link">&para;</a></h5>
+<p>The time between samples, in milliseconds.</p>
+<h2 id="setrange">setRange<a class="headerlink" href="#setrange" title="Permanent link">&para;</a></h2>
+<p><br/></p>
+<h4 id="int-setrange-int-range"><div style='color:#a71d5d; display:inline-block'>int</div> <div style='color:#795da3; display:inline-block'>setRange</div>( <div style='color:#a71d5d; display:inline-block'>int</div> range)<a class="headerlink" href="#int-setrange-int-range" title="Permanent link">&para;</a></h4>
+<h5 id="description_5">Description<a class="headerlink" href="#description_5" title="Permanent link">&para;</a></h5>
+<p>Attempts to set the sample range of the accelerometer to the specified value (in g).</p>
+<h5 id="parameters_4">Parameters<a class="headerlink" href="#parameters_4" title="Permanent link">&para;</a></h5>
+<blockquote>
+<p><div style='color:#a71d5d; display:inline-block'>int</div> range - The requested sample range of samples, in g.</p>
+</blockquote>
+<h5 id="returns_2">Returns<a class="headerlink" href="#returns_2" title="Permanent link">&para;</a></h5>
+<p>DEVICE_OK on success, DEVICE_I2C_ERROR is the request fails.</p>
+<h5 id="example_4">Example<a class="headerlink" href="#example_4" title="Permanent link">&para;</a></h5>
+<pre><code class="cpp"> // the sample range of the accelerometer is now 8G.
+ accelerometer.setRange(8);
+</code></pre>
+
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The requested range may not be possible on the hardware. In this case, the nearest lower range is chosen.</p>
+</div>
+<h2 id="getrange">getRange<a class="headerlink" href="#getrange" title="Permanent link">&para;</a></h2>
+<p><br/></p>
+<h4 id="int-getrange"><div style='color:#a71d5d; display:inline-block'>int</div> <div style='color:#795da3; display:inline-block'>getRange</div>()<a class="headerlink" href="#int-getrange" title="Permanent link">&para;</a></h4>
+<h5 id="description_6">Description<a class="headerlink" href="#description_6" title="Permanent link">&para;</a></h5>
+<p>Reads the currently configured sample range of the accelerometer.</p>
+<h5 id="returns_3">Returns<a class="headerlink" href="#returns_3" title="Permanent link">&para;</a></h5>
+<p>The sample range, in g.</p>
+<h2 id="whoami">whoAmI<a class="headerlink" href="#whoami" title="Permanent link">&para;</a></h2>
+<p><br/></p>
+<h4 id="int-whoami"><div style='color:#a71d5d; display:inline-block'>int</div> <div style='color:#795da3; display:inline-block'>whoAmI</div>()<a class="headerlink" href="#int-whoami" title="Permanent link">&para;</a></h4>
+<h5 id="description_7">Description<a class="headerlink" href="#description_7" title="Permanent link">&para;</a></h5>
+<p>Attempts to read the 8 bit ID from the accelerometer, this can be used for validation purposes.</p>
+<h5 id="returns_4">Returns<a class="headerlink" href="#returns_4" title="Permanent link">&para;</a></h5>
+<p>the 8 bit ID returned by the accelerometer, or DEVICE_I2C_ERROR if the request fails.</p>
+<h5 id="example_5">Example<a class="headerlink" href="#example_5" title="Permanent link">&para;</a></h5>
+<pre><code class="cpp"> accelerometer.whoAmI();
+</code></pre>
+
+<h2 id="getsample">getSample<a class="headerlink" href="#getsample" title="Permanent link">&para;</a></h2>
+<p><br/></p>
+<h4 id="sample3d-getsample"><div style='color:#a71d5d; display:inline-block'>Sample3D</div> <div style='color:#795da3; display:inline-block'>getSample</div>()<a class="headerlink" href="#sample3d-getsample" title="Permanent link">&para;</a></h4>
+<h5 id="description_8">Description<a class="headerlink" href="#description_8" title="Permanent link">&para;</a></h5>
+<p>Reads the accelerometer data from the latest update retrieved from the accelerometer. Data is provided in ENU format, relative to the device package (and makes no attempt to align axes to the device).</p>
+<h5 id="returns_5">Returns<a class="headerlink" href="#returns_5" title="Permanent link">&para;</a></h5>
+<p>The force measured in each axis, in milli-g.</p>
+<h2 id="configure">configure<a class="headerlink" href="#configure" title="Permanent link">&para;</a></h2>
+<p><br/></p>
+<h4 id="int-configure"><div style='color:#a71d5d; display:inline-block'>int</div> <div style='color:#795da3; display:inline-block'>configure</div>()<a class="headerlink" href="#int-configure" title="Permanent link">&para;</a></h4>
+<h5 id="description_9">Description<a class="headerlink" href="#description_9" title="Permanent link">&para;</a></h5>
+<p>Configures the accelerometer for G range and sample rate defined in this object. The nearest values are chosen to those defined that are supported by the hardware. The instance variables are then updated to reflect reality.</p>
+<h5 id="returns_6">Returns<a class="headerlink" href="#returns_6" title="Permanent link">&para;</a></h5>
+<p>DEVICE_OK on success, DEVICE_I2C_ERROR if the accelerometer could not be configured.</p>
+<h2 id="updatesample">updateSample<a class="headerlink" href="#updatesample" title="Permanent link">&para;</a></h2>
+<p><br/></p>
+<h4 id="int-updatesample"><div style='color:#a71d5d; display:inline-block'>int</div> <div style='color:#795da3; display:inline-block'>updateSample</div>()<a class="headerlink" href="#int-updatesample" title="Permanent link">&para;</a></h4>
+<h5 id="description_10">Description<a class="headerlink" href="#description_10" title="Permanent link">&para;</a></h5>
+<p>Reads the acceleration data from the accelerometer, and stores it in our buffer. This only happens if the accelerometer indicates that it has new data via int1.</p>
+<p>On first use, this member function will attempt to add this component to the list of fiber components in order to constantly update the values stored by this object.</p>
+<p>This technique is called lazy instantiation, and it means that we do not obtain the overhead from non-chalantly adding this component to fiber components.</p>
+<h5 id="returns_7">Returns<a class="headerlink" href="#returns_7" title="Permanent link">&para;</a></h5>
+<p>DEVICE_OK on success, DEVICE_I2C_ERROR if the read request fails.</p>
+<h2 id="requestupdate">requestUpdate<a class="headerlink" href="#requestupdate" title="Permanent link">&para;</a></h2>
+<p><br/></p>
+<h4 id="int-requestupdate"><div style='color:#a71d5d; display:inline-block'>int</div> <div style='color:#795da3; display:inline-block'>requestUpdate</div>()<a class="headerlink" href="#int-requestupdate" title="Permanent link">&para;</a></h4>
+<h5 id="description_11">Description<a class="headerlink" href="#description_11" title="Permanent link">&para;</a></h5>
+<p>Poll to see if new data is available from the hardware. If so, update it. n.b. it is not necessary to explicitly call this funciton to update data (it normally happens in the background when the scheduler is idle), but a check is performed if the user explicitly requests up to date data.</p>
+<h5 id="returns_8">Returns<a class="headerlink" href="#returns_8" title="Permanent link">&para;</a></h5>
+<p>DEVICE_OK on success, DEVICE_I2C_ERROR if the update fails.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This method should be overidden by the hardware driver to implement the requested changes in hardware.</p>
+</div>
+<hr /></div>
+        </div>
+
+        <footer class="col-md-12">
+            
+            <center><a href="https://www.lancaster.ac.uk"><image style="width:auto;" height="61" src="../../img/lancs-logo.png"></image></a></center>
+            <center>Documentation built with <a href="http://www.mkdocs.org/">MkDocs</a>.</center>
+        </footer>
+
+        <script src="../../js/jquery-1.10.2.min.js"></script>
+        <script src="../../js/bootstrap-3.0.3.min.js"></script>
+        <script src="../../js/highlight.pack.js"></script>
+        <script>var base_url = '../..';</script>
+        <script data-main="../../mkdocs/js/search.js" src="../../mkdocs/js/require.js"></script>
+        <script src="../../js/base.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="Search Modal" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="exampleModalLabel">Search</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>
+                            From here you can search these documents. Enter
+                            your search terms below.
+                        </p>
+                        <form role="form">
+                            <div class="form-group">
+                                <input type="text" class="form-control" placeholder="Search..." id="mkdocs-search-query">
+                            </div>
+                        </form>
+                        <div id="mkdocs-search-results"></div>
+                    </div>
+                    <div class="modal-footer">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

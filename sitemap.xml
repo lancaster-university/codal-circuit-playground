@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    
+        
+    <url>
+     <loc>None/</loc>
+     <lastmod>2018-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/device/</loc>
+     <lastmod>2018-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+        
+    <url>
+     <loc>None/cplay/</loc>
+     <lastmod>2018-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/cplay/i2c/</loc>
+     <lastmod>2018-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/cplay/serial/</loc>
+     <lastmod>2018-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/cplay/messageBus/</loc>
+     <lastmod>2018-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/cplay/button/</loc>
+     <lastmod>2018-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/cplay/accelerometer/</loc>
+     <lastmod>2018-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/cplay/thermometer/</loc>
+     <lastmod>2018-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    <url>
+     <loc>None/cplay/io/</loc>
+     <lastmod>2018-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+        
+    
+
+    
+    <url>
+     <loc>None/cplay/multibutton/</loc>
+     <lastmod>2018-01-15</lastmod>
+     <changefreq>daily</changefreq>
+    </url>
+    
+
+</urlset>

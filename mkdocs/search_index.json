@@ -1,0 +1,2454 @@
+{
+    "docs": [
+        {
+            "location": "/", 
+            "text": "Introduction\n\n\nThe CODAL runtime provides an easy to use environment for programming the CircuitPlayground Express\nin the C/C++ language, written by Lancaster University. It contains device drivers for all the hardware capabilities of the micro:bit,\nand also a suite of runtime mechanisms to make programming the micro:bit easier and more flexible. These\nrange from control of the LED matrix display to peer-to-peer radio communication and secure\nBluetooth Low Energy services.\n\n\nIn addition to supporting development in C/C++, the runtime is also designed specifically to support\nhigher level languages provided by our partners that target the micro:bit. It is currently used as a support library for \nMicrosoft MakeCode\n\n\nOn these pages you will find guidance on how to start using the runtime in C/C++, summaries of all the\ncomponents that make up the system and a full set of API documentation (the functions you can use to control the micro:bit).\n\n\nJust to show how easy it is to get started, view a \nsample program\n.\n\n\nGetting Started\n\n\nDeveloping with the CODAL runtime is simple, and there are multiple ways to create programs for your device.\n\n\nNext Steps\n\n\nAfter you've chosen your development environment, the next step is obvious: \nPROGRAM\n!\n\n\nHere is some sample code to get you started:\n\n\n#include \nCircuitPlayground.h\n\n\nCircuitPlayground cplay;\n\nint main()\n{\n    while(1)\n    {\n        cplay.io.led.setDigitalValue(1);\n        cplay.sleep(500);\n        cplay.io.led.setDigitalValue(1);\n        cplay.sleep(500);\n    }\n    release_fiber();\n}\n\n\n\n\nWhat is cplay?\n\n\nuBit is an instance of the \nCircuitPlayground\n class which provides a really simple way to interact\nwith the various components on the micro:bit itself.\n\n\nThis simplicity can be seen with this line of code:\n\n\ncplay.io.led.setDigitalValue(1);\n\n\n\n\nThis line sets the LED indicator on the device.\n\n\nWhat is a fiber and why do we release it?\n\n\nFibers are lightweight threads used by the runtime to perform operations asynchronously.\n\n\nThe function call \nrelease_fiber();\n is recommended at the end of main to release the main fiber, and enter\nthe scheduler indefinitely as you may have other fibers running elsewhere in the code.\nIt also means that the processor will enter a power efficient sleep if there are\nno other processes running.\n\n\nIf this line is omitted, your program will cease all execution.", 
+            "title": "Introduction"
+        }, 
+        {
+            "location": "/#introduction", 
+            "text": "The CODAL runtime provides an easy to use environment for programming the CircuitPlayground Express\nin the C/C++ language, written by Lancaster University. It contains device drivers for all the hardware capabilities of the micro:bit,\nand also a suite of runtime mechanisms to make programming the micro:bit easier and more flexible. These\nrange from control of the LED matrix display to peer-to-peer radio communication and secure\nBluetooth Low Energy services.  In addition to supporting development in C/C++, the runtime is also designed specifically to support\nhigher level languages provided by our partners that target the micro:bit. It is currently used as a support library for  Microsoft MakeCode  On these pages you will find guidance on how to start using the runtime in C/C++, summaries of all the\ncomponents that make up the system and a full set of API documentation (the functions you can use to control the micro:bit).  Just to show how easy it is to get started, view a  sample program .", 
+            "title": "Introduction"
+        }, 
+        {
+            "location": "/#getting-started", 
+            "text": "Developing with the CODAL runtime is simple, and there are multiple ways to create programs for your device.", 
+            "title": "Getting Started"
+        }, 
+        {
+            "location": "/#next-steps", 
+            "text": "After you've chosen your development environment, the next step is obvious:  PROGRAM !  Here is some sample code to get you started:  #include  CircuitPlayground.h \n\nCircuitPlayground cplay;\n\nint main()\n{\n    while(1)\n    {\n        cplay.io.led.setDigitalValue(1);\n        cplay.sleep(500);\n        cplay.io.led.setDigitalValue(1);\n        cplay.sleep(500);\n    }\n    release_fiber();\n}", 
+            "title": "Next Steps"
+        }, 
+        {
+            "location": "/#what-is-cplay", 
+            "text": "uBit is an instance of the  CircuitPlayground  class which provides a really simple way to interact\nwith the various components on the micro:bit itself.  This simplicity can be seen with this line of code:  cplay.io.led.setDigitalValue(1);  This line sets the LED indicator on the device.", 
+            "title": "What is cplay?"
+        }, 
+        {
+            "location": "/#what-is-a-fiber-and-why-do-we-release-it", 
+            "text": "Fibers are lightweight threads used by the runtime to perform operations asynchronously.  The function call  release_fiber();  is recommended at the end of main to release the main fiber, and enter\nthe scheduler indefinitely as you may have other fibers running elsewhere in the code.\nIt also means that the processor will enter a power efficient sleep if there are\nno other processes running.  If this line is omitted, your program will cease all execution.", 
+            "title": "What is a fiber and why do we release it?"
+        }, 
+        {
+            "location": "/device/", 
+            "text": "About the CircuitPlayground", 
+            "title": "Hardware"
+        }, 
+        {
+            "location": "/device/#about-the-circuitplayground", 
+            "text": "", 
+            "title": "About the CircuitPlayground"
+        }, 
+        {
+            "location": "/cplay/", 
+            "text": "CircuitPlayground\n\n\nOverview\n\n\nAlthough the runtime is built from lots of small components, we also provide an easy to use pre-packaged collection of the commonly used components\nall in one place. This makes it much easier to start programming your micro:bit in C.\n\n\nThis grouping is provided by a C++ class called \nCircuitPlayground\n.  The \nCircuitPlayground\n class has a number of\nmember variables, that operate as device drivers to control the most commonly used features of the micro:bit.\n\n\nThere is an instance of the \nCircuitPlayground\n class created as a global variable in all the sample programs, called \ncplay\n:\n\n\n\n\ncplay {\n\n   \n.i2c\n,\n\n   \n.serial\n,\n\n   \n.MessageBus\n,\n\n   \n.buttonA\n,\n\n   \n.buttonB\n,\n\n   \n.buttonAB\n,\n\n   \n.accelerometer\n,\n\n   \n.thermometer\n,\n\n   \n.io\n,\n\n   }\n\n\n\n\nYou can use dot operator '.' to any of these resources inside cplay to access any of the functions they provide. There is a complete list of the\nfunctions available under the \ncplay\n menu item in the navigation bar at the top of the page.\n\n\nFor example, if we needed to scroll some text across the display, we simply would write the following:\n\n\ncplay.display.scroll(\nHELLO!\n);\n\n\n\n\nSimilarly, if we wanted to send some text over serial, we could write the following\ncode:\n\n\nfor(int i = 3; i \n 0; i--)\n{\n    cplay.serial.printf(\n%d...\n, i);\n    cplay.sleep(1000);\n}\n\n// or alternatively...\ncplay.serial.send(\nCode!\n);\n\n\n\n\nThe runtime also contains a scheduler, which uses lightweight threads (called fibers)\nto control the rate of execution.\n\n\nTo place the current fiber into a power efficient \nsleep\n write the following:\n\n\n// where X is an integer in milliseconds for the amount of time you would like to sleep for.\ncplay.sleep(X);\n\n\n\n\nMessage Bus ID\n\n\n\n\nNone\n\n\n\n\nMessage Bus Events\n\n\n\n\nNone\n\n\n\n\nAPI\n\n\nConstructor\n\n\n\n\nCircuitPlayground()\n\n\nDescription\n\n\nConstructor.\n\n\nCreate a representation of a Genuino Zero device, which includes member variables that represent various device drivers used to control aspects of the board.", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/cplay/#circuitplayground", 
+            "text": "", 
+            "title": "CircuitPlayground"
+        }, 
+        {
+            "location": "/cplay/#overview", 
+            "text": "Although the runtime is built from lots of small components, we also provide an easy to use pre-packaged collection of the commonly used components\nall in one place. This makes it much easier to start programming your micro:bit in C.  This grouping is provided by a C++ class called  CircuitPlayground .  The  CircuitPlayground  class has a number of\nmember variables, that operate as device drivers to control the most commonly used features of the micro:bit.  There is an instance of the  CircuitPlayground  class created as a global variable in all the sample programs, called  cplay :   cplay { \n    .i2c , \n    .serial , \n    .MessageBus , \n    .buttonA , \n    .buttonB , \n    .buttonAB , \n    .accelerometer , \n    .thermometer , \n    .io , \n   }   You can use dot operator '.' to any of these resources inside cplay to access any of the functions they provide. There is a complete list of the\nfunctions available under the  cplay  menu item in the navigation bar at the top of the page.  For example, if we needed to scroll some text across the display, we simply would write the following:  cplay.display.scroll( HELLO! );  Similarly, if we wanted to send some text over serial, we could write the following\ncode:  for(int i = 3; i   0; i--)\n{\n    cplay.serial.printf( %d... , i);\n    cplay.sleep(1000);\n}\n\n// or alternatively...\ncplay.serial.send( Code! );  The runtime also contains a scheduler, which uses lightweight threads (called fibers)\nto control the rate of execution.  To place the current fiber into a power efficient  sleep  write the following:  // where X is an integer in milliseconds for the amount of time you would like to sleep for.\ncplay.sleep(X);", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/cplay/#message-bus-id", 
+            "text": "None", 
+            "title": "Message Bus ID"
+        }, 
+        {
+            "location": "/cplay/#message-bus-events", 
+            "text": "None", 
+            "title": "Message Bus Events"
+        }, 
+        {
+            "location": "/cplay/#api", 
+            "text": "", 
+            "title": "API"
+        }, 
+        {
+            "location": "/cplay/#constructor", 
+            "text": "", 
+            "title": "Constructor"
+        }, 
+        {
+            "location": "/cplay/#circuitplayground_1", 
+            "text": "", 
+            "title": "CircuitPlayground()"
+        }, 
+        {
+            "location": "/cplay/#description", 
+            "text": "Constructor.  Create a representation of a Genuino Zero device, which includes member variables that represent various device drivers used to control aspects of the board.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/i2c/", 
+            "text": "cplay.i2c\n\n\nOverview\n\n\ni2c is a very common, widely used protocol for communicating with other devices\nover a wire. i2c uses a very simple addressing scheme to access these other\ndevices. The \naccelerometer\n uses I2C to communicate information.\n\n\nMessage Bus ID\n\n\n\n\nNone.\n\n\n\n\nMessage Bus Events\n\n\n\n\nNone.\n\n\n\n\nAPI\n\n\nConstructor\n\n\n\n\nI2C( \ncodal::Pin  \n sda,  \ncodal::Pin  \n scl)\n\n\nDescription\n\n\nConstructor.\n\n\nParameters\n\n\n\n\ncodal::Pin  \n sda\n\n\ncodal::Pin  \n scl\n\n\n\n\nsetFrequency\n\n\n\n\nint\n \nsetFrequency\n( \nuint32_t\n frequency)\n\n\nDescription\n\n\nSet the frequency of the  I2C  interface\n\n\nfrequency\n\n\nThe bus frequency in hertz\n\n\nParameters\n\n\n\n\nuint32_t\n frequency - The bus frequency in hertz\n\n\n\n\nwrite\n\n\n\n\nint\n \nwrite\n( \nuint8_t\n data)\n\n\nDescription\n\n\nIssues a standard, 2 byte  I2C  command write to the accelerometer.\n\n\nBlocks the calling thread until complete.\n\n\nParameters\n\n\n\n\nuint8_t\n data\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_I2C_ERROR if the write request failed.\n\n\nread\n\n\n\n\nint\n \nread\n()\n\n\nDescription\n\n\nIssues a single-byte read command.\n\n\nBlocks the calling thread until complete.\n\n\nReturns\n\n\nthe byte on success or DEVICE_I2C_ERROR if the read request failed.\n\n\n\nint\n \nread\n( \nAcknowledgeType\n ack)\n\n\nDescription\n\n\nIssues a single-byte read command.\n\n\nBlocks the calling thread until complete.\n\n\nParameters\n\n\n\n\nAcknowledgeType\n ack\n\n\n\n\nReturns\n\n\nthe byte on success or DEVICE_I2C_ERROR if the read request failed.\n\n\nstart\n\n\n\n\nint\n \nstart\n()\n\n\nDescription\n\n\nReturns\n\n\nDEVICE_OK on success, or an error code\n\n\nstop\n\n\n\n\nint\n \nstop\n()\n\n\nDescription\n\n\nReturns\n\n\nDEVICE_OK on success, or an error code", 
+            "title": "i2c"
+        }, 
+        {
+            "location": "/cplay/i2c/#cplayi2c", 
+            "text": "", 
+            "title": "cplay.i2c"
+        }, 
+        {
+            "location": "/cplay/i2c/#overview", 
+            "text": "i2c is a very common, widely used protocol for communicating with other devices\nover a wire. i2c uses a very simple addressing scheme to access these other\ndevices. The  accelerometer  uses I2C to communicate information.", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/cplay/i2c/#message-bus-id", 
+            "text": "None.", 
+            "title": "Message Bus ID"
+        }, 
+        {
+            "location": "/cplay/i2c/#message-bus-events", 
+            "text": "None.", 
+            "title": "Message Bus Events"
+        }, 
+        {
+            "location": "/cplay/i2c/#api", 
+            "text": "", 
+            "title": "API"
+        }, 
+        {
+            "location": "/cplay/i2c/#constructor", 
+            "text": "", 
+            "title": "Constructor"
+        }, 
+        {
+            "location": "/cplay/i2c/#i2c-codalpin-sda-codalpin-scl", 
+            "text": "", 
+            "title": "I2C( codal::Pin  &amp; sda,  codal::Pin  &amp; scl)"
+        }, 
+        {
+            "location": "/cplay/i2c/#description", 
+            "text": "Constructor.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/i2c/#parameters", 
+            "text": "codal::Pin    sda  codal::Pin    scl", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/i2c/#setfrequency", 
+            "text": "", 
+            "title": "setFrequency"
+        }, 
+        {
+            "location": "/cplay/i2c/#int-setfrequency-uint32_t-frequency", 
+            "text": "", 
+            "title": "int setFrequency( uint32_t frequency)"
+        }, 
+        {
+            "location": "/cplay/i2c/#description_1", 
+            "text": "Set the frequency of the  I2C  interface  frequency  The bus frequency in hertz", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/i2c/#parameters_1", 
+            "text": "uint32_t  frequency - The bus frequency in hertz", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/i2c/#write", 
+            "text": "", 
+            "title": "write"
+        }, 
+        {
+            "location": "/cplay/i2c/#int-write-uint8_t-data", 
+            "text": "", 
+            "title": "int write( uint8_t data)"
+        }, 
+        {
+            "location": "/cplay/i2c/#description_2", 
+            "text": "Issues a standard, 2 byte  I2C  command write to the accelerometer.  Blocks the calling thread until complete.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/i2c/#parameters_2", 
+            "text": "uint8_t  data", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/i2c/#returns", 
+            "text": "DEVICE_OK on success, DEVICE_I2C_ERROR if the write request failed.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/i2c/#read", 
+            "text": "", 
+            "title": "read"
+        }, 
+        {
+            "location": "/cplay/i2c/#int-read", 
+            "text": "", 
+            "title": "int read()"
+        }, 
+        {
+            "location": "/cplay/i2c/#description_3", 
+            "text": "Issues a single-byte read command.  Blocks the calling thread until complete.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/i2c/#returns_1", 
+            "text": "the byte on success or DEVICE_I2C_ERROR if the read request failed.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/i2c/#int-read-acknowledgetype-ack", 
+            "text": "", 
+            "title": "int read( AcknowledgeType ack)"
+        }, 
+        {
+            "location": "/cplay/i2c/#description_4", 
+            "text": "Issues a single-byte read command.  Blocks the calling thread until complete.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/i2c/#parameters_3", 
+            "text": "AcknowledgeType  ack", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/i2c/#returns_2", 
+            "text": "the byte on success or DEVICE_I2C_ERROR if the read request failed.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/i2c/#start", 
+            "text": "", 
+            "title": "start"
+        }, 
+        {
+            "location": "/cplay/i2c/#int-start", 
+            "text": "", 
+            "title": "int start()"
+        }, 
+        {
+            "location": "/cplay/i2c/#description_5", 
+            "text": "", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/i2c/#returns_3", 
+            "text": "DEVICE_OK on success, or an error code", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/i2c/#stop", 
+            "text": "", 
+            "title": "stop"
+        }, 
+        {
+            "location": "/cplay/i2c/#int-stop", 
+            "text": "", 
+            "title": "int stop()"
+        }, 
+        {
+            "location": "/cplay/i2c/#description_6", 
+            "text": "", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/i2c/#returns_4", 
+            "text": "DEVICE_OK on success, or an error code", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/", 
+            "text": "cplay.serial\n\n\nOverview\n\n\nMessage Bus ID\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_ID_SERIAL\n\n\n32\n\n\n\n\n\n\n\n\nMessage Bus Events\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_SERIAL_EVT_DELIM_MATCH\n\n\n1\n\n\n\n\n\n\nDEVICE_SERIAL_EVT_HEAD_MATCH\n\n\n2\n\n\n\n\n\n\nDEVICE_SERIAL_EVT_RX_FULL\n\n\n3\n\n\n\n\n\n\n\n\nNotify Events\n\n\nThese events use the notification channel \nDEVICE_ID_NOTIFY\n, which provides\ngeneral purpose synchronisation.\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_SERIAL_EVT_TX_EMPTY\n\n\n2\n\n\n\n\n\n\n\n\nAPI\n\n\nConstructor\n\n\n\n\nSerial( \nPinName\n tx,  \nPinName\n rx)\n\n\nDescription\n\n\nConstructor. Create an instance of DeviceSerial\n\n\nParameters\n\n\n\n\nPinName\n tx - the  Pin  to be used for transmission\n\n\nPinName\n rx - the  Pin  to be used for receiving data\n\n\n\n\nExample\n\n\n DeviceSerial serial(USBTX, USBRX);\n\n\n\n\n\n\nNote\n\n\nthe default baud rate is 115200. More API details can be found: -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/SerialBase.h -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/RawSerial.h\n\n\n\n\n\n\nSerial( \nPinName\n tx,  \nPinName\n rx,  \nuint8_t\n rxBufferSize)\n\n\nDescription\n\n\nConstructor. Create an instance of DeviceSerial\n\n\nParameters\n\n\n\n\nPinName\n tx - the  Pin  to be used for transmission\n\n\nPinName\n rx - the  Pin  to be used for receiving data\n\n\nuint8_t\n rxBufferSize - the size of the buffer to be used for receiving bytes\n\n\n\n\nExample\n\n\n DeviceSerial serial(USBTX, USBRX);\n\n\n\n\n\n\nNote\n\n\nthe default baud rate is 115200. More API details can be found: -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/SerialBase.h -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/RawSerial.h\n\n\n\n\n\n\nSerial( \nPinName\n tx,  \nPinName\n rx,  \nuint8_t\n rxBufferSize,  \nuint8_t\n txBufferSize)\n\n\nDescription\n\n\nConstructor. Create an instance of DeviceSerial\n\n\nParameters\n\n\n\n\nPinName\n tx - the  Pin  to be used for transmission\n\n\nPinName\n rx - the  Pin  to be used for receiving data\n\n\nuint8_t\n rxBufferSize - the size of the buffer to be used for receiving bytes\n\n\nuint8_t\n txBufferSize - the size of the buffer to be used for transmitting bytes\n\n\n\n\nExample\n\n\n DeviceSerial serial(USBTX, USBRX);\n\n\n\n\n\n\nNote\n\n\nthe default baud rate is 115200. More API details can be found: -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/SerialBase.h -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/RawSerial.h\n\n\n\n\nsendChar\n\n\n\n\nint\n \nsendChar\n( \nchar\n c)\n\n\nDescription\n\n\nSends a single character over the serial line.\n\n\nc\n\n\nthe character to send\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - the character is copied into the txBuff and returns immediately.\n\n\nSYNC_SPINWAIT - the character is copied into the txBuff and this method\n                will spin (lock up the processor) until the character has\n                been sent.\n\n\nSYNC_SLEEP - the character is copied into the txBuff and the fiber sleeps\n             until the character has been sent. This allows other fibers\n             to continue execution.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nchar\n c - the character to send\n\n\n\n\nReturns\n\n\nthe number of bytes written, or DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission.\n\n\n\nint\n \nsendChar\n( \nchar\n c,  \nSerialMode\n mode)\n\n\nDescription\n\n\nSends a single character over the serial line.\n\n\nc\n\n\nthe character to send\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - the character is copied into the txBuff and returns immediately.\n\n\nSYNC_SPINWAIT - the character is copied into the txBuff and this method\n                will spin (lock up the processor) until the character has\n                been sent.\n\n\nSYNC_SLEEP - the character is copied into the txBuff and the fiber sleeps\n             until the character has been sent. This allows other fibers\n             to continue execution.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nchar\n c - the character to send\n\n\nSerialMode\n mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - the character is copied into the txBuff and returns immediately.\n\n\n\n\nSYNC_SPINWAIT - the character is copied into the txBuff and this method\n                will spin (lock up the processor) until the character has\n                been sent.\n\n\nSYNC_SLEEP - the character is copied into the txBuff and the fiber sleeps\n             until the character has been sent. This allows other fibers\n             to continue execution.\n\n\nReturns\n\n\nthe number of bytes written, or DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission.\n\n\nsend\n\n\n\n\nint\n \nsend\n( \nManagedString\n s)\n\n\nDescription\n\n\nSends a  ManagedString  over the serial line.\n\n\ns\n\n\nthe string to send\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.\n\n\nSYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.\n\n\nSYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nManagedString\n s - the string to send\n\n\n\n\nReturns\n\n\nthe number of bytes written, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission, DEVICE_INVALID_PARAMETER if buffer is invalid, or the given bufferLen is \n= 0.\n\n\n\nint\n \nsend\n( \nManagedString\n s,  \nSerialMode\n mode)\n\n\nDescription\n\n\nSends a  ManagedString  over the serial line.\n\n\ns\n\n\nthe string to send\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.\n\n\nSYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.\n\n\nSYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nManagedString\n s - the string to send\n\n\nSerialMode\n mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.\n\n\n\n\nSYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.\n\n\nSYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.\n\n\nReturns\n\n\nthe number of bytes written, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission, DEVICE_INVALID_PARAMETER if buffer is invalid, or the given bufferLen is \n= 0.\n\n\n\nint\n \nsend\n( \nuint8_t *\n buffer,  \nint\n bufferLen)\n\n\nDescription\n\n\nSends a buffer of known length over the serial line.\n\n\nbuffer\n\n\na pointer to the first character of the buffer\n\n\nlen\n\n\nthe number of bytes that are safely available to read.\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.\n\n\nSYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.\n\n\nSYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nuint8_t *\n buffer - a pointer to the first character of the buffer\n\n\nint\n bufferLen - a pointer to the first character of the buffer\n\n\n\n\nReturns\n\n\nthe number of bytes written, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission, DEVICE_INVALID_PARAMETER if buffer is invalid, or the given bufferLen is \n= 0.\n\n\n\nint\n \nsend\n( \nuint8_t *\n buffer,  \nint\n bufferLen,  \nSerialMode\n mode)\n\n\nDescription\n\n\nSends a buffer of known length over the serial line.\n\n\nbuffer\n\n\na pointer to the first character of the buffer\n\n\nlen\n\n\nthe number of bytes that are safely available to read.\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.\n\n\nSYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.\n\n\nSYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nuint8_t *\n buffer - a pointer to the first character of the buffer\n\n\nint\n bufferLen - a pointer to the first character of the buffer\n\n\nSerialMode\n mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.\n\n\n\n\nSYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.\n\n\nSYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.\n\n\nReturns\n\n\nthe number of bytes written, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission, DEVICE_INVALID_PARAMETER if buffer is invalid, or the given bufferLen is \n= 0.\n\n\nread\n\n\n\n\nint\n \nread\n()\n\n\nDescription\n\n\nReads a single character from the rxBuff\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - A character is read from the rxBuff if available, if there\n        are no characters to be read, a value of DEVICE_NO_DATA is returned immediately.\n\n\nSYNC_SPINWAIT - A character is read from the rxBuff if available, if there\n                are no characters to be read, this method will spin\n                (lock up the processor) until a character is available.\n\n\nSYNC_SLEEP - A character is read from the rxBuff if available, if there\n             are no characters to be read, the calling fiber sleeps\n             until there is a character available.\n\n\nDefaults to SYNC_SLEEP.\n\n\nReturns\n\n\na character, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for reception, DEVICE_NO_RESOURCES if buffer allocation did not complete successfully, or DEVICE_NO_DATA if the rx buffer is empty and the mode given is ASYNC.\n\n\n\nint\n \nread\n( \nSerialMode\n mode)\n\n\nDescription\n\n\nReads a single character from the rxBuff\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - A character is read from the rxBuff if available, if there\n        are no characters to be read, a value of DEVICE_NO_DATA is returned immediately.\n\n\nSYNC_SPINWAIT - A character is read from the rxBuff if available, if there\n                are no characters to be read, this method will spin\n                (lock up the processor) until a character is available.\n\n\nSYNC_SLEEP - A character is read from the rxBuff if available, if there\n             are no characters to be read, the calling fiber sleeps\n             until there is a character available.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nSerialMode\n mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - A character is read from the rxBuff if available, if there\n        are no characters to be read, a value of DEVICE_NO_DATA is returned immediately.\n\n\n\n\nSYNC_SPINWAIT - A character is read from the rxBuff if available, if there\n                are no characters to be read, this method will spin\n                (lock up the processor) until a character is available.\n\n\nSYNC_SLEEP - A character is read from the rxBuff if available, if there\n             are no characters to be read, the calling fiber sleeps\n             until there is a character available.\n\n\nReturns\n\n\na character, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for reception, DEVICE_NO_RESOURCES if buffer allocation did not complete successfully, or DEVICE_NO_DATA if the rx buffer is empty and the mode given is ASYNC.\n\n\n\nManagedString\n \nread\n( \nint\n size)\n\n\nDescription\n\n\nReads multiple characters from the rxBuff and returns them as a  ManagedString\n\n\nsize\n\n\nthe number of characters to read.\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will return\n        a ManagedString with the expected size. Otherwise, it will read however\n        many characters there are available.\n\n\nSYNC_SPINWAIT - If the desired number of characters are available, this will return\n                a ManagedString with the expected size. Otherwise, this method will spin\n                (lock up the processor) until the desired number of characters have been read.\n\n\nSYNC_SLEEP - If the desired number of characters are available, this will return\n             a ManagedString with the expected size. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nint\n size - the number of characters to read.\n\n\n\n\nReturns\n\n\nA  ManagedString , or an empty  ManagedString  if an error was encountered during the read.\n\n\n\nManagedString\n \nread\n( \nint\n size,  \nSerialMode\n mode)\n\n\nDescription\n\n\nReads multiple characters from the rxBuff and returns them as a  ManagedString\n\n\nsize\n\n\nthe number of characters to read.\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will return\n        a ManagedString with the expected size. Otherwise, it will read however\n        many characters there are available.\n\n\nSYNC_SPINWAIT - If the desired number of characters are available, this will return\n                a ManagedString with the expected size. Otherwise, this method will spin\n                (lock up the processor) until the desired number of characters have been read.\n\n\nSYNC_SLEEP - If the desired number of characters are available, this will return\n             a ManagedString with the expected size. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nint\n size - the number of characters to read.\n\n\nSerialMode\n mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will return\n        a ManagedString with the expected size. Otherwise, it will read however\n        many characters there are available.\n\n\n\n\nSYNC_SPINWAIT - If the desired number of characters are available, this will return\n                a ManagedString with the expected size. Otherwise, this method will spin\n                (lock up the processor) until the desired number of characters have been read.\n\n\nSYNC_SLEEP - If the desired number of characters are available, this will return\n             a ManagedString with the expected size. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.\n\n\nReturns\n\n\nA  ManagedString , or an empty  ManagedString  if an error was encountered during the read.\n\n\n\nint\n \nread\n( \nuint8_t *\n buffer,  \nint\n bufferLen)\n\n\nDescription\n\n\nReads multiple characters from the rxBuff and fills a user buffer.\n\n\nbuffer\n\n\na pointer to a user allocated buffer.\n\n\nbufferLen\n\n\nthe amount of data that can be safely stored\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will fill\n        the given buffer. Otherwise, it will fill the buffer with however\n        many characters there are available.\n\n\nSYNC_SPINWAIT - If the desired number of characters are available, this will fill\n                the given buffer. Otherwise, this method will spin (lock up the processor)\n                and fill the buffer until the desired number of characters have been read.\n\n\nSYNC_SLEEP - If the desired number of characters are available, this will fill\n             the given buffer. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nuint8_t *\n buffer - a pointer to a user allocated buffer.\n\n\nint\n bufferLen - the amount of data that can be safely stored\n\n\n\n\nReturns\n\n\nthe number of characters read, or DEVICE_SERIAL_IN_USE if another fiber is using the instance for receiving.\n\n\n\nint\n \nread\n( \nuint8_t *\n buffer,  \nint\n bufferLen,  \nSerialMode\n mode)\n\n\nDescription\n\n\nReads multiple characters from the rxBuff and fills a user buffer.\n\n\nbuffer\n\n\na pointer to a user allocated buffer.\n\n\nbufferLen\n\n\nthe amount of data that can be safely stored\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will fill\n        the given buffer. Otherwise, it will fill the buffer with however\n        many characters there are available.\n\n\nSYNC_SPINWAIT - If the desired number of characters are available, this will fill\n                the given buffer. Otherwise, this method will spin (lock up the processor)\n                and fill the buffer until the desired number of characters have been read.\n\n\nSYNC_SLEEP - If the desired number of characters are available, this will fill\n             the given buffer. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nuint8_t *\n buffer - a pointer to a user allocated buffer.\n\n\nint\n bufferLen - the amount of data that can be safely stored\n\n\nSerialMode\n mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will fill\n        the given buffer. Otherwise, it will fill the buffer with however\n        many characters there are available.\n\n\n\n\nSYNC_SPINWAIT - If the desired number of characters are available, this will fill\n                the given buffer. Otherwise, this method will spin (lock up the processor)\n                and fill the buffer until the desired number of characters have been read.\n\n\nSYNC_SLEEP - If the desired number of characters are available, this will fill\n             the given buffer. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.\n\n\nReturns\n\n\nthe number of characters read, or DEVICE_SERIAL_IN_USE if another fiber is using the instance for receiving.\n\n\nreadUntil\n\n\n\n\nManagedString\n \nreadUntil\n( \nManagedString\n delimeters)\n\n\nDescription\n\n\nReads until one of the delimeters matches a character in the rxBuff\n\n\ndelimeters\n\n\na  ManagedString  containing a sequence of delimeter characters e.g.  ManagedString (\"\\r\\n\")\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If one of the delimeters matches a character already in the rxBuff\n        this method will return a ManagedString up to the delimeter.\n        Otherwise, it will return an Empty ManagedString.\n\n\nSYNC_SPINWAIT - If one of the delimeters matches a character already in the rxBuff\n                this method will return a ManagedString up to the delimeter.\n                Otherwise, this method will spin (lock up the processor) until a\n                received character matches one of the delimeters.\n\n\nSYNC_SLEEP - If one of the delimeters matches a character already in the rxBuff\n             this method will return a ManagedString up to the delimeter.\n             Otherwise, the calling fiber sleeps until a character matching one\n             of the delimeters is seen.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nManagedString\n delimeters - a  ManagedString  containing a sequence of delimeter characters e.g.  ManagedString (\"\\r\\n\")\n\n\n\n\nReturns\n\n\nA  ManagedString  containing the characters up to a delimeter, or an Empty  ManagedString , if another fiber is currently using this instance for reception.\n\n\n\n\nNote\n\n\ndelimeters are matched on a per byte basis.\n\n\n\n\n\n\nManagedString\n \nreadUntil\n( \nManagedString\n delimeters,  \nSerialMode\n mode)\n\n\nDescription\n\n\nReads until one of the delimeters matches a character in the rxBuff\n\n\ndelimeters\n\n\na  ManagedString  containing a sequence of delimeter characters e.g.  ManagedString (\"\\r\\n\")\n\n\nmode\n\n\nthe selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If one of the delimeters matches a character already in the rxBuff\n        this method will return a ManagedString up to the delimeter.\n        Otherwise, it will return an Empty ManagedString.\n\n\nSYNC_SPINWAIT - If one of the delimeters matches a character already in the rxBuff\n                this method will return a ManagedString up to the delimeter.\n                Otherwise, this method will spin (lock up the processor) until a\n                received character matches one of the delimeters.\n\n\nSYNC_SLEEP - If one of the delimeters matches a character already in the rxBuff\n             this method will return a ManagedString up to the delimeter.\n             Otherwise, the calling fiber sleeps until a character matching one\n             of the delimeters is seen.\n\n\nDefaults to SYNC_SLEEP.\n\n\nParameters\n\n\n\n\nManagedString\n delimeters - a  ManagedString  containing a sequence of delimeter characters e.g.  ManagedString (\"\\r\\n\")\n\n\nSerialMode\n mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If one of the delimeters matches a character already in the rxBuff\n        this method will return a ManagedString up to the delimeter.\n        Otherwise, it will return an Empty ManagedString.\n\n\n\n\nSYNC_SPINWAIT - If one of the delimeters matches a character already in the rxBuff\n                this method will return a ManagedString up to the delimeter.\n                Otherwise, this method will spin (lock up the processor) until a\n                received character matches one of the delimeters.\n\n\nSYNC_SLEEP - If one of the delimeters matches a character already in the rxBuff\n             this method will return a ManagedString up to the delimeter.\n             Otherwise, the calling fiber sleeps until a character matching one\n             of the delimeters is seen.\n\n\nReturns\n\n\nA  ManagedString  containing the characters up to a delimeter, or an Empty  ManagedString , if another fiber is currently using this instance for reception.\n\n\n\n\nNote\n\n\ndelimeters are matched on a per byte basis.\n\n\n\n\nbaud\n\n\n\n\nint\n \nbaud\n( \nint\n baudrate)\n\n\nDescription\n\n\nA wrapper around the inherited method \"baud\" so we can trap the baud rate as it changes and restore it if  redirect()  is called.\n\n\nParameters\n\n\n\n\nint\n baudrate - the new baudrate. See:\n https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/targets/hal/TARGET_NORDIC/TARGET_MCU_NRF51822/serial_api.c  for permitted baud rates.\n\n\n\n\nReturns\n\n\nDEVICE_INVALID_PARAMETER if baud rate is less than 0, otherwise DEVICE_OK.\n\n\n\n\nNote\n\n\nthe underlying implementation chooses the first allowable rate at or above that requested.\n\n\n\n\nredirect\n\n\n\n\nint\n \nredirect\n( \nPinName\n tx,  \nPinName\n rx)\n\n\nDescription\n\n\nA way of dynamically configuring the serial instance to use pins other than USBTX and USBRX.\n\n\nParameters\n\n\n\n\nPinName\n tx - the new transmission pin.\n\n\nPinName\n rx - the new reception pin.\n\n\n\n\nReturns\n\n\nDEVICE_SERIAL_IN_USE if another fiber is currently transmitting or receiving, otherwise DEVICE_OK.\n\n\neventAfter\n\n\n\n\nint\n \neventAfter\n( \nint\n len)\n\n\nDescription\n\n\nConfigures an event to be fired after \"len\" characters.\n\n\nWill generate an event with the ID: DEVICE_ID_SERIAL and the value DEVICE_SERIAL_EVT_HEAD_MATCH.\n\n\nParameters\n\n\n\n\nint\n len - the number of characters to wait before triggering the event.\n\n\n\n\nReturns\n\n\nDEVICE_INVALID_PARAMETER if the mode given is SYNC_SPINWAIT, otherwise DEVICE_OK.\n\n\n\nint\n \neventAfter\n( \nint\n len,  \nSerialMode\n mode)\n\n\nDescription\n\n\nConfigures an event to be fired after \"len\" characters.\n\n\nWill generate an event with the ID: DEVICE_ID_SERIAL and the value DEVICE_SERIAL_EVT_HEAD_MATCH.\n\n\nParameters\n\n\n\n\nint\n len - the number of characters to wait before triggering the event.\n\n\nSerialMode\n mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - Will configure the event and return immediately.\n\n\n\n\nSYNC_SPINWAIT - will return DEVICE_INVALID_PARAMETER\n\n\nSYNC_SLEEP - Will configure the event and block the current fiber until the\n             event is received.\n\n\nReturns\n\n\nDEVICE_INVALID_PARAMETER if the mode given is SYNC_SPINWAIT, otherwise DEVICE_OK.\n\n\neventOn\n\n\n\n\nint\n \neventOn\n( \nManagedString\n delimeters)\n\n\nDescription\n\n\nConfigures an event to be fired on a match with one of the delimeters.\n\n\nWill generate an event with the ID: DEVICE_ID_SERIAL and the value DEVICE_SERIAL_EVT_DELIM_MATCH.\n\n\nParameters\n\n\n\n\nManagedString\n delimeters - the characters to match received characters against e.g.  ManagedString (\"\\n\")\n\n\n\n\nReturns\n\n\nDEVICE_INVALID_PARAMETER if the mode given is SYNC_SPINWAIT, otherwise DEVICE_OK.\n\n\n\n\nNote\n\n\ndelimeters are matched on a per byte basis.\n\n\n\n\n\n\nint\n \neventOn\n( \nManagedString\n delimeters,  \nSerialMode\n mode)\n\n\nDescription\n\n\nConfigures an event to be fired on a match with one of the delimeters.\n\n\nWill generate an event with the ID: DEVICE_ID_SERIAL and the value DEVICE_SERIAL_EVT_DELIM_MATCH.\n\n\nParameters\n\n\n\n\nManagedString\n delimeters - the characters to match received characters against e.g.  ManagedString (\"\\n\")\n\n\nSerialMode\n mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - Will configure the event and return immediately.\n\n\n\n\nSYNC_SPINWAIT - will return DEVICE_INVALID_PARAMETER\n\n\nSYNC_SLEEP - Will configure the event and block the current fiber until the\n             event is received.\n\n\nReturns\n\n\nDEVICE_INVALID_PARAMETER if the mode given is SYNC_SPINWAIT, otherwise DEVICE_OK.\n\n\n\n\nNote\n\n\ndelimeters are matched on a per byte basis.\n\n\n\n\nisReadable\n\n\n\n\nint\n \nisReadable\n()\n\n\nDescription\n\n\nDetermines whether there is any data waiting in our Rx buffer.\n\n\nReturns\n\n\n1 if we have space, 0 if we do not.\n\n\n\n\nNote\n\n\nWe do not wrap the super's readable() method as we don't want to interfere with communities that use manual calls to serial.readable().\n\n\n\n\nisWriteable\n\n\n\n\nint\n \nisWriteable\n()\n\n\nDescription\n\n\nDetermines if we have space in our txBuff.\n\n\nReturns\n\n\n1 if we have space, 0 if we do not.\n\n\n\n\nNote\n\n\nWe do not wrap the super's writeable() method as we don't want to interfere with communities that use manual calls to serial.writeable().\n\n\n\n\nsetRxBufferSize\n\n\n\n\nint\n \nsetRxBufferSize\n( \nuint8_t\n size)\n\n\nDescription\n\n\nReconfigures the size of our rxBuff\n\n\nParameters\n\n\n\n\nuint8_t\n size - the new size for our rxBuff\n\n\n\n\nReturns\n\n\nDEVICE_SERIAL_IN_USE if another fiber is currently using this instance for reception, otherwise DEVICE_OK.\n\n\nsetTxBufferSize\n\n\n\n\nint\n \nsetTxBufferSize\n( \nuint8_t\n size)\n\n\nDescription\n\n\nReconfigures the size of our txBuff\n\n\nParameters\n\n\n\n\nuint8_t\n size - the new size for our txBuff\n\n\n\n\nReturns\n\n\nDEVICE_SERIAL_IN_USE if another fiber is currently using this instance for transmission, otherwise DEVICE_OK.\n\n\ngetRxBufferSize\n\n\n\n\nint\n \ngetRxBufferSize\n()\n\n\nDescription\n\n\nThe size of our rx buffer in bytes.\n\n\nReturns\n\n\nthe current size of rxBuff in bytes\n\n\ngetTxBufferSize\n\n\n\n\nint\n \ngetTxBufferSize\n()\n\n\nDescription\n\n\nThe size of our tx buffer in bytes.\n\n\nReturns\n\n\nthe current size of txBuff in bytes\n\n\nclearRxBuffer\n\n\n\n\nint\n \nclearRxBuffer\n()\n\n\nDescription\n\n\nSets the tail to match the head of our circular buffer for reception, effectively clearing the reception buffer.\n\n\nReturns\n\n\nDEVICE_SERIAL_IN_USE if another fiber is currently using this instance for reception, otherwise DEVICE_OK.\n\n\nclearTxBuffer\n\n\n\n\nint\n \nclearTxBuffer\n()\n\n\nDescription\n\n\nSets the tail to match the head of our circular buffer for transmission, effectively clearing the transmission buffer.\n\n\nReturns\n\n\nDEVICE_SERIAL_IN_USE if another fiber is currently using this instance for transmission, otherwise DEVICE_OK.\n\n\nrxBufferedSize\n\n\n\n\nint\n \nrxBufferedSize\n()\n\n\nDescription\n\n\nThe number of bytes currently stored in our rx buffer waiting to be digested, by the user.\n\n\nReturns\n\n\nThe currently buffered number of bytes in our rxBuff.\n\n\ntxBufferedSize\n\n\n\n\nint\n \ntxBufferedSize\n()\n\n\nDescription\n\n\nThe number of bytes currently stored in our tx buffer waiting to be transmitted by the hardware.\n\n\nReturns\n\n\nThe currently buffered number of bytes in our txBuff.\n\n\nrxInUse\n\n\n\n\nint\n \nrxInUse\n()\n\n\nDescription\n\n\nDetermines if the serial bus is currently in use by another fiber for reception.\n\n\nReturns\n\n\nThe state of our mutex lock for reception.\n\n\n\n\nNote\n\n\nOnly one fiber can call read at a time\n\n\n\n\ntxInUse\n\n\n\n\nint\n \ntxInUse\n()\n\n\nDescription\n\n\nDetermines if the serial bus is currently in use by another fiber for transmission.\n\n\nReturns\n\n\nThe state of our mutex lock for transmition.\n\n\n\n\nNote\n\n\nOnly one fiber can call send at a time\n\n\n\n\ndetach\n\n\n\n\nint\n \ndetach\n( \nSerialInterruptType\n interruptType)\n\n\nDescription\n\n\nDetaches a previously configured interrupt\n\n\nParameters\n\n\n\n\nSerialInterruptType\n interruptType - one of RxInterrupt or TxInterrupt\n\n\n\n\nReturns\n\n\nDEVICE_OK on success.", 
+            "title": "serial"
+        }, 
+        {
+            "location": "/cplay/serial/#cplayserial", 
+            "text": "", 
+            "title": "cplay.serial"
+        }, 
+        {
+            "location": "/cplay/serial/#overview", 
+            "text": "", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/cplay/serial/#message-bus-id", 
+            "text": "Constant  Value      DEVICE_ID_SERIAL  32", 
+            "title": "Message Bus ID"
+        }, 
+        {
+            "location": "/cplay/serial/#message-bus-events", 
+            "text": "Constant  Value      DEVICE_SERIAL_EVT_DELIM_MATCH  1    DEVICE_SERIAL_EVT_HEAD_MATCH  2    DEVICE_SERIAL_EVT_RX_FULL  3", 
+            "title": "Message Bus Events"
+        }, 
+        {
+            "location": "/cplay/serial/#notify-events", 
+            "text": "These events use the notification channel  DEVICE_ID_NOTIFY , which provides\ngeneral purpose synchronisation.     Constant  Value      DEVICE_SERIAL_EVT_TX_EMPTY  2", 
+            "title": "Notify Events"
+        }, 
+        {
+            "location": "/cplay/serial/#api", 
+            "text": "", 
+            "title": "API"
+        }, 
+        {
+            "location": "/cplay/serial/#constructor", 
+            "text": "", 
+            "title": "Constructor"
+        }, 
+        {
+            "location": "/cplay/serial/#serial-pinname-tx-pinname-rx", 
+            "text": "", 
+            "title": "Serial( PinName tx,  PinName rx)"
+        }, 
+        {
+            "location": "/cplay/serial/#description", 
+            "text": "Constructor. Create an instance of DeviceSerial", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters", 
+            "text": "PinName  tx - the  Pin  to be used for transmission  PinName  rx - the  Pin  to be used for receiving data", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#example", 
+            "text": "DeviceSerial serial(USBTX, USBRX);   Note  the default baud rate is 115200. More API details can be found: -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/SerialBase.h -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/RawSerial.h", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/serial/#serial-pinname-tx-pinname-rx-uint8_t-rxbuffersize", 
+            "text": "", 
+            "title": "Serial( PinName tx,  PinName rx,  uint8_t rxBufferSize)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_1", 
+            "text": "Constructor. Create an instance of DeviceSerial", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_1", 
+            "text": "PinName  tx - the  Pin  to be used for transmission  PinName  rx - the  Pin  to be used for receiving data  uint8_t  rxBufferSize - the size of the buffer to be used for receiving bytes", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#example_1", 
+            "text": "DeviceSerial serial(USBTX, USBRX);   Note  the default baud rate is 115200. More API details can be found: -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/SerialBase.h -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/RawSerial.h", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/serial/#serial-pinname-tx-pinname-rx-uint8_t-rxbuffersize-uint8_t-txbuffersize", 
+            "text": "", 
+            "title": "Serial( PinName tx,  PinName rx,  uint8_t rxBufferSize,  uint8_t txBufferSize)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_2", 
+            "text": "Constructor. Create an instance of DeviceSerial", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_2", 
+            "text": "PinName  tx - the  Pin  to be used for transmission  PinName  rx - the  Pin  to be used for receiving data  uint8_t  rxBufferSize - the size of the buffer to be used for receiving bytes  uint8_t  txBufferSize - the size of the buffer to be used for transmitting bytes", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#example_2", 
+            "text": "DeviceSerial serial(USBTX, USBRX);   Note  the default baud rate is 115200. More API details can be found: -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/SerialBase.h -https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/api/RawSerial.h", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/serial/#sendchar", 
+            "text": "", 
+            "title": "sendChar"
+        }, 
+        {
+            "location": "/cplay/serial/#int-sendchar-char-c", 
+            "text": "", 
+            "title": "int sendChar( char c)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_3", 
+            "text": "Sends a single character over the serial line.  c  the character to send  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - the character is copied into the txBuff and returns immediately.  SYNC_SPINWAIT - the character is copied into the txBuff and this method\n                will spin (lock up the processor) until the character has\n                been sent.  SYNC_SLEEP - the character is copied into the txBuff and the fiber sleeps\n             until the character has been sent. This allows other fibers\n             to continue execution.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_3", 
+            "text": "char  c - the character to send", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns", 
+            "text": "the number of bytes written, or DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#int-sendchar-char-c-serialmode-mode", 
+            "text": "", 
+            "title": "int sendChar( char c,  SerialMode mode)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_4", 
+            "text": "Sends a single character over the serial line.  c  the character to send  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - the character is copied into the txBuff and returns immediately.  SYNC_SPINWAIT - the character is copied into the txBuff and this method\n                will spin (lock up the processor) until the character has\n                been sent.  SYNC_SLEEP - the character is copied into the txBuff and the fiber sleeps\n             until the character has been sent. This allows other fibers\n             to continue execution.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_4", 
+            "text": "char  c - the character to send  SerialMode  mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - the character is copied into the txBuff and returns immediately.   SYNC_SPINWAIT - the character is copied into the txBuff and this method\n                will spin (lock up the processor) until the character has\n                been sent.  SYNC_SLEEP - the character is copied into the txBuff and the fiber sleeps\n             until the character has been sent. This allows other fibers\n             to continue execution.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_1", 
+            "text": "the number of bytes written, or DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#send", 
+            "text": "", 
+            "title": "send"
+        }, 
+        {
+            "location": "/cplay/serial/#int-send-managedstring-s", 
+            "text": "", 
+            "title": "int send( ManagedString s)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_5", 
+            "text": "Sends a  ManagedString  over the serial line.  s  the string to send  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.  SYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.  SYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_5", 
+            "text": "ManagedString  s - the string to send", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_2", 
+            "text": "the number of bytes written, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission, DEVICE_INVALID_PARAMETER if buffer is invalid, or the given bufferLen is  = 0.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#int-send-managedstring-s-serialmode-mode", 
+            "text": "", 
+            "title": "int send( ManagedString s,  SerialMode mode)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_6", 
+            "text": "Sends a  ManagedString  over the serial line.  s  the string to send  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.  SYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.  SYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_6", 
+            "text": "ManagedString  s - the string to send  SerialMode  mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.   SYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.  SYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_3", 
+            "text": "the number of bytes written, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission, DEVICE_INVALID_PARAMETER if buffer is invalid, or the given bufferLen is  = 0.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#int-send-uint8_t-42-buffer-int-bufferlen", 
+            "text": "", 
+            "title": "int send( uint8_t * buffer,  int bufferLen)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_7", 
+            "text": "Sends a buffer of known length over the serial line.  buffer  a pointer to the first character of the buffer  len  the number of bytes that are safely available to read.  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.  SYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.  SYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_7", 
+            "text": "uint8_t *  buffer - a pointer to the first character of the buffer  int  bufferLen - a pointer to the first character of the buffer", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_4", 
+            "text": "the number of bytes written, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission, DEVICE_INVALID_PARAMETER if buffer is invalid, or the given bufferLen is  = 0.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#int-send-uint8_t-42-buffer-int-bufferlen-serialmode-mode", 
+            "text": "", 
+            "title": "int send( uint8_t * buffer,  int bufferLen,  SerialMode mode)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_8", 
+            "text": "Sends a buffer of known length over the serial line.  buffer  a pointer to the first character of the buffer  len  the number of bytes that are safely available to read.  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.  SYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.  SYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_8", 
+            "text": "uint8_t *  buffer - a pointer to the first character of the buffer  int  bufferLen - a pointer to the first character of the buffer  SerialMode  mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - bytes are copied into the txBuff and returns immediately.   SYNC_SPINWAIT - bytes are copied into the txBuff and this method\n                will spin (lock up the processor) until all bytes\n                have been sent.  SYNC_SLEEP - bytes are copied into the txBuff and the fiber sleeps\n             until all bytes have been sent. This allows other fibers\n             to continue execution.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_5", 
+            "text": "the number of bytes written, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for transmission, DEVICE_INVALID_PARAMETER if buffer is invalid, or the given bufferLen is  = 0.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#read", 
+            "text": "", 
+            "title": "read"
+        }, 
+        {
+            "location": "/cplay/serial/#int-read", 
+            "text": "", 
+            "title": "int read()"
+        }, 
+        {
+            "location": "/cplay/serial/#description_9", 
+            "text": "Reads a single character from the rxBuff  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - A character is read from the rxBuff if available, if there\n        are no characters to be read, a value of DEVICE_NO_DATA is returned immediately.  SYNC_SPINWAIT - A character is read from the rxBuff if available, if there\n                are no characters to be read, this method will spin\n                (lock up the processor) until a character is available.  SYNC_SLEEP - A character is read from the rxBuff if available, if there\n             are no characters to be read, the calling fiber sleeps\n             until there is a character available.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_6", 
+            "text": "a character, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for reception, DEVICE_NO_RESOURCES if buffer allocation did not complete successfully, or DEVICE_NO_DATA if the rx buffer is empty and the mode given is ASYNC.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#int-read-serialmode-mode", 
+            "text": "", 
+            "title": "int read( SerialMode mode)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_10", 
+            "text": "Reads a single character from the rxBuff  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - A character is read from the rxBuff if available, if there\n        are no characters to be read, a value of DEVICE_NO_DATA is returned immediately.  SYNC_SPINWAIT - A character is read from the rxBuff if available, if there\n                are no characters to be read, this method will spin\n                (lock up the processor) until a character is available.  SYNC_SLEEP - A character is read from the rxBuff if available, if there\n             are no characters to be read, the calling fiber sleeps\n             until there is a character available.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_9", 
+            "text": "SerialMode  mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - A character is read from the rxBuff if available, if there\n        are no characters to be read, a value of DEVICE_NO_DATA is returned immediately.   SYNC_SPINWAIT - A character is read from the rxBuff if available, if there\n                are no characters to be read, this method will spin\n                (lock up the processor) until a character is available.  SYNC_SLEEP - A character is read from the rxBuff if available, if there\n             are no characters to be read, the calling fiber sleeps\n             until there is a character available.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_7", 
+            "text": "a character, DEVICE_SERIAL_IN_USE if another fiber is using the serial instance for reception, DEVICE_NO_RESOURCES if buffer allocation did not complete successfully, or DEVICE_NO_DATA if the rx buffer is empty and the mode given is ASYNC.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#managedstring-read-int-size", 
+            "text": "", 
+            "title": "ManagedString read( int size)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_11", 
+            "text": "Reads multiple characters from the rxBuff and returns them as a  ManagedString  size  the number of characters to read.  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will return\n        a ManagedString with the expected size. Otherwise, it will read however\n        many characters there are available.  SYNC_SPINWAIT - If the desired number of characters are available, this will return\n                a ManagedString with the expected size. Otherwise, this method will spin\n                (lock up the processor) until the desired number of characters have been read.  SYNC_SLEEP - If the desired number of characters are available, this will return\n             a ManagedString with the expected size. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_10", 
+            "text": "int  size - the number of characters to read.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_8", 
+            "text": "A  ManagedString , or an empty  ManagedString  if an error was encountered during the read.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#managedstring-read-int-size-serialmode-mode", 
+            "text": "", 
+            "title": "ManagedString read( int size,  SerialMode mode)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_12", 
+            "text": "Reads multiple characters from the rxBuff and returns them as a  ManagedString  size  the number of characters to read.  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will return\n        a ManagedString with the expected size. Otherwise, it will read however\n        many characters there are available.  SYNC_SPINWAIT - If the desired number of characters are available, this will return\n                a ManagedString with the expected size. Otherwise, this method will spin\n                (lock up the processor) until the desired number of characters have been read.  SYNC_SLEEP - If the desired number of characters are available, this will return\n             a ManagedString with the expected size. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_11", 
+            "text": "int  size - the number of characters to read.  SerialMode  mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will return\n        a ManagedString with the expected size. Otherwise, it will read however\n        many characters there are available.   SYNC_SPINWAIT - If the desired number of characters are available, this will return\n                a ManagedString with the expected size. Otherwise, this method will spin\n                (lock up the processor) until the desired number of characters have been read.  SYNC_SLEEP - If the desired number of characters are available, this will return\n             a ManagedString with the expected size. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_9", 
+            "text": "A  ManagedString , or an empty  ManagedString  if an error was encountered during the read.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#int-read-uint8_t-42-buffer-int-bufferlen", 
+            "text": "", 
+            "title": "int read( uint8_t * buffer,  int bufferLen)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_13", 
+            "text": "Reads multiple characters from the rxBuff and fills a user buffer.  buffer  a pointer to a user allocated buffer.  bufferLen  the amount of data that can be safely stored  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will fill\n        the given buffer. Otherwise, it will fill the buffer with however\n        many characters there are available.  SYNC_SPINWAIT - If the desired number of characters are available, this will fill\n                the given buffer. Otherwise, this method will spin (lock up the processor)\n                and fill the buffer until the desired number of characters have been read.  SYNC_SLEEP - If the desired number of characters are available, this will fill\n             the given buffer. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_12", 
+            "text": "uint8_t *  buffer - a pointer to a user allocated buffer.  int  bufferLen - the amount of data that can be safely stored", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_10", 
+            "text": "the number of characters read, or DEVICE_SERIAL_IN_USE if another fiber is using the instance for receiving.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#int-read-uint8_t-42-buffer-int-bufferlen-serialmode-mode", 
+            "text": "", 
+            "title": "int read( uint8_t * buffer,  int bufferLen,  SerialMode mode)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_14", 
+            "text": "Reads multiple characters from the rxBuff and fills a user buffer.  buffer  a pointer to a user allocated buffer.  bufferLen  the amount of data that can be safely stored  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will fill\n        the given buffer. Otherwise, it will fill the buffer with however\n        many characters there are available.  SYNC_SPINWAIT - If the desired number of characters are available, this will fill\n                the given buffer. Otherwise, this method will spin (lock up the processor)\n                and fill the buffer until the desired number of characters have been read.  SYNC_SLEEP - If the desired number of characters are available, this will fill\n             the given buffer. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_13", 
+            "text": "uint8_t *  buffer - a pointer to a user allocated buffer.  int  bufferLen - the amount of data that can be safely stored  SerialMode  mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If the desired number of characters are available, this will fill\n        the given buffer. Otherwise, it will fill the buffer with however\n        many characters there are available.   SYNC_SPINWAIT - If the desired number of characters are available, this will fill\n                the given buffer. Otherwise, this method will spin (lock up the processor)\n                and fill the buffer until the desired number of characters have been read.  SYNC_SLEEP - If the desired number of characters are available, this will fill\n             the given buffer. Otherwise, the calling fiber sleeps\n             until the desired number of characters have been read.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_11", 
+            "text": "the number of characters read, or DEVICE_SERIAL_IN_USE if another fiber is using the instance for receiving.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#readuntil", 
+            "text": "", 
+            "title": "readUntil"
+        }, 
+        {
+            "location": "/cplay/serial/#managedstring-readuntil-managedstring-delimeters", 
+            "text": "", 
+            "title": "ManagedString readUntil( ManagedString delimeters)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_15", 
+            "text": "Reads until one of the delimeters matches a character in the rxBuff  delimeters  a  ManagedString  containing a sequence of delimeter characters e.g.  ManagedString (\"\\r\\n\")  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If one of the delimeters matches a character already in the rxBuff\n        this method will return a ManagedString up to the delimeter.\n        Otherwise, it will return an Empty ManagedString.  SYNC_SPINWAIT - If one of the delimeters matches a character already in the rxBuff\n                this method will return a ManagedString up to the delimeter.\n                Otherwise, this method will spin (lock up the processor) until a\n                received character matches one of the delimeters.  SYNC_SLEEP - If one of the delimeters matches a character already in the rxBuff\n             this method will return a ManagedString up to the delimeter.\n             Otherwise, the calling fiber sleeps until a character matching one\n             of the delimeters is seen.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_14", 
+            "text": "ManagedString  delimeters - a  ManagedString  containing a sequence of delimeter characters e.g.  ManagedString (\"\\r\\n\")", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_12", 
+            "text": "A  ManagedString  containing the characters up to a delimeter, or an Empty  ManagedString , if another fiber is currently using this instance for reception.   Note  delimeters are matched on a per byte basis.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#managedstring-readuntil-managedstring-delimeters-serialmode-mode", 
+            "text": "", 
+            "title": "ManagedString readUntil( ManagedString delimeters,  SerialMode mode)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_16", 
+            "text": "Reads until one of the delimeters matches a character in the rxBuff  delimeters  a  ManagedString  containing a sequence of delimeter characters e.g.  ManagedString (\"\\r\\n\")  mode  the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If one of the delimeters matches a character already in the rxBuff\n        this method will return a ManagedString up to the delimeter.\n        Otherwise, it will return an Empty ManagedString.  SYNC_SPINWAIT - If one of the delimeters matches a character already in the rxBuff\n                this method will return a ManagedString up to the delimeter.\n                Otherwise, this method will spin (lock up the processor) until a\n                received character matches one of the delimeters.  SYNC_SLEEP - If one of the delimeters matches a character already in the rxBuff\n             this method will return a ManagedString up to the delimeter.\n             Otherwise, the calling fiber sleeps until a character matching one\n             of the delimeters is seen.  Defaults to SYNC_SLEEP.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_15", 
+            "text": "ManagedString  delimeters - a  ManagedString  containing a sequence of delimeter characters e.g.  ManagedString (\"\\r\\n\")  SerialMode  mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - If one of the delimeters matches a character already in the rxBuff\n        this method will return a ManagedString up to the delimeter.\n        Otherwise, it will return an Empty ManagedString.   SYNC_SPINWAIT - If one of the delimeters matches a character already in the rxBuff\n                this method will return a ManagedString up to the delimeter.\n                Otherwise, this method will spin (lock up the processor) until a\n                received character matches one of the delimeters.  SYNC_SLEEP - If one of the delimeters matches a character already in the rxBuff\n             this method will return a ManagedString up to the delimeter.\n             Otherwise, the calling fiber sleeps until a character matching one\n             of the delimeters is seen.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_13", 
+            "text": "A  ManagedString  containing the characters up to a delimeter, or an Empty  ManagedString , if another fiber is currently using this instance for reception.   Note  delimeters are matched on a per byte basis.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#baud", 
+            "text": "", 
+            "title": "baud"
+        }, 
+        {
+            "location": "/cplay/serial/#int-baud-int-baudrate", 
+            "text": "", 
+            "title": "int baud( int baudrate)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_17", 
+            "text": "A wrapper around the inherited method \"baud\" so we can trap the baud rate as it changes and restore it if  redirect()  is called.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_16", 
+            "text": "int  baudrate - the new baudrate. See:\n https://github.com/mbedmicro/mbed/blob/master/libraries/mbed/targets/hal/TARGET_NORDIC/TARGET_MCU_NRF51822/serial_api.c  for permitted baud rates.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_14", 
+            "text": "DEVICE_INVALID_PARAMETER if baud rate is less than 0, otherwise DEVICE_OK.   Note  the underlying implementation chooses the first allowable rate at or above that requested.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#redirect", 
+            "text": "", 
+            "title": "redirect"
+        }, 
+        {
+            "location": "/cplay/serial/#int-redirect-pinname-tx-pinname-rx", 
+            "text": "", 
+            "title": "int redirect( PinName tx,  PinName rx)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_18", 
+            "text": "A way of dynamically configuring the serial instance to use pins other than USBTX and USBRX.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_17", 
+            "text": "PinName  tx - the new transmission pin.  PinName  rx - the new reception pin.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_15", 
+            "text": "DEVICE_SERIAL_IN_USE if another fiber is currently transmitting or receiving, otherwise DEVICE_OK.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#eventafter", 
+            "text": "", 
+            "title": "eventAfter"
+        }, 
+        {
+            "location": "/cplay/serial/#int-eventafter-int-len", 
+            "text": "", 
+            "title": "int eventAfter( int len)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_19", 
+            "text": "Configures an event to be fired after \"len\" characters.  Will generate an event with the ID: DEVICE_ID_SERIAL and the value DEVICE_SERIAL_EVT_HEAD_MATCH.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_18", 
+            "text": "int  len - the number of characters to wait before triggering the event.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_16", 
+            "text": "DEVICE_INVALID_PARAMETER if the mode given is SYNC_SPINWAIT, otherwise DEVICE_OK.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#int-eventafter-int-len-serialmode-mode", 
+            "text": "", 
+            "title": "int eventAfter( int len,  SerialMode mode)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_20", 
+            "text": "Configures an event to be fired after \"len\" characters.  Will generate an event with the ID: DEVICE_ID_SERIAL and the value DEVICE_SERIAL_EVT_HEAD_MATCH.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_19", 
+            "text": "int  len - the number of characters to wait before triggering the event.  SerialMode  mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - Will configure the event and return immediately.   SYNC_SPINWAIT - will return DEVICE_INVALID_PARAMETER  SYNC_SLEEP - Will configure the event and block the current fiber until the\n             event is received.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_17", 
+            "text": "DEVICE_INVALID_PARAMETER if the mode given is SYNC_SPINWAIT, otherwise DEVICE_OK.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#eventon", 
+            "text": "", 
+            "title": "eventOn"
+        }, 
+        {
+            "location": "/cplay/serial/#int-eventon-managedstring-delimeters", 
+            "text": "", 
+            "title": "int eventOn( ManagedString delimeters)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_21", 
+            "text": "Configures an event to be fired on a match with one of the delimeters.  Will generate an event with the ID: DEVICE_ID_SERIAL and the value DEVICE_SERIAL_EVT_DELIM_MATCH.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_20", 
+            "text": "ManagedString  delimeters - the characters to match received characters against e.g.  ManagedString (\"\\n\")", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_18", 
+            "text": "DEVICE_INVALID_PARAMETER if the mode given is SYNC_SPINWAIT, otherwise DEVICE_OK.   Note  delimeters are matched on a per byte basis.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#int-eventon-managedstring-delimeters-serialmode-mode", 
+            "text": "", 
+            "title": "int eventOn( ManagedString delimeters,  SerialMode mode)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_22", 
+            "text": "Configures an event to be fired on a match with one of the delimeters.  Will generate an event with the ID: DEVICE_ID_SERIAL and the value DEVICE_SERIAL_EVT_DELIM_MATCH.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_21", 
+            "text": "ManagedString  delimeters - the characters to match received characters against e.g.  ManagedString (\"\\n\")  SerialMode  mode - the selected mode, one of: ASYNC, SYNC_SPINWAIT, SYNC_SLEEP. Each mode gives a different behaviour:  ASYNC - Will configure the event and return immediately.   SYNC_SPINWAIT - will return DEVICE_INVALID_PARAMETER  SYNC_SLEEP - Will configure the event and block the current fiber until the\n             event is received.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_19", 
+            "text": "DEVICE_INVALID_PARAMETER if the mode given is SYNC_SPINWAIT, otherwise DEVICE_OK.   Note  delimeters are matched on a per byte basis.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#isreadable", 
+            "text": "", 
+            "title": "isReadable"
+        }, 
+        {
+            "location": "/cplay/serial/#int-isreadable", 
+            "text": "", 
+            "title": "int isReadable()"
+        }, 
+        {
+            "location": "/cplay/serial/#description_23", 
+            "text": "Determines whether there is any data waiting in our Rx buffer.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_20", 
+            "text": "1 if we have space, 0 if we do not.   Note  We do not wrap the super's readable() method as we don't want to interfere with communities that use manual calls to serial.readable().", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#iswriteable", 
+            "text": "", 
+            "title": "isWriteable"
+        }, 
+        {
+            "location": "/cplay/serial/#int-iswriteable", 
+            "text": "", 
+            "title": "int isWriteable()"
+        }, 
+        {
+            "location": "/cplay/serial/#description_24", 
+            "text": "Determines if we have space in our txBuff.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_21", 
+            "text": "1 if we have space, 0 if we do not.   Note  We do not wrap the super's writeable() method as we don't want to interfere with communities that use manual calls to serial.writeable().", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#setrxbuffersize", 
+            "text": "", 
+            "title": "setRxBufferSize"
+        }, 
+        {
+            "location": "/cplay/serial/#int-setrxbuffersize-uint8_t-size", 
+            "text": "", 
+            "title": "int setRxBufferSize( uint8_t size)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_25", 
+            "text": "Reconfigures the size of our rxBuff", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_22", 
+            "text": "uint8_t  size - the new size for our rxBuff", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_22", 
+            "text": "DEVICE_SERIAL_IN_USE if another fiber is currently using this instance for reception, otherwise DEVICE_OK.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#settxbuffersize", 
+            "text": "", 
+            "title": "setTxBufferSize"
+        }, 
+        {
+            "location": "/cplay/serial/#int-settxbuffersize-uint8_t-size", 
+            "text": "", 
+            "title": "int setTxBufferSize( uint8_t size)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_26", 
+            "text": "Reconfigures the size of our txBuff", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_23", 
+            "text": "uint8_t  size - the new size for our txBuff", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_23", 
+            "text": "DEVICE_SERIAL_IN_USE if another fiber is currently using this instance for transmission, otherwise DEVICE_OK.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#getrxbuffersize", 
+            "text": "", 
+            "title": "getRxBufferSize"
+        }, 
+        {
+            "location": "/cplay/serial/#int-getrxbuffersize", 
+            "text": "", 
+            "title": "int getRxBufferSize()"
+        }, 
+        {
+            "location": "/cplay/serial/#description_27", 
+            "text": "The size of our rx buffer in bytes.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_24", 
+            "text": "the current size of rxBuff in bytes", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#gettxbuffersize", 
+            "text": "", 
+            "title": "getTxBufferSize"
+        }, 
+        {
+            "location": "/cplay/serial/#int-gettxbuffersize", 
+            "text": "", 
+            "title": "int getTxBufferSize()"
+        }, 
+        {
+            "location": "/cplay/serial/#description_28", 
+            "text": "The size of our tx buffer in bytes.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_25", 
+            "text": "the current size of txBuff in bytes", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#clearrxbuffer", 
+            "text": "", 
+            "title": "clearRxBuffer"
+        }, 
+        {
+            "location": "/cplay/serial/#int-clearrxbuffer", 
+            "text": "", 
+            "title": "int clearRxBuffer()"
+        }, 
+        {
+            "location": "/cplay/serial/#description_29", 
+            "text": "Sets the tail to match the head of our circular buffer for reception, effectively clearing the reception buffer.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_26", 
+            "text": "DEVICE_SERIAL_IN_USE if another fiber is currently using this instance for reception, otherwise DEVICE_OK.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#cleartxbuffer", 
+            "text": "", 
+            "title": "clearTxBuffer"
+        }, 
+        {
+            "location": "/cplay/serial/#int-cleartxbuffer", 
+            "text": "", 
+            "title": "int clearTxBuffer()"
+        }, 
+        {
+            "location": "/cplay/serial/#description_30", 
+            "text": "Sets the tail to match the head of our circular buffer for transmission, effectively clearing the transmission buffer.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_27", 
+            "text": "DEVICE_SERIAL_IN_USE if another fiber is currently using this instance for transmission, otherwise DEVICE_OK.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#rxbufferedsize", 
+            "text": "", 
+            "title": "rxBufferedSize"
+        }, 
+        {
+            "location": "/cplay/serial/#int-rxbufferedsize", 
+            "text": "", 
+            "title": "int rxBufferedSize()"
+        }, 
+        {
+            "location": "/cplay/serial/#description_31", 
+            "text": "The number of bytes currently stored in our rx buffer waiting to be digested, by the user.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_28", 
+            "text": "The currently buffered number of bytes in our rxBuff.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#txbufferedsize", 
+            "text": "", 
+            "title": "txBufferedSize"
+        }, 
+        {
+            "location": "/cplay/serial/#int-txbufferedsize", 
+            "text": "", 
+            "title": "int txBufferedSize()"
+        }, 
+        {
+            "location": "/cplay/serial/#description_32", 
+            "text": "The number of bytes currently stored in our tx buffer waiting to be transmitted by the hardware.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_29", 
+            "text": "The currently buffered number of bytes in our txBuff.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#rxinuse", 
+            "text": "", 
+            "title": "rxInUse"
+        }, 
+        {
+            "location": "/cplay/serial/#int-rxinuse", 
+            "text": "", 
+            "title": "int rxInUse()"
+        }, 
+        {
+            "location": "/cplay/serial/#description_33", 
+            "text": "Determines if the serial bus is currently in use by another fiber for reception.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_30", 
+            "text": "The state of our mutex lock for reception.   Note  Only one fiber can call read at a time", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#txinuse", 
+            "text": "", 
+            "title": "txInUse"
+        }, 
+        {
+            "location": "/cplay/serial/#int-txinuse", 
+            "text": "", 
+            "title": "int txInUse()"
+        }, 
+        {
+            "location": "/cplay/serial/#description_34", 
+            "text": "Determines if the serial bus is currently in use by another fiber for transmission.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_31", 
+            "text": "The state of our mutex lock for transmition.   Note  Only one fiber can call send at a time", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/serial/#detach", 
+            "text": "", 
+            "title": "detach"
+        }, 
+        {
+            "location": "/cplay/serial/#int-detach-serialinterrupttype-interrupttype", 
+            "text": "", 
+            "title": "int detach( SerialInterruptType interruptType)"
+        }, 
+        {
+            "location": "/cplay/serial/#description_35", 
+            "text": "Detaches a previously configured interrupt", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/serial/#parameters_24", 
+            "text": "SerialInterruptType  interruptType - one of RxInterrupt or TxInterrupt", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/serial/#returns_32", 
+            "text": "DEVICE_OK on success.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/messageBus/", 
+            "text": "cplay.messageBus\n\n\nOverview\n\n\nMessage Bus ID\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_ID_MESSAGE_BUS_LISTENER\n\n\n1021\n\n\n\n\n\n\n\n\nThe message bus will send a \nDEVICE_ID_MESSAGE_BUS_LISTENER\n event whenever a new listener is added to the message bus.\n\n\nThis event allows other parts of the system to detect when interactions are taking place with a component. This is primarily used as a power management mechanism - allowing on demand activation of hardware when necessary.\n\n\nMessage Bus Events\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nMessage Bus ID of listener\n\n\n1-65535\n\n\n\n\n\n\n\n\nAPI\n\n\nConstructor\n\n\n\n\nMessageBus()\n\n\nDescription\n\n\nDefault constructor.\n\n\nAdds itself as a fiber component, and also configures itself to be the default  EventModel  if defaultEventBus is NULL.\n\n\nsend\n\n\n\n\nint\n \nsend\n( \nEvent\n evt)\n\n\nDescription\n\n\nQueues the given event to be sent to all registered recipients.\n\n\nParameters\n\n\n\n\nEvent\n evt - The event to send.\n\n\n\n\nExample\n\n\n MessageBus bus;\n\n // Creates and sends the Event using bus.\n Event evt(DEVICE_ID_BUTTON_A, DEVICE_BUTTON_EVT_CLICK);\n\n // Creates the Event, but delays the sending of that event.\n Event evt1(DEVICE_ID_BUTTON_A, DEVICE_BUTTON_EVT_CLICK, CREATE_ONLY);\n\n bus.send(evt1);\n\n // This has the same effect!\n evt1.fire()\n\n\n\n\nprocess\n\n\n\n\nint\n \nprocess\n( \nEvent  \n evt)\n\n\nDescription\n\n\nInternal function, used to deliver the given event to all relevant recipients. Normally, this is called once an event has been removed from the event queue.\n\n\nParameters\n\n\n\n\nEvent  \n evt - The event to send.\n\n\n\n\nReturns\n\n\n1 if all matching listeners were processed, 0 if further processing is required.\n\n\n\n\nNote\n\n\nIt is recommended that all external code uses the  send()  function instead of this function, or the constructors provided by  Event .\n\n\n\n\n\n\nint\n \nprocess\n( \nEvent  \n evt,  \nbool\n urgent)\n\n\nDescription\n\n\nInternal function, used to deliver the given event to all relevant recipients. Normally, this is called once an event has been removed from the event queue.\n\n\nParameters\n\n\n\n\nEvent  \n evt - The event to send.\n\n\nbool\n urgent - The type of listeners to process (optional). If set to true, only listeners defined as urgent and non-blocking will be processed otherwise, all other (standard) listeners will be processed. Defaults to false.\n\n\n\n\nReturns\n\n\n1 if all matching listeners were processed, 0 if further processing is required.\n\n\n\n\nNote\n\n\nIt is recommended that all external code uses the  send()  function instead of this function, or the constructors provided by  Event .\n\n\n\n\nelementAt\n\n\n\n\nListener\n \nelementAt\n( \nint\n n)\n\n\nDescription\n\n\nReturns the  Listener  with the given position in our list.\n\n\nParameters\n\n\n\n\nint\n n - The position in the list to return.\n\n\n\n\nReturns\n\n\nthe  Listener  at postion n in the list, or NULL if the position is invalid.\n\n\nadd\n\n\n\n\nint\n \nadd\n( \nListener  *\n newListener)\n\n\nDescription\n\n\nAdd the given  Listener  to the list of event handlers, unconditionally.\n\n\nParameters\n\n\n\n\nListener  *\n newListener\n\n\n\n\nReturns\n\n\nDEVICE_OK if the listener is valid, DEVICE_INVALID_PARAMETER otherwise.\n\n\nremove\n\n\n\n\nint\n \nremove\n( \nListener  *\n newListener)\n\n\nDescription\n\n\nRemove the given  Listener  from the list of event handlers.\n\n\nParameters\n\n\n\n\nListener  *\n newListener\n\n\n\n\nReturns\n\n\nDEVICE_OK if the listener is valid, DEVICE_INVALID_PARAMETER otherwise.", 
+            "title": "messageBus"
+        }, 
+        {
+            "location": "/cplay/messageBus/#cplaymessagebus", 
+            "text": "", 
+            "title": "cplay.messageBus"
+        }, 
+        {
+            "location": "/cplay/messageBus/#overview", 
+            "text": "", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/cplay/messageBus/#message-bus-id", 
+            "text": "Constant  Value      DEVICE_ID_MESSAGE_BUS_LISTENER  1021     The message bus will send a  DEVICE_ID_MESSAGE_BUS_LISTENER  event whenever a new listener is added to the message bus.  This event allows other parts of the system to detect when interactions are taking place with a component. This is primarily used as a power management mechanism - allowing on demand activation of hardware when necessary.", 
+            "title": "Message Bus ID"
+        }, 
+        {
+            "location": "/cplay/messageBus/#message-bus-events", 
+            "text": "Constant  Value      Message Bus ID of listener  1-65535", 
+            "title": "Message Bus Events"
+        }, 
+        {
+            "location": "/cplay/messageBus/#api", 
+            "text": "", 
+            "title": "API"
+        }, 
+        {
+            "location": "/cplay/messageBus/#constructor", 
+            "text": "", 
+            "title": "Constructor"
+        }, 
+        {
+            "location": "/cplay/messageBus/#messagebus", 
+            "text": "", 
+            "title": "MessageBus()"
+        }, 
+        {
+            "location": "/cplay/messageBus/#description", 
+            "text": "Default constructor.  Adds itself as a fiber component, and also configures itself to be the default  EventModel  if defaultEventBus is NULL.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/messageBus/#send", 
+            "text": "", 
+            "title": "send"
+        }, 
+        {
+            "location": "/cplay/messageBus/#int-send-event-evt", 
+            "text": "", 
+            "title": "int send( Event evt)"
+        }, 
+        {
+            "location": "/cplay/messageBus/#description_1", 
+            "text": "Queues the given event to be sent to all registered recipients.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/messageBus/#parameters", 
+            "text": "Event  evt - The event to send.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/messageBus/#example", 
+            "text": "MessageBus bus;\n\n // Creates and sends the Event using bus.\n Event evt(DEVICE_ID_BUTTON_A, DEVICE_BUTTON_EVT_CLICK);\n\n // Creates the Event, but delays the sending of that event.\n Event evt1(DEVICE_ID_BUTTON_A, DEVICE_BUTTON_EVT_CLICK, CREATE_ONLY);\n\n bus.send(evt1);\n\n // This has the same effect!\n evt1.fire()", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/messageBus/#process", 
+            "text": "", 
+            "title": "process"
+        }, 
+        {
+            "location": "/cplay/messageBus/#int-process-event-evt", 
+            "text": "", 
+            "title": "int process( Event  &amp; evt)"
+        }, 
+        {
+            "location": "/cplay/messageBus/#description_2", 
+            "text": "Internal function, used to deliver the given event to all relevant recipients. Normally, this is called once an event has been removed from the event queue.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/messageBus/#parameters_1", 
+            "text": "Event    evt - The event to send.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/messageBus/#returns", 
+            "text": "1 if all matching listeners were processed, 0 if further processing is required.   Note  It is recommended that all external code uses the  send()  function instead of this function, or the constructors provided by  Event .", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/messageBus/#int-process-event-evt-bool-urgent", 
+            "text": "", 
+            "title": "int process( Event  &amp; evt,  bool urgent)"
+        }, 
+        {
+            "location": "/cplay/messageBus/#description_3", 
+            "text": "Internal function, used to deliver the given event to all relevant recipients. Normally, this is called once an event has been removed from the event queue.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/messageBus/#parameters_2", 
+            "text": "Event    evt - The event to send.  bool  urgent - The type of listeners to process (optional). If set to true, only listeners defined as urgent and non-blocking will be processed otherwise, all other (standard) listeners will be processed. Defaults to false.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/messageBus/#returns_1", 
+            "text": "1 if all matching listeners were processed, 0 if further processing is required.   Note  It is recommended that all external code uses the  send()  function instead of this function, or the constructors provided by  Event .", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/messageBus/#elementat", 
+            "text": "", 
+            "title": "elementAt"
+        }, 
+        {
+            "location": "/cplay/messageBus/#listener-elementat-int-n", 
+            "text": "", 
+            "title": "Listener elementAt( int n)"
+        }, 
+        {
+            "location": "/cplay/messageBus/#description_4", 
+            "text": "Returns the  Listener  with the given position in our list.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/messageBus/#parameters_3", 
+            "text": "int  n - The position in the list to return.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/messageBus/#returns_2", 
+            "text": "the  Listener  at postion n in the list, or NULL if the position is invalid.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/messageBus/#add", 
+            "text": "", 
+            "title": "add"
+        }, 
+        {
+            "location": "/cplay/messageBus/#int-add-listener-42-newlistener", 
+            "text": "", 
+            "title": "int add( Listener  * newListener)"
+        }, 
+        {
+            "location": "/cplay/messageBus/#description_5", 
+            "text": "Add the given  Listener  to the list of event handlers, unconditionally.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/messageBus/#parameters_4", 
+            "text": "Listener  *  newListener", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/messageBus/#returns_3", 
+            "text": "DEVICE_OK if the listener is valid, DEVICE_INVALID_PARAMETER otherwise.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/messageBus/#remove", 
+            "text": "", 
+            "title": "remove"
+        }, 
+        {
+            "location": "/cplay/messageBus/#int-remove-listener-42-newlistener", 
+            "text": "", 
+            "title": "int remove( Listener  * newListener)"
+        }, 
+        {
+            "location": "/cplay/messageBus/#description_6", 
+            "text": "Remove the given  Listener  from the list of event handlers.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/messageBus/#parameters_5", 
+            "text": "Listener  *  newListener", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/messageBus/#returns_4", 
+            "text": "DEVICE_OK if the listener is valid, DEVICE_INVALID_PARAMETER otherwise.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/button/", 
+            "text": "Buttons\n\n\nOverview\n\n\nMessage Bus ID\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_ID_BUTTON_A\n\n\n1\n\n\n\n\n\n\nDEVICE_ID_BUTTON_B\n\n\n2\n\n\n\n\n\n\n\n\nMessage Bus Events\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_DOWN\n\n\n1\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_UP\n\n\n2\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_CLICK\n\n\n3\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_LONG_CLICK\n\n\n4\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_HOLD\n\n\n5\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_DOUBLE_CLICK\n\n\n6\n\n\n\n\n\n\n\n\nAPI\n\n\nAbstractButton\n\n\n\n\nAbstractButton()\n\n\nDescription\n\n\nConstructor.\n\n\nCreate a abstract software representation of a button.\n\n\nisPressed\n\n\n\n\nint\n \nisPressed\n()\n\n\nDescription\n\n\nTests if this  Button  is currently pressed.\n\n\nReturns\n\n\n1 if this button is pressed, 0 otherwise.\n\n\nExample\n\n\n if(buttonA.isPressed())\n display.scroll(\nPressed!\n);\n\n\n\n\nwasPressed\n\n\n\n\nint\n \nwasPressed\n()\n\n\nDescription\n\n\nDetermines if this button has been pressed.\n\n\nReturns\n\n\nthe number of time this button has been pressed since the last time  wasPressed()  has been called.\n\n\nExample\n\n\n if(buttonA.wasPressed())\n display.scroll(\nPressed!\n);\n\n\n\n\nenable\n\n\n\n\nvoid\n \nenable\n()\n\n\nDescription\n\n\nEnables this button. Buttons are normally created in an enabled state, but use this funciton to re-enable a previously disabled button.\n\n\ndisable\n\n\n\n\nvoid\n \ndisable\n()\n\n\nDescription\n\n\nDisable this button. Buttons are normally created in an enabled state. Use this funciton to disable this button.", 
+            "title": "buttons"
+        }, 
+        {
+            "location": "/cplay/button/#buttons", 
+            "text": "", 
+            "title": "Buttons"
+        }, 
+        {
+            "location": "/cplay/button/#overview", 
+            "text": "", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/cplay/button/#message-bus-id", 
+            "text": "Constant  Value      DEVICE_ID_BUTTON_A  1    DEVICE_ID_BUTTON_B  2", 
+            "title": "Message Bus ID"
+        }, 
+        {
+            "location": "/cplay/button/#message-bus-events", 
+            "text": "Constant  Value      DEVICE_BUTTON_EVT_DOWN  1    DEVICE_BUTTON_EVT_UP  2    DEVICE_BUTTON_EVT_CLICK  3    DEVICE_BUTTON_EVT_LONG_CLICK  4    DEVICE_BUTTON_EVT_HOLD  5    DEVICE_BUTTON_EVT_DOUBLE_CLICK  6", 
+            "title": "Message Bus Events"
+        }, 
+        {
+            "location": "/cplay/button/#api", 
+            "text": "", 
+            "title": "API"
+        }, 
+        {
+            "location": "/cplay/button/#abstractbutton", 
+            "text": "", 
+            "title": "AbstractButton"
+        }, 
+        {
+            "location": "/cplay/button/#abstractbutton_1", 
+            "text": "", 
+            "title": "AbstractButton()"
+        }, 
+        {
+            "location": "/cplay/button/#description", 
+            "text": "Constructor.  Create a abstract software representation of a button.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/button/#ispressed", 
+            "text": "", 
+            "title": "isPressed"
+        }, 
+        {
+            "location": "/cplay/button/#int-ispressed", 
+            "text": "", 
+            "title": "int isPressed()"
+        }, 
+        {
+            "location": "/cplay/button/#description_1", 
+            "text": "Tests if this  Button  is currently pressed.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/button/#returns", 
+            "text": "1 if this button is pressed, 0 otherwise.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/button/#example", 
+            "text": "if(buttonA.isPressed())\n display.scroll( Pressed! );", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/button/#waspressed", 
+            "text": "", 
+            "title": "wasPressed"
+        }, 
+        {
+            "location": "/cplay/button/#int-waspressed", 
+            "text": "", 
+            "title": "int wasPressed()"
+        }, 
+        {
+            "location": "/cplay/button/#description_2", 
+            "text": "Determines if this button has been pressed.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/button/#returns_1", 
+            "text": "the number of time this button has been pressed since the last time  wasPressed()  has been called.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/button/#example_1", 
+            "text": "if(buttonA.wasPressed())\n display.scroll( Pressed! );", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/button/#enable", 
+            "text": "", 
+            "title": "enable"
+        }, 
+        {
+            "location": "/cplay/button/#void-enable", 
+            "text": "", 
+            "title": "void enable()"
+        }, 
+        {
+            "location": "/cplay/button/#description_3", 
+            "text": "Enables this button. Buttons are normally created in an enabled state, but use this funciton to re-enable a previously disabled button.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/button/#disable", 
+            "text": "", 
+            "title": "disable"
+        }, 
+        {
+            "location": "/cplay/button/#void-disable", 
+            "text": "", 
+            "title": "void disable()"
+        }, 
+        {
+            "location": "/cplay/button/#description_4", 
+            "text": "Disable this button. Buttons are normally created in an enabled state. Use this funciton to disable this button.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/", 
+            "text": "uBit.accelerometer\n\n\nOverview\n\n\nMessage Bus ID\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_ID_ACCELEROMETER\n\n\n4\n\n\n\n\n\n\nDEVICE_ID_GESTURE\n\n\n27\n\n\n\n\n\n\n\n\nMessage Bus Events:\n\n\nDEVICE_ID_ACCELEROMETER\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_DATA_UPDATE\n\n\n1\n\n\n\n\n\n\n\n\nDEVICE_ID_GESTURE\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_TILT_UP\n\n\n1\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_TILT_DOWN\n\n\n2\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_TILT_LEFT\n\n\n3\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_TILT_RIGHT\n\n\n4\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_FACE_UP\n\n\n5\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_FACE_DOWN\n\n\n6\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_FREEFALL\n\n\n7\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_3G\n\n\n8\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_6G\n\n\n9\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_8G\n\n\n10\n\n\n\n\n\n\nDEVICE_ACCELEROMETER_EVT_SHAKE\n\n\n11\n\n\n\n\n\n\n\n\nAPI\n\n\nConstructor\n\n\n\n\nLIS3DH( \nI2C  \n _i2c,  \nPin  \n _int1,  \nCoordinateSpace  \n coordinateSpace)\n\n\nDescription\n\n\nConstructor. Create a software abstraction of an accelerometer.\n\n\nParameters\n\n\n\n\nI2C  \n _i2c - an instance of  I2C  used to communicate with the onboard accelerometer.\n\n\nPin  \n _int1\n\n\nCoordinateSpace  \n coordinateSpace\n\n\n\n\nExample\n\n\n I2C i2c = I2C(I2C_SDA0, I2C_SCL0);\n\n Accelerometer accelerometer = Accelerometer(i2c);\n\n\n\n\n\n\nLIS3DH( \nI2C  \n _i2c,  \nPin  \n _int1,  \nCoordinateSpace  \n coordinateSpace,  \nuint16_t\n address)\n\n\nDescription\n\n\nConstructor. Create a software abstraction of an accelerometer.\n\n\nParameters\n\n\n\n\nI2C  \n _i2c - an instance of  I2C  used to communicate with the onboard accelerometer.\n\n\nPin  \n _int1\n\n\nCoordinateSpace  \n coordinateSpace\n\n\nuint16_t\n address - the default  I2C  address of the accelerometer. Defaults to: MMA8653_DEFAULT_ADDR.\n\n\n\n\nExample\n\n\n I2C i2c = I2C(I2C_SDA0, I2C_SCL0);\n\n Accelerometer accelerometer = Accelerometer(i2c);\n\n\n\n\n\n\nLIS3DH( \nI2C  \n _i2c,  \nPin  \n _int1,  \nCoordinateSpace  \n coordinateSpace,  \nuint16_t\n address,  \nuint16_t\n id)\n\n\nDescription\n\n\nConstructor. Create a software abstraction of an accelerometer.\n\n\nParameters\n\n\n\n\nI2C  \n _i2c - an instance of  I2C  used to communicate with the onboard accelerometer.\n\n\nPin  \n _int1\n\n\nCoordinateSpace  \n coordinateSpace\n\n\nuint16_t\n address - the default  I2C  address of the accelerometer. Defaults to: MMA8653_DEFAULT_ADDR.\n\n\nuint16_t\n id - the unique  EventModel  id of this component. Defaults to: DEVICE_ID_ACCELEROMETER\n\n\n\n\nExample\n\n\n I2C i2c = I2C(I2C_SDA0, I2C_SCL0);\n\n Accelerometer accelerometer = Accelerometer(i2c);\n\n\n\n\nsetPeriod\n\n\n\n\nint\n \nsetPeriod\n( \nint\n period)\n\n\nDescription\n\n\nAttempts to set the sample rate of the accelerometer to the specified value (in ms).\n\n\nParameters\n\n\n\n\nint\n period - the requested time between samples, in milliseconds.\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_I2C_ERROR is the request fails.\n\n\nExample\n\n\n // sample rate is now 20 ms.\n accelerometer.setPeriod(20);\n\n\n\n\n\n\nNote\n\n\nThe requested rate may not be possible on the hardware. In this case, the nearest lower rate is chosen.\n\n\n\n\ngetPeriod\n\n\n\n\nint\n \ngetPeriod\n()\n\n\nDescription\n\n\nReads the currently configured sample rate of the accelerometer.\n\n\nReturns\n\n\nThe time between samples, in milliseconds.\n\n\nsetRange\n\n\n\n\nint\n \nsetRange\n( \nint\n range)\n\n\nDescription\n\n\nAttempts to set the sample range of the accelerometer to the specified value (in g).\n\n\nParameters\n\n\n\n\nint\n range - The requested sample range of samples, in g.\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_I2C_ERROR is the request fails.\n\n\nExample\n\n\n // the sample range of the accelerometer is now 8G.\n accelerometer.setRange(8);\n\n\n\n\n\n\nNote\n\n\nThe requested range may not be possible on the hardware. In this case, the nearest lower range is chosen.\n\n\n\n\ngetRange\n\n\n\n\nint\n \ngetRange\n()\n\n\nDescription\n\n\nReads the currently configured sample range of the accelerometer.\n\n\nReturns\n\n\nThe sample range, in g.\n\n\nwhoAmI\n\n\n\n\nint\n \nwhoAmI\n()\n\n\nDescription\n\n\nAttempts to read the 8 bit ID from the accelerometer, this can be used for validation purposes.\n\n\nReturns\n\n\nthe 8 bit ID returned by the accelerometer, or DEVICE_I2C_ERROR if the request fails.\n\n\nExample\n\n\n accelerometer.whoAmI();\n\n\n\n\ngetSample\n\n\n\n\nSample3D\n \ngetSample\n()\n\n\nDescription\n\n\nReads the accelerometer data from the latest update retrieved from the accelerometer. Data is provided in ENU format, relative to the device package (and makes no attempt to align axes to the device).\n\n\nReturns\n\n\nThe force measured in each axis, in milli-g.\n\n\nconfigure\n\n\n\n\nint\n \nconfigure\n()\n\n\nDescription\n\n\nConfigures the accelerometer for G range and sample rate defined in this object. The nearest values are chosen to those defined that are supported by the hardware. The instance variables are then updated to reflect reality.\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_I2C_ERROR if the accelerometer could not be configured.\n\n\nupdateSample\n\n\n\n\nint\n \nupdateSample\n()\n\n\nDescription\n\n\nReads the acceleration data from the accelerometer, and stores it in our buffer. This only happens if the accelerometer indicates that it has new data via int1.\n\n\nOn first use, this member function will attempt to add this component to the list of fiber components in order to constantly update the values stored by this object.\n\n\nThis technique is called lazy instantiation, and it means that we do not obtain the overhead from non-chalantly adding this component to fiber components.\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_I2C_ERROR if the read request fails.\n\n\nrequestUpdate\n\n\n\n\nint\n \nrequestUpdate\n()\n\n\nDescription\n\n\nPoll to see if new data is available from the hardware. If so, update it. n.b. it is not necessary to explicitly call this funciton to update data (it normally happens in the background when the scheduler is idle), but a check is performed if the user explicitly requests up to date data.\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_I2C_ERROR if the update fails.\n\n\n\n\nNote\n\n\nThis method should be overidden by the hardware driver to implement the requested changes in hardware.", 
+            "title": "accelerometer"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#ubitaccelerometer", 
+            "text": "", 
+            "title": "uBit.accelerometer"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#overview", 
+            "text": "", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#message-bus-id", 
+            "text": "Constant  Value      DEVICE_ID_ACCELEROMETER  4    DEVICE_ID_GESTURE  27", 
+            "title": "Message Bus ID"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#message-bus-events", 
+            "text": "", 
+            "title": "Message Bus Events:"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#device_id_accelerometer", 
+            "text": "Constant  Value      DEVICE_ACCELEROMETER_EVT_DATA_UPDATE  1", 
+            "title": "DEVICE_ID_ACCELEROMETER"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#device_id_gesture", 
+            "text": "Constant  Value      DEVICE_ACCELEROMETER_EVT_TILT_UP  1    DEVICE_ACCELEROMETER_EVT_TILT_DOWN  2    DEVICE_ACCELEROMETER_EVT_TILT_LEFT  3    DEVICE_ACCELEROMETER_EVT_TILT_RIGHT  4    DEVICE_ACCELEROMETER_EVT_FACE_UP  5    DEVICE_ACCELEROMETER_EVT_FACE_DOWN  6    DEVICE_ACCELEROMETER_EVT_FREEFALL  7    DEVICE_ACCELEROMETER_EVT_3G  8    DEVICE_ACCELEROMETER_EVT_6G  9    DEVICE_ACCELEROMETER_EVT_8G  10    DEVICE_ACCELEROMETER_EVT_SHAKE  11", 
+            "title": "DEVICE_ID_GESTURE"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#api", 
+            "text": "", 
+            "title": "API"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#constructor", 
+            "text": "", 
+            "title": "Constructor"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#lis3dh-i2c-_i2c-pin-_int1-coordinatespace-coordinatespace", 
+            "text": "", 
+            "title": "LIS3DH( I2C  &amp; _i2c,  Pin  &amp; _int1,  CoordinateSpace  &amp; coordinateSpace)"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description", 
+            "text": "Constructor. Create a software abstraction of an accelerometer.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#parameters", 
+            "text": "I2C    _i2c - an instance of  I2C  used to communicate with the onboard accelerometer.  Pin    _int1  CoordinateSpace    coordinateSpace", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#example", 
+            "text": "I2C i2c = I2C(I2C_SDA0, I2C_SCL0);\n\n Accelerometer accelerometer = Accelerometer(i2c);", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#lis3dh-i2c-_i2c-pin-_int1-coordinatespace-coordinatespace-uint16_t-address", 
+            "text": "", 
+            "title": "LIS3DH( I2C  &amp; _i2c,  Pin  &amp; _int1,  CoordinateSpace  &amp; coordinateSpace,  uint16_t address)"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description_1", 
+            "text": "Constructor. Create a software abstraction of an accelerometer.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#parameters_1", 
+            "text": "I2C    _i2c - an instance of  I2C  used to communicate with the onboard accelerometer.  Pin    _int1  CoordinateSpace    coordinateSpace  uint16_t  address - the default  I2C  address of the accelerometer. Defaults to: MMA8653_DEFAULT_ADDR.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#example_1", 
+            "text": "I2C i2c = I2C(I2C_SDA0, I2C_SCL0);\n\n Accelerometer accelerometer = Accelerometer(i2c);", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#lis3dh-i2c-_i2c-pin-_int1-coordinatespace-coordinatespace-uint16_t-address-uint16_t-id", 
+            "text": "", 
+            "title": "LIS3DH( I2C  &amp; _i2c,  Pin  &amp; _int1,  CoordinateSpace  &amp; coordinateSpace,  uint16_t address,  uint16_t id)"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description_2", 
+            "text": "Constructor. Create a software abstraction of an accelerometer.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#parameters_2", 
+            "text": "I2C    _i2c - an instance of  I2C  used to communicate with the onboard accelerometer.  Pin    _int1  CoordinateSpace    coordinateSpace  uint16_t  address - the default  I2C  address of the accelerometer. Defaults to: MMA8653_DEFAULT_ADDR.  uint16_t  id - the unique  EventModel  id of this component. Defaults to: DEVICE_ID_ACCELEROMETER", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#example_2", 
+            "text": "I2C i2c = I2C(I2C_SDA0, I2C_SCL0);\n\n Accelerometer accelerometer = Accelerometer(i2c);", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#setperiod", 
+            "text": "", 
+            "title": "setPeriod"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#int-setperiod-int-period", 
+            "text": "", 
+            "title": "int setPeriod( int period)"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description_3", 
+            "text": "Attempts to set the sample rate of the accelerometer to the specified value (in ms).", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#parameters_3", 
+            "text": "int  period - the requested time between samples, in milliseconds.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#returns", 
+            "text": "DEVICE_OK on success, DEVICE_I2C_ERROR is the request fails.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#example_3", 
+            "text": "// sample rate is now 20 ms.\n accelerometer.setPeriod(20);   Note  The requested rate may not be possible on the hardware. In this case, the nearest lower rate is chosen.", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#getperiod", 
+            "text": "", 
+            "title": "getPeriod"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#int-getperiod", 
+            "text": "", 
+            "title": "int getPeriod()"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description_4", 
+            "text": "Reads the currently configured sample rate of the accelerometer.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#returns_1", 
+            "text": "The time between samples, in milliseconds.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#setrange", 
+            "text": "", 
+            "title": "setRange"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#int-setrange-int-range", 
+            "text": "", 
+            "title": "int setRange( int range)"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description_5", 
+            "text": "Attempts to set the sample range of the accelerometer to the specified value (in g).", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#parameters_4", 
+            "text": "int  range - The requested sample range of samples, in g.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#returns_2", 
+            "text": "DEVICE_OK on success, DEVICE_I2C_ERROR is the request fails.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#example_4", 
+            "text": "// the sample range of the accelerometer is now 8G.\n accelerometer.setRange(8);   Note  The requested range may not be possible on the hardware. In this case, the nearest lower range is chosen.", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#getrange", 
+            "text": "", 
+            "title": "getRange"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#int-getrange", 
+            "text": "", 
+            "title": "int getRange()"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description_6", 
+            "text": "Reads the currently configured sample range of the accelerometer.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#returns_3", 
+            "text": "The sample range, in g.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#whoami", 
+            "text": "", 
+            "title": "whoAmI"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#int-whoami", 
+            "text": "", 
+            "title": "int whoAmI()"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description_7", 
+            "text": "Attempts to read the 8 bit ID from the accelerometer, this can be used for validation purposes.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#returns_4", 
+            "text": "the 8 bit ID returned by the accelerometer, or DEVICE_I2C_ERROR if the request fails.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#example_5", 
+            "text": "accelerometer.whoAmI();", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#getsample", 
+            "text": "", 
+            "title": "getSample"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#sample3d-getsample", 
+            "text": "", 
+            "title": "Sample3D getSample()"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description_8", 
+            "text": "Reads the accelerometer data from the latest update retrieved from the accelerometer. Data is provided in ENU format, relative to the device package (and makes no attempt to align axes to the device).", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#returns_5", 
+            "text": "The force measured in each axis, in milli-g.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#configure", 
+            "text": "", 
+            "title": "configure"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#int-configure", 
+            "text": "", 
+            "title": "int configure()"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description_9", 
+            "text": "Configures the accelerometer for G range and sample rate defined in this object. The nearest values are chosen to those defined that are supported by the hardware. The instance variables are then updated to reflect reality.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#returns_6", 
+            "text": "DEVICE_OK on success, DEVICE_I2C_ERROR if the accelerometer could not be configured.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#updatesample", 
+            "text": "", 
+            "title": "updateSample"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#int-updatesample", 
+            "text": "", 
+            "title": "int updateSample()"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description_10", 
+            "text": "Reads the acceleration data from the accelerometer, and stores it in our buffer. This only happens if the accelerometer indicates that it has new data via int1.  On first use, this member function will attempt to add this component to the list of fiber components in order to constantly update the values stored by this object.  This technique is called lazy instantiation, and it means that we do not obtain the overhead from non-chalantly adding this component to fiber components.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#returns_7", 
+            "text": "DEVICE_OK on success, DEVICE_I2C_ERROR if the read request fails.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#requestupdate", 
+            "text": "", 
+            "title": "requestUpdate"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#int-requestupdate", 
+            "text": "", 
+            "title": "int requestUpdate()"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#description_11", 
+            "text": "Poll to see if new data is available from the hardware. If so, update it. n.b. it is not necessary to explicitly call this funciton to update data (it normally happens in the background when the scheduler is idle), but a check is performed if the user explicitly requests up to date data.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/accelerometer/#returns_8", 
+            "text": "DEVICE_OK on success, DEVICE_I2C_ERROR if the update fails.   Note  This method should be overidden by the hardware driver to implement the requested changes in hardware.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/thermometer/", 
+            "text": "cplay.thermometer\n\n\nOverview\n\n\nThermometer provides access to the surface temperature of the nrf51822.\nThe temperature reading therefore is not representative of the ambient temperature,\nbut rather the temperature relative to the surface temperature of the chip.\n\n\nHowever, we can make it representative of the ambient temperature in software\nthrough \"calibrating\" the thermometer.\n\n\nCalibration is very simple, and is calculated by giving the current temperature\nto the \nsetCalibration()\n member function. From the temperature, an offset is\ncalculated, and is subsequently used to offset future temperature readings.\n\n\nReal time updates\n\n\nWhen using the standard uBit presentation, the thermometer is continuously updated\nin the background using an idle thread (after it is first used), which is executed\nwhenever the micro:bit has no other tasks to perform.\n\n\nIf there is no scheduler running, the values are synchronously read on \ngetTemperature()\n\ncalls. Additionally, if you would like to drive thermometer updates manually \nupdateSample()\n\ncan be used.\n\n\nMessage Bus ID\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_ID_THERMOMETER\n\n\n28\n\n\n\n\n\n\n\n\nMessage Bus Events\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_THERMOMETER_EVT_UPDATE\n\n\n1\n\n\n\n\n\n\n\n\nAPI\n\n\nConstructor\n\n\n\n\nLinearAnalogSensor( \nPin  \n pin,  \nuint16_t\n id,  \nuint16_t\n sampleFloor,  \nuint16_t\n sampleCeiling)\n\n\nDescription\n\n\nConstructor.\n\n\nCreates a  LinearAnalogSensor .\n\n\npin\n\n\nThe pin on which to sense\n\n\nid\n\n\nThe ID of this compoenent e.g. DEVICE_ID_THERMOMETER\n\n\ninputFloor\n\n\nThe minimum level in the input range.\n\n\ninputCeiling\n\n\nThe maximum level in the input range.\n\n\noutputFloor\n\n\nThe minimum level in the output range. Default: 0.\n\n\noutputCeiling\n\n\nThe maximum level in the output range. Default: 1023.\n\n\nParameters\n\n\n\n\nPin  \n pin - The pin on which to sense\n\n\nuint16_t\n id - The ID of this compoenent e.g. DEVICE_ID_THERMOMETER\n\n\nuint16_t\n sampleFloor\n\n\nuint16_t\n sampleCeiling\n\n\n\n\n\nLinearAnalogSensor( \nPin  \n pin,  \nuint16_t\n id,  \nuint16_t\n sampleFloor,  \nuint16_t\n sampleCeiling,  \nfloat\n valueFloor)\n\n\nDescription\n\n\nConstructor.\n\n\nCreates a  LinearAnalogSensor .\n\n\npin\n\n\nThe pin on which to sense\n\n\nid\n\n\nThe ID of this compoenent e.g. DEVICE_ID_THERMOMETER\n\n\ninputFloor\n\n\nThe minimum level in the input range.\n\n\ninputCeiling\n\n\nThe maximum level in the input range.\n\n\noutputFloor\n\n\nThe minimum level in the output range. Default: 0.\n\n\noutputCeiling\n\n\nThe maximum level in the output range. Default: 1023.\n\n\nParameters\n\n\n\n\nPin  \n pin - The pin on which to sense\n\n\nuint16_t\n id - The ID of this compoenent e.g. DEVICE_ID_THERMOMETER\n\n\nuint16_t\n sampleFloor\n\n\nuint16_t\n sampleCeiling\n\n\nfloat\n valueFloor\n\n\n\n\n\nLinearAnalogSensor( \nPin  \n pin,  \nuint16_t\n id,  \nuint16_t\n sampleFloor,  \nuint16_t\n sampleCeiling,  \nfloat\n valueFloor,  \nfloat\n valueCeiling)\n\n\nDescription\n\n\nConstructor.\n\n\nCreates a  LinearAnalogSensor .\n\n\npin\n\n\nThe pin on which to sense\n\n\nid\n\n\nThe ID of this compoenent e.g. DEVICE_ID_THERMOMETER\n\n\ninputFloor\n\n\nThe minimum level in the input range.\n\n\ninputCeiling\n\n\nThe maximum level in the input range.\n\n\noutputFloor\n\n\nThe minimum level in the output range. Default: 0.\n\n\noutputCeiling\n\n\nThe maximum level in the output range. Default: 1023.\n\n\nParameters\n\n\n\n\nPin  \n pin - The pin on which to sense\n\n\nuint16_t\n id - The ID of this compoenent e.g. DEVICE_ID_THERMOMETER\n\n\nuint16_t\n sampleFloor\n\n\nuint16_t\n sampleCeiling\n\n\nfloat\n valueFloor\n\n\nfloat\n valueCeiling\n\n\n\n\nupdateSample\n\n\n\n\nvoid\n \nupdateSample\n()\n\n\nDescription\n\n\nUpdates the internal reading of the sensor. Typically called periodicaly.\n\n\nReturns\n\n\nDEVICE_OK on success.", 
+            "title": "thermometer"
+        }, 
+        {
+            "location": "/cplay/thermometer/#cplaythermometer", 
+            "text": "", 
+            "title": "cplay.thermometer"
+        }, 
+        {
+            "location": "/cplay/thermometer/#overview", 
+            "text": "Thermometer provides access to the surface temperature of the nrf51822.\nThe temperature reading therefore is not representative of the ambient temperature,\nbut rather the temperature relative to the surface temperature of the chip.  However, we can make it representative of the ambient temperature in software\nthrough \"calibrating\" the thermometer.  Calibration is very simple, and is calculated by giving the current temperature\nto the  setCalibration()  member function. From the temperature, an offset is\ncalculated, and is subsequently used to offset future temperature readings.", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/cplay/thermometer/#real-time-updates", 
+            "text": "When using the standard uBit presentation, the thermometer is continuously updated\nin the background using an idle thread (after it is first used), which is executed\nwhenever the micro:bit has no other tasks to perform.  If there is no scheduler running, the values are synchronously read on  getTemperature() \ncalls. Additionally, if you would like to drive thermometer updates manually  updateSample() \ncan be used.", 
+            "title": "Real time updates"
+        }, 
+        {
+            "location": "/cplay/thermometer/#message-bus-id", 
+            "text": "Constant  Value      DEVICE_ID_THERMOMETER  28", 
+            "title": "Message Bus ID"
+        }, 
+        {
+            "location": "/cplay/thermometer/#message-bus-events", 
+            "text": "Constant  Value      DEVICE_THERMOMETER_EVT_UPDATE  1", 
+            "title": "Message Bus Events"
+        }, 
+        {
+            "location": "/cplay/thermometer/#api", 
+            "text": "", 
+            "title": "API"
+        }, 
+        {
+            "location": "/cplay/thermometer/#constructor", 
+            "text": "", 
+            "title": "Constructor"
+        }, 
+        {
+            "location": "/cplay/thermometer/#linearanalogsensor-pin-pin-uint16_t-id-uint16_t-samplefloor-uint16_t-sampleceiling", 
+            "text": "", 
+            "title": "LinearAnalogSensor( Pin  &amp; pin,  uint16_t id,  uint16_t sampleFloor,  uint16_t sampleCeiling)"
+        }, 
+        {
+            "location": "/cplay/thermometer/#description", 
+            "text": "Constructor.  Creates a  LinearAnalogSensor .  pin  The pin on which to sense  id  The ID of this compoenent e.g. DEVICE_ID_THERMOMETER  inputFloor  The minimum level in the input range.  inputCeiling  The maximum level in the input range.  outputFloor  The minimum level in the output range. Default: 0.  outputCeiling  The maximum level in the output range. Default: 1023.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/thermometer/#parameters", 
+            "text": "Pin    pin - The pin on which to sense  uint16_t  id - The ID of this compoenent e.g. DEVICE_ID_THERMOMETER  uint16_t  sampleFloor  uint16_t  sampleCeiling", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/thermometer/#linearanalogsensor-pin-pin-uint16_t-id-uint16_t-samplefloor-uint16_t-sampleceiling-float-valuefloor", 
+            "text": "", 
+            "title": "LinearAnalogSensor( Pin  &amp; pin,  uint16_t id,  uint16_t sampleFloor,  uint16_t sampleCeiling,  float valueFloor)"
+        }, 
+        {
+            "location": "/cplay/thermometer/#description_1", 
+            "text": "Constructor.  Creates a  LinearAnalogSensor .  pin  The pin on which to sense  id  The ID of this compoenent e.g. DEVICE_ID_THERMOMETER  inputFloor  The minimum level in the input range.  inputCeiling  The maximum level in the input range.  outputFloor  The minimum level in the output range. Default: 0.  outputCeiling  The maximum level in the output range. Default: 1023.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/thermometer/#parameters_1", 
+            "text": "Pin    pin - The pin on which to sense  uint16_t  id - The ID of this compoenent e.g. DEVICE_ID_THERMOMETER  uint16_t  sampleFloor  uint16_t  sampleCeiling  float  valueFloor", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/thermometer/#linearanalogsensor-pin-pin-uint16_t-id-uint16_t-samplefloor-uint16_t-sampleceiling-float-valuefloor-float-valueceiling", 
+            "text": "", 
+            "title": "LinearAnalogSensor( Pin  &amp; pin,  uint16_t id,  uint16_t sampleFloor,  uint16_t sampleCeiling,  float valueFloor,  float valueCeiling)"
+        }, 
+        {
+            "location": "/cplay/thermometer/#description_2", 
+            "text": "Constructor.  Creates a  LinearAnalogSensor .  pin  The pin on which to sense  id  The ID of this compoenent e.g. DEVICE_ID_THERMOMETER  inputFloor  The minimum level in the input range.  inputCeiling  The maximum level in the input range.  outputFloor  The minimum level in the output range. Default: 0.  outputCeiling  The maximum level in the output range. Default: 1023.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/thermometer/#parameters_2", 
+            "text": "Pin    pin - The pin on which to sense  uint16_t  id - The ID of this compoenent e.g. DEVICE_ID_THERMOMETER  uint16_t  sampleFloor  uint16_t  sampleCeiling  float  valueFloor  float  valueCeiling", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/thermometer/#updatesample", 
+            "text": "", 
+            "title": "updateSample"
+        }, 
+        {
+            "location": "/cplay/thermometer/#void-updatesample", 
+            "text": "", 
+            "title": "void updateSample()"
+        }, 
+        {
+            "location": "/cplay/thermometer/#description_3", 
+            "text": "Updates the internal reading of the sensor. Typically called periodicaly.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/thermometer/#returns", 
+            "text": "DEVICE_OK on success.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/", 
+            "text": "cplay.io\n\n\nOverview\n\n\ncplay.io\n provides a means of accessing the pins exposed on the edge connector,\nenabling Analog and Digital Input/Output operations. Some pins can also perform\nbasic touch sensing through resistance detection.\n\n\nThere are 6 Analog capable pins which can be used to generate Analog wave forms\nand approximate Analog inputs. There is only one Analog to Digital converter on\nthe NRF51822, which prevents concurrent analog to digital conversions.\n\n\nAnalog waveforms are simulated via Pulse Width Modulation generated by software.\nAs such, there is a limit of \n3\n concurrent PWM outputs.\n\n\nThere are two ways of accessing pins on the edge connector:\n\n\n\n\ncplay.io.A0.setDigitalValue(1)\n - Would configure A0 as a digital output, and set that pin HI.\n\n\ncplay.io.pin[1].setDigitalValue(1)\n - Would configure A1 as a digital output, and set that pin HI.\n\n\n\n\nBy design, the operation of the pins on the edge connector are dynamic, and can swap between\nmodes based on the method that as been called.\n\n\nFor example:\n\n\nwhile(1)\n{\n    cplay.io.P0.setDigitalValue(1);\n    cplay.sleep(1000);\n    cplay.io.P0.setServoValue(90);\n    cplay.sleep(1000);\n}\n\n\n\n\nWill transition between Digital and Analog output every second.\n\n\nMessage Bus ID\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\nCapability\n\n\n\n\n\n\n\n\n\n\nDEVICE_ID_IO_P0\n\n\n7\n\n\nAnalog, digital and touch\n\n\n\n\n\n\n\n\nMessage Bus Events\n\n\nWhen \nisTouched()\n is called, provided that the selected pin has touch capabilities\n(outlined above), an instance of \nbutton\n will be created. Listeners\ncan therefore be placed using the desired pins' ID, with the exact same events\nproduced by a standard \nbutton\n.\n\n\ncplay.messageBus.listen(DEVICE_ID_IO_P0, DEVICE_EVT_ANY, someFunction);\ncplay.io.P0.isTouched();\n\n\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_DOWN\n\n\n1\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_UP\n\n\n2\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_CLICK\n\n\n3\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_LONG_CLICK\n\n\n4\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_HOLD\n\n\n5\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_DOUBLE_CLICK\n\n\n6\n\n\n\n\n\n\n\n\nAPI\n\n\nConstructor\n\n\n\n\nPin( \nint\n id,  \nPinNumber\n name,  \nPinCapability\n capability)\n\n\nDescription\n\n\nConstructor. Create a  Pin  instance, generally used to represent a pin on the edge connector.\n\n\nParameters\n\n\n\n\nint\n id - the unique  EventModel  id of this component.\n\n\nPinNumber\n name - the PinNumber for this  Pin  instance.\n\n\nPinCapability\n capability - the capabilities this  Pin  instance should have. (PIN_CAPABILITY_DIGITAL, PIN_CAPABILITY_ANALOG, PIN_CAPABILITY_AD, PIN_CAPABILITY_ALL)\n\n\n\n\nExample\n\n\n Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_ALL);\n\n\n\n\nsetDigitalValue\n\n\n\n\nint\n \nsetDigitalValue\n( \nint\n value)\n\n\nDescription\n\n\nConfigures this IO pin as a digital output (if necessary) and sets the pin to 'value'.\n\n\nParameters\n\n\n\n\nint\n value - 0 (LO) or 1 (HI)\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have digital capability.\n\n\nExample\n\n\n Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_BOTH);\n P0.setDigitalValue(1); // P0 is now HI\n\n\n\n\ngetDigitalValue\n\n\n\n\nint\n \ngetDigitalValue\n()\n\n\nDescription\n\n\nConfigures this IO pin as a digital input (if necessary) and tests its current value.\n\n\nReturns\n\n\n1 if this input is high, 0 if input is LO, or DEVICE_NOT_SUPPORTED if the given pin does not have digital capability.\n\n\nExample\n\n\n Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_BOTH);\n P0.getDigitalValue(); // P0 is either 0 or 1;\n\n\n\n\n\n\nint\n \ngetDigitalValue\n( \nPullMode\n pull)\n\n\nDescription\n\n\nConfigures this IO pin as a digital input with the specified internal pull-up/pull-down configuraiton (if necessary) and tests its current value.\n\n\nParameters\n\n\n\n\nPullMode\n pull - one of the mbed pull configurations: PullUp, PullDown, PullNone\n\n\n\n\nReturns\n\n\n1 if this input is high, 0 if input is LO, or DEVICE_NOT_SUPPORTED if the given pin does not have digital capability.\n\n\nExample\n\n\n Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_BOTH);\n P0.getDigitalValue(PullUp); // P0 is either 0 or 1;\n\n\n\n\nsetAnalogValue\n\n\n\n\nint\n \nsetAnalogValue\n( \nint\n value)\n\n\nDescription\n\n\nConfigures this IO pin as an analog/pwm output, and change the output value to the given level.\n\n\nParameters\n\n\n\n\nint\n value - the level to set on the output pin, in the range 0 - 1024\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.\n\n\nsetServoValue\n\n\n\n\nint\n \nsetServoValue\n( \nint\n value)\n\n\nDescription\n\n\nConfigures this IO pin as an analog/pwm output (if necessary) and configures the period to be 20ms, with a duty cycle between 500 us and 2500 us.\n\n\nA value of 180 sets the duty cycle to be 2500us, and a value of 0 sets the duty cycle to be 500us by default.\n\n\nThis range can be modified to fine tune, and also tolerate different servos.\n\n\nParameters\n\n\n\n\nint\n value - the level to set on the output pin, in the range 0 - 180.\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.\n\n\n\nint\n \nsetServoValue\n( \nint\n value,  \nint\n range)\n\n\nDescription\n\n\nConfigures this IO pin as an analog/pwm output (if necessary) and configures the period to be 20ms, with a duty cycle between 500 us and 2500 us.\n\n\nA value of 180 sets the duty cycle to be 2500us, and a value of 0 sets the duty cycle to be 500us by default.\n\n\nThis range can be modified to fine tune, and also tolerate different servos.\n\n\nParameters\n\n\n\n\nint\n value - the level to set on the output pin, in the range 0 - 180.\n\n\nint\n range - which gives the span of possible values the i.e. the lower and upper bounds (center +/- range/2). Defaults to DEVICE_PIN_DEFAULT_SERVO_RANGE.\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.\n\n\n\nint\n \nsetServoValue\n( \nint\n value,  \nint\n range,  \nint\n center)\n\n\nDescription\n\n\nConfigures this IO pin as an analog/pwm output (if necessary) and configures the period to be 20ms, with a duty cycle between 500 us and 2500 us.\n\n\nA value of 180 sets the duty cycle to be 2500us, and a value of 0 sets the duty cycle to be 500us by default.\n\n\nThis range can be modified to fine tune, and also tolerate different servos.\n\n\nParameters\n\n\n\n\nint\n value - the level to set on the output pin, in the range 0 - 180.\n\n\nint\n range - which gives the span of possible values the i.e. the lower and upper bounds (center +/- range/2). Defaults to DEVICE_PIN_DEFAULT_SERVO_RANGE.\n\n\nint\n center - the center point from which to calculate the lower and upper bounds. Defaults to DEVICE_PIN_DEFAULT_SERVO_CENTER\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.\n\n\ngetAnalogValue\n\n\n\n\nint\n \ngetAnalogValue\n()\n\n\nDescription\n\n\nConfigures this IO pin as an analogue input (if necessary), and samples the  Pin  for its analog value.\n\n\nReturns\n\n\nthe current analogue level on the pin, in the range 0 - 1024, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.\n\n\nExample\n\n\n Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_BOTH);\n P0.getAnalogValue(); // P0 is a value in the range of 0 - 1024\n\n\n\n\nisInput\n\n\n\n\nint\n \nisInput\n()\n\n\nDescription\n\n\nDetermines if this IO pin is currently configured as an input.\n\n\nReturns\n\n\n1 if pin is an analog or digital input, 0 otherwise.\n\n\nisOutput\n\n\n\n\nint\n \nisOutput\n()\n\n\nDescription\n\n\nDetermines if this IO pin is currently configured as an output.\n\n\nReturns\n\n\n1 if pin is an analog or digital output, 0 otherwise.\n\n\nisDigital\n\n\n\n\nint\n \nisDigital\n()\n\n\nDescription\n\n\nDetermines if this IO pin is currently configured for digital use.\n\n\nReturns\n\n\n1 if pin is digital, 0 otherwise.\n\n\nisAnalog\n\n\n\n\nint\n \nisAnalog\n()\n\n\nDescription\n\n\nDetermines if this IO pin is currently configured for analog use.\n\n\nReturns\n\n\n1 if pin is analog, 0 otherwise.\n\n\nisTouched\n\n\n\n\nint\n \nisTouched\n()\n\n\nDescription\n\n\nConfigures this IO pin as a \"makey makey\" style touch sensor (if necessary) and tests its current debounced state.\n\n\nUsers can also subscribe to DeviceButton events generated from this pin.\n\n\nReturns\n\n\n1 if pin is touched, 0 if not, or DEVICE_NOT_SUPPORTED if this pin does not support touch capability.\n\n\nExample\n\n\n DeviceMessageBus bus;\n\n Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_ALL);\n if(P0.isTouched())\n {\n //do something!\n }\n\n // subscribe to events generated by this pin!\n bus.listen(DEVICE_ID_IO_P0, DEVICE_BUTTON_EVT_CLICK, someFunction);\n\n\n\n\nsetServoPulseUs\n\n\n\n\nint\n \nsetServoPulseUs\n( \nuint32_t\n pulseWidth)\n\n\nDescription\n\n\nConfigures this IO pin as an analog/pwm output if it isn't already, configures the period to be 20ms, and sets the pulse width, based on the value it is given.\n\n\nParameters\n\n\n\n\nuint32_t\n pulseWidth - the desired pulse width in microseconds.\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.\n\n\nsetAnalogPeriod\n\n\n\n\nint\n \nsetAnalogPeriod\n( \nint\n period)\n\n\nDescription\n\n\nConfigures the PWM period of the analog output to the given value.\n\n\nParameters\n\n\n\n\nint\n period - The new period for the analog output in milliseconds.\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, or DEVICE_NOT_SUPPORTED if the given pin is not configured as an analog output.\n\n\nsetAnalogPeriodUs\n\n\n\n\nint\n \nsetAnalogPeriodUs\n( \nuint32_t\n period)\n\n\nDescription\n\n\nConfigures the PWM period of the analog output to the given value.\n\n\nParameters\n\n\n\n\nuint32_t\n period - The new period for the analog output in microseconds.\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, or DEVICE_NOT_SUPPORTED if the given pin is not configured as an analog output.\n\n\ngetAnalogPeriodUs\n\n\n\n\nuint32_t\n \ngetAnalogPeriodUs\n()\n\n\nDescription\n\n\nObtains the PWM period of the analog output in microseconds.\n\n\nReturns\n\n\nthe period on success, or DEVICE_NOT_SUPPORTED if the given pin is not configured as an analog output.\n\n\ngetAnalogPeriod\n\n\n\n\nint\n \ngetAnalogPeriod\n()\n\n\nDescription\n\n\nObtains the PWM period of the analog output in milliseconds.\n\n\nReturns\n\n\nthe period on success, or DEVICE_NOT_SUPPORTED if the given pin is not configured as an analog output.\n\n\nsetPull\n\n\n\n\nint\n \nsetPull\n( \nPullMode\n pull)\n\n\nDescription\n\n\nConfigures the pull of this pin.\n\n\nParameters\n\n\n\n\nPullMode\n pull - one of the mbed pull configurations: PullUp, PullDown, PullNone\n\n\n\n\nReturns\n\n\nDEVICE_NOT_SUPPORTED if the current pin configuration is anything other than a digital input, otherwise DEVICE_OK.\n\n\ndrainPin\n\n\n\n\nint\n \ndrainPin\n()\n\n\nDescription\n\n\nUtility function to drain any residual capacitative charge held on a pin. This is useful for applicaitons that measure rise/fall time of digital inputs, such as resititve touch sensors like makeymakey.\n\n\nReturns\n\n\nDEVICE_NOT_SUPPORTED if the current pin configuration is anything other than a digital input, otherwise DEVICE_OK.\n\n\neventOn\n\n\n\n\nint\n \neventOn\n( \nint\n eventType)\n\n\nDescription\n\n\nConfigures the events generated by this  Pin  instance.\n\n\nDEVICE_PIN_EVENT_ON_EDGE - Configures this pin to a digital input, and generates events whenever a rise/fall is detected on this pin. (DEVICE_PIN_EVT_RISE, DEVICE_PIN_EVT_FALL) DEVICE_PIN_EVENT_ON_PULSE - Configures this pin to a digital input, and generates events where the timestamp is the duration that this pin was either HI or LO. (DEVICE_PIN_EVT_PULSE_HI, DEVICE_PIN_EVT_PULSE_LO) DEVICE_PIN_EVENT_ON_TOUCH - Configures this pin as a makey makey style touch sensor, in the form of a DeviceButton. Normal button events will be generated using the ID of this pin. DEVICE_PIN_EVENT_NONE - Disables events for this pin.\n\n\nParameters\n\n\n\n\nint\n eventType - One of: DEVICE_PIN_EVENT_ON_EDGE, DEVICE_PIN_EVENT_ON_PULSE, DEVICE_PIN_EVENT_ON_TOUCH, DEVICE_PIN_EVENT_NONE\n\n\n\n\nReturns\n\n\nDEVICE_OK on success, or DEVICE_INVALID_PARAMETER if the given eventype does not match\n\n\nExample\n\n\n DeviceMessageBus bus;\n\n Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_BOTH);\n P0.eventOn(DEVICE_PIN_EVENT_ON_PULSE);\n\n void onPulse(Event evt)\n {\n int duration = evt.timestamp;\n }\n\n bus.listen(DEVICE_ID_IO_P0, DEVICE_PIN_EVT_PULSE_HI, onPulse, MESSAGE_BUS_LISTENER_IMMEDIATE)\n\n\n\n\n\n\nNote\n\n\nIn the DEVICE_PIN_EVENT_ON_PULSE mode, the smallest pulse that was reliably detected was 85us, around 5khz. If more precision is required, please use the InterruptIn class supplied by ARM mbed.", 
+            "title": "io"
+        }, 
+        {
+            "location": "/cplay/io/#cplayio", 
+            "text": "", 
+            "title": "cplay.io"
+        }, 
+        {
+            "location": "/cplay/io/#overview", 
+            "text": "cplay.io  provides a means of accessing the pins exposed on the edge connector,\nenabling Analog and Digital Input/Output operations. Some pins can also perform\nbasic touch sensing through resistance detection.  There are 6 Analog capable pins which can be used to generate Analog wave forms\nand approximate Analog inputs. There is only one Analog to Digital converter on\nthe NRF51822, which prevents concurrent analog to digital conversions.  Analog waveforms are simulated via Pulse Width Modulation generated by software.\nAs such, there is a limit of  3  concurrent PWM outputs.  There are two ways of accessing pins on the edge connector:   cplay.io.A0.setDigitalValue(1)  - Would configure A0 as a digital output, and set that pin HI.  cplay.io.pin[1].setDigitalValue(1)  - Would configure A1 as a digital output, and set that pin HI.   By design, the operation of the pins on the edge connector are dynamic, and can swap between\nmodes based on the method that as been called.  For example:  while(1)\n{\n    cplay.io.P0.setDigitalValue(1);\n    cplay.sleep(1000);\n    cplay.io.P0.setServoValue(90);\n    cplay.sleep(1000);\n}  Will transition between Digital and Analog output every second.", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/cplay/io/#message-bus-id", 
+            "text": "Constant  Value  Capability      DEVICE_ID_IO_P0  7  Analog, digital and touch", 
+            "title": "Message Bus ID"
+        }, 
+        {
+            "location": "/cplay/io/#message-bus-events", 
+            "text": "When  isTouched()  is called, provided that the selected pin has touch capabilities\n(outlined above), an instance of  button  will be created. Listeners\ncan therefore be placed using the desired pins' ID, with the exact same events\nproduced by a standard  button .  cplay.messageBus.listen(DEVICE_ID_IO_P0, DEVICE_EVT_ANY, someFunction);\ncplay.io.P0.isTouched();     Constant  Value      DEVICE_BUTTON_EVT_DOWN  1    DEVICE_BUTTON_EVT_UP  2    DEVICE_BUTTON_EVT_CLICK  3    DEVICE_BUTTON_EVT_LONG_CLICK  4    DEVICE_BUTTON_EVT_HOLD  5    DEVICE_BUTTON_EVT_DOUBLE_CLICK  6", 
+            "title": "Message Bus Events"
+        }, 
+        {
+            "location": "/cplay/io/#api", 
+            "text": "", 
+            "title": "API"
+        }, 
+        {
+            "location": "/cplay/io/#constructor", 
+            "text": "", 
+            "title": "Constructor"
+        }, 
+        {
+            "location": "/cplay/io/#pin-int-id-pinnumber-name-pincapability-capability", 
+            "text": "", 
+            "title": "Pin( int id,  PinNumber name,  PinCapability capability)"
+        }, 
+        {
+            "location": "/cplay/io/#description", 
+            "text": "Constructor. Create a  Pin  instance, generally used to represent a pin on the edge connector.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters", 
+            "text": "int  id - the unique  EventModel  id of this component.  PinNumber  name - the PinNumber for this  Pin  instance.  PinCapability  capability - the capabilities this  Pin  instance should have. (PIN_CAPABILITY_DIGITAL, PIN_CAPABILITY_ANALOG, PIN_CAPABILITY_AD, PIN_CAPABILITY_ALL)", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#example", 
+            "text": "Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_ALL);", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/io/#setdigitalvalue", 
+            "text": "", 
+            "title": "setDigitalValue"
+        }, 
+        {
+            "location": "/cplay/io/#int-setdigitalvalue-int-value", 
+            "text": "", 
+            "title": "int setDigitalValue( int value)"
+        }, 
+        {
+            "location": "/cplay/io/#description_1", 
+            "text": "Configures this IO pin as a digital output (if necessary) and sets the pin to 'value'.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters_1", 
+            "text": "int  value - 0 (LO) or 1 (HI)", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#returns", 
+            "text": "DEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have digital capability.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#example_1", 
+            "text": "Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_BOTH);\n P0.setDigitalValue(1); // P0 is now HI", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/io/#getdigitalvalue", 
+            "text": "", 
+            "title": "getDigitalValue"
+        }, 
+        {
+            "location": "/cplay/io/#int-getdigitalvalue", 
+            "text": "", 
+            "title": "int getDigitalValue()"
+        }, 
+        {
+            "location": "/cplay/io/#description_2", 
+            "text": "Configures this IO pin as a digital input (if necessary) and tests its current value.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#returns_1", 
+            "text": "1 if this input is high, 0 if input is LO, or DEVICE_NOT_SUPPORTED if the given pin does not have digital capability.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#example_2", 
+            "text": "Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_BOTH);\n P0.getDigitalValue(); // P0 is either 0 or 1;", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/io/#int-getdigitalvalue-pullmode-pull", 
+            "text": "", 
+            "title": "int getDigitalValue( PullMode pull)"
+        }, 
+        {
+            "location": "/cplay/io/#description_3", 
+            "text": "Configures this IO pin as a digital input with the specified internal pull-up/pull-down configuraiton (if necessary) and tests its current value.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters_2", 
+            "text": "PullMode  pull - one of the mbed pull configurations: PullUp, PullDown, PullNone", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#returns_2", 
+            "text": "1 if this input is high, 0 if input is LO, or DEVICE_NOT_SUPPORTED if the given pin does not have digital capability.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#example_3", 
+            "text": "Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_BOTH);\n P0.getDigitalValue(PullUp); // P0 is either 0 or 1;", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/io/#setanalogvalue", 
+            "text": "", 
+            "title": "setAnalogValue"
+        }, 
+        {
+            "location": "/cplay/io/#int-setanalogvalue-int-value", 
+            "text": "", 
+            "title": "int setAnalogValue( int value)"
+        }, 
+        {
+            "location": "/cplay/io/#description_4", 
+            "text": "Configures this IO pin as an analog/pwm output, and change the output value to the given level.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters_3", 
+            "text": "int  value - the level to set on the output pin, in the range 0 - 1024", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#returns_3", 
+            "text": "DEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#setservovalue", 
+            "text": "", 
+            "title": "setServoValue"
+        }, 
+        {
+            "location": "/cplay/io/#int-setservovalue-int-value", 
+            "text": "", 
+            "title": "int setServoValue( int value)"
+        }, 
+        {
+            "location": "/cplay/io/#description_5", 
+            "text": "Configures this IO pin as an analog/pwm output (if necessary) and configures the period to be 20ms, with a duty cycle between 500 us and 2500 us.  A value of 180 sets the duty cycle to be 2500us, and a value of 0 sets the duty cycle to be 500us by default.  This range can be modified to fine tune, and also tolerate different servos.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters_4", 
+            "text": "int  value - the level to set on the output pin, in the range 0 - 180.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#returns_4", 
+            "text": "DEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#int-setservovalue-int-value-int-range", 
+            "text": "", 
+            "title": "int setServoValue( int value,  int range)"
+        }, 
+        {
+            "location": "/cplay/io/#description_6", 
+            "text": "Configures this IO pin as an analog/pwm output (if necessary) and configures the period to be 20ms, with a duty cycle between 500 us and 2500 us.  A value of 180 sets the duty cycle to be 2500us, and a value of 0 sets the duty cycle to be 500us by default.  This range can be modified to fine tune, and also tolerate different servos.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters_5", 
+            "text": "int  value - the level to set on the output pin, in the range 0 - 180.  int  range - which gives the span of possible values the i.e. the lower and upper bounds (center +/- range/2). Defaults to DEVICE_PIN_DEFAULT_SERVO_RANGE.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#returns_5", 
+            "text": "DEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#int-setservovalue-int-value-int-range-int-center", 
+            "text": "", 
+            "title": "int setServoValue( int value,  int range,  int center)"
+        }, 
+        {
+            "location": "/cplay/io/#description_7", 
+            "text": "Configures this IO pin as an analog/pwm output (if necessary) and configures the period to be 20ms, with a duty cycle between 500 us and 2500 us.  A value of 180 sets the duty cycle to be 2500us, and a value of 0 sets the duty cycle to be 500us by default.  This range can be modified to fine tune, and also tolerate different servos.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters_6", 
+            "text": "int  value - the level to set on the output pin, in the range 0 - 180.  int  range - which gives the span of possible values the i.e. the lower and upper bounds (center +/- range/2). Defaults to DEVICE_PIN_DEFAULT_SERVO_RANGE.  int  center - the center point from which to calculate the lower and upper bounds. Defaults to DEVICE_PIN_DEFAULT_SERVO_CENTER", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#returns_6", 
+            "text": "DEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#getanalogvalue", 
+            "text": "", 
+            "title": "getAnalogValue"
+        }, 
+        {
+            "location": "/cplay/io/#int-getanalogvalue", 
+            "text": "", 
+            "title": "int getAnalogValue()"
+        }, 
+        {
+            "location": "/cplay/io/#description_8", 
+            "text": "Configures this IO pin as an analogue input (if necessary), and samples the  Pin  for its analog value.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#returns_7", 
+            "text": "the current analogue level on the pin, in the range 0 - 1024, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#example_4", 
+            "text": "Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_BOTH);\n P0.getAnalogValue(); // P0 is a value in the range of 0 - 1024", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/io/#isinput", 
+            "text": "", 
+            "title": "isInput"
+        }, 
+        {
+            "location": "/cplay/io/#int-isinput", 
+            "text": "", 
+            "title": "int isInput()"
+        }, 
+        {
+            "location": "/cplay/io/#description_9", 
+            "text": "Determines if this IO pin is currently configured as an input.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#returns_8", 
+            "text": "1 if pin is an analog or digital input, 0 otherwise.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#isoutput", 
+            "text": "", 
+            "title": "isOutput"
+        }, 
+        {
+            "location": "/cplay/io/#int-isoutput", 
+            "text": "", 
+            "title": "int isOutput()"
+        }, 
+        {
+            "location": "/cplay/io/#description_10", 
+            "text": "Determines if this IO pin is currently configured as an output.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#returns_9", 
+            "text": "1 if pin is an analog or digital output, 0 otherwise.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#isdigital", 
+            "text": "", 
+            "title": "isDigital"
+        }, 
+        {
+            "location": "/cplay/io/#int-isdigital", 
+            "text": "", 
+            "title": "int isDigital()"
+        }, 
+        {
+            "location": "/cplay/io/#description_11", 
+            "text": "Determines if this IO pin is currently configured for digital use.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#returns_10", 
+            "text": "1 if pin is digital, 0 otherwise.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#isanalog", 
+            "text": "", 
+            "title": "isAnalog"
+        }, 
+        {
+            "location": "/cplay/io/#int-isanalog", 
+            "text": "", 
+            "title": "int isAnalog()"
+        }, 
+        {
+            "location": "/cplay/io/#description_12", 
+            "text": "Determines if this IO pin is currently configured for analog use.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#returns_11", 
+            "text": "1 if pin is analog, 0 otherwise.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#istouched", 
+            "text": "", 
+            "title": "isTouched"
+        }, 
+        {
+            "location": "/cplay/io/#int-istouched", 
+            "text": "", 
+            "title": "int isTouched()"
+        }, 
+        {
+            "location": "/cplay/io/#description_13", 
+            "text": "Configures this IO pin as a \"makey makey\" style touch sensor (if necessary) and tests its current debounced state.  Users can also subscribe to DeviceButton events generated from this pin.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#returns_12", 
+            "text": "1 if pin is touched, 0 if not, or DEVICE_NOT_SUPPORTED if this pin does not support touch capability.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#example_5", 
+            "text": "DeviceMessageBus bus;\n\n Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_ALL);\n if(P0.isTouched())\n {\n //do something!\n }\n\n // subscribe to events generated by this pin!\n bus.listen(DEVICE_ID_IO_P0, DEVICE_BUTTON_EVT_CLICK, someFunction);", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/io/#setservopulseus", 
+            "text": "", 
+            "title": "setServoPulseUs"
+        }, 
+        {
+            "location": "/cplay/io/#int-setservopulseus-uint32_t-pulsewidth", 
+            "text": "", 
+            "title": "int setServoPulseUs( uint32_t pulseWidth)"
+        }, 
+        {
+            "location": "/cplay/io/#description_14", 
+            "text": "Configures this IO pin as an analog/pwm output if it isn't already, configures the period to be 20ms, and sets the pulse width, based on the value it is given.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters_7", 
+            "text": "uint32_t  pulseWidth - the desired pulse width in microseconds.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#returns_13", 
+            "text": "DEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED if the given pin does not have analog capability.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#setanalogperiod", 
+            "text": "", 
+            "title": "setAnalogPeriod"
+        }, 
+        {
+            "location": "/cplay/io/#int-setanalogperiod-int-period", 
+            "text": "", 
+            "title": "int setAnalogPeriod( int period)"
+        }, 
+        {
+            "location": "/cplay/io/#description_15", 
+            "text": "Configures the PWM period of the analog output to the given value.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters_8", 
+            "text": "int  period - The new period for the analog output in milliseconds.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#returns_14", 
+            "text": "DEVICE_OK on success, or DEVICE_NOT_SUPPORTED if the given pin is not configured as an analog output.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#setanalogperiodus", 
+            "text": "", 
+            "title": "setAnalogPeriodUs"
+        }, 
+        {
+            "location": "/cplay/io/#int-setanalogperiodus-uint32_t-period", 
+            "text": "", 
+            "title": "int setAnalogPeriodUs( uint32_t period)"
+        }, 
+        {
+            "location": "/cplay/io/#description_16", 
+            "text": "Configures the PWM period of the analog output to the given value.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters_9", 
+            "text": "uint32_t  period - The new period for the analog output in microseconds.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#returns_15", 
+            "text": "DEVICE_OK on success, or DEVICE_NOT_SUPPORTED if the given pin is not configured as an analog output.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#getanalogperiodus", 
+            "text": "", 
+            "title": "getAnalogPeriodUs"
+        }, 
+        {
+            "location": "/cplay/io/#uint32_t-getanalogperiodus", 
+            "text": "", 
+            "title": "uint32_t getAnalogPeriodUs()"
+        }, 
+        {
+            "location": "/cplay/io/#description_17", 
+            "text": "Obtains the PWM period of the analog output in microseconds.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#returns_16", 
+            "text": "the period on success, or DEVICE_NOT_SUPPORTED if the given pin is not configured as an analog output.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#getanalogperiod", 
+            "text": "", 
+            "title": "getAnalogPeriod"
+        }, 
+        {
+            "location": "/cplay/io/#int-getanalogperiod", 
+            "text": "", 
+            "title": "int getAnalogPeriod()"
+        }, 
+        {
+            "location": "/cplay/io/#description_18", 
+            "text": "Obtains the PWM period of the analog output in milliseconds.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#returns_17", 
+            "text": "the period on success, or DEVICE_NOT_SUPPORTED if the given pin is not configured as an analog output.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#setpull", 
+            "text": "", 
+            "title": "setPull"
+        }, 
+        {
+            "location": "/cplay/io/#int-setpull-pullmode-pull", 
+            "text": "", 
+            "title": "int setPull( PullMode pull)"
+        }, 
+        {
+            "location": "/cplay/io/#description_19", 
+            "text": "Configures the pull of this pin.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters_10", 
+            "text": "PullMode  pull - one of the mbed pull configurations: PullUp, PullDown, PullNone", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#returns_18", 
+            "text": "DEVICE_NOT_SUPPORTED if the current pin configuration is anything other than a digital input, otherwise DEVICE_OK.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#drainpin", 
+            "text": "", 
+            "title": "drainPin"
+        }, 
+        {
+            "location": "/cplay/io/#int-drainpin", 
+            "text": "", 
+            "title": "int drainPin()"
+        }, 
+        {
+            "location": "/cplay/io/#description_20", 
+            "text": "Utility function to drain any residual capacitative charge held on a pin. This is useful for applicaitons that measure rise/fall time of digital inputs, such as resititve touch sensors like makeymakey.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#returns_19", 
+            "text": "DEVICE_NOT_SUPPORTED if the current pin configuration is anything other than a digital input, otherwise DEVICE_OK.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#eventon", 
+            "text": "", 
+            "title": "eventOn"
+        }, 
+        {
+            "location": "/cplay/io/#int-eventon-int-eventtype", 
+            "text": "", 
+            "title": "int eventOn( int eventType)"
+        }, 
+        {
+            "location": "/cplay/io/#description_21", 
+            "text": "Configures the events generated by this  Pin  instance.  DEVICE_PIN_EVENT_ON_EDGE - Configures this pin to a digital input, and generates events whenever a rise/fall is detected on this pin. (DEVICE_PIN_EVT_RISE, DEVICE_PIN_EVT_FALL) DEVICE_PIN_EVENT_ON_PULSE - Configures this pin to a digital input, and generates events where the timestamp is the duration that this pin was either HI or LO. (DEVICE_PIN_EVT_PULSE_HI, DEVICE_PIN_EVT_PULSE_LO) DEVICE_PIN_EVENT_ON_TOUCH - Configures this pin as a makey makey style touch sensor, in the form of a DeviceButton. Normal button events will be generated using the ID of this pin. DEVICE_PIN_EVENT_NONE - Disables events for this pin.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/io/#parameters_11", 
+            "text": "int  eventType - One of: DEVICE_PIN_EVENT_ON_EDGE, DEVICE_PIN_EVENT_ON_PULSE, DEVICE_PIN_EVENT_ON_TOUCH, DEVICE_PIN_EVENT_NONE", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/io/#returns_20", 
+            "text": "DEVICE_OK on success, or DEVICE_INVALID_PARAMETER if the given eventype does not match", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/io/#example_6", 
+            "text": "DeviceMessageBus bus;\n\n Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_BOTH);\n P0.eventOn(DEVICE_PIN_EVENT_ON_PULSE);\n\n void onPulse(Event evt)\n {\n int duration = evt.timestamp;\n }\n\n bus.listen(DEVICE_ID_IO_P0, DEVICE_PIN_EVT_PULSE_HI, onPulse, MESSAGE_BUS_LISTENER_IMMEDIATE)   Note  In the DEVICE_PIN_EVENT_ON_PULSE mode, the smallest pulse that was reliably detected was 85us, around 5khz. If more precision is required, please use the InterruptIn class supplied by ARM mbed.", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/multibutton/", 
+            "text": "uBit.buttonAB\n\n\nOverview\n\n\nMessage Bus ID\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_ID_BUTTON_AB\n\n\n26\n\n\n\n\n\n\n\n\nMessage Bus Events\n\n\n\n\n\n\n\n\nConstant\n\n\nValue\n\n\n\n\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_DOWN\n\n\n1\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_UP\n\n\n2\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_CLICK\n\n\n3\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_LONG_CLICK\n\n\n4\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_HOLD\n\n\n5\n\n\n\n\n\n\nDEVICE_BUTTON_EVT_DOUBLE_CLICK\n\n\n6\n\n\n\n\n\n\n\n\nAPI\n\n\nConstructor\n\n\n\n\nMultiButton( \nuint16_t\n button1,  \nuint16_t\n button2,  \nuint16_t\n id)\n\n\nDescription\n\n\nConstructor.\n\n\nCreate a representation of a virtual button, that generates events based upon the combination of two given buttons.\n\n\nParameters\n\n\n\n\nuint16_t\n button1 - the unique ID of the first button to watch.\n\n\nuint16_t\n button2 - the unique ID of the second button to watch.\n\n\nuint16_t\n id - the unique  EventModel  id of this  MultiButton  instance.\n\n\n\n\nExample\n\n\n multiButton(DEVICE_ID_BUTTON_A, DEVICE_ID_BUTTON_B, DEVICE_ID_BUTTON_AB);\n\n\n\n\nisPressed\n\n\n\n\nint\n \nisPressed\n()\n\n\nDescription\n\n\nTests if this  MultiButton  instance is virtually pressed.\n\n\nReturns\n\n\n1 if both physical buttons are pressed simultaneously.\n\n\nExample\n\n\n if(buttonAB.isPressed())\n display.scroll(\nPressed!\n);\n\n\n\n\nsetEventConfiguration\n\n\n\n\nvoid\n \nsetEventConfiguration\n( \nButtonEventConfiguration\n config)\n\n\nDescription\n\n\nChanges the event configuration of this button to the given ButtonEventConfiguration. All subsequent events generated by this button will then be informed by this configuration.\n\n\nParameters\n\n\n\n\nButtonEventConfiguration\n config - The new configuration for this button. Legal values are DEVICE_BUTTON_ALL_EVENTS or DEVICE_BUTTON_SIMPLE_EVENTS.\n\n\n\n\nExample\n\n\n // Configure a button to generate all possible events.\n buttonAB.setEventConfiguration(DEVICE_BUTTON_ALL_EVENTS);\n\n // Configure a button to suppress DEVICE_BUTTON_EVT_CLICK and DEVICE_BUTTON_EVT_LONG_CLICK events.\n buttonAB.setEventConfiguration(DEVICE_BUTTON_SIMPLE_EVENTS);", 
+            "title": "_buttonAB"
+        }, 
+        {
+            "location": "/cplay/multibutton/#ubitbuttonab", 
+            "text": "", 
+            "title": "uBit.buttonAB"
+        }, 
+        {
+            "location": "/cplay/multibutton/#overview", 
+            "text": "", 
+            "title": "Overview"
+        }, 
+        {
+            "location": "/cplay/multibutton/#message-bus-id", 
+            "text": "Constant  Value      DEVICE_ID_BUTTON_AB  26", 
+            "title": "Message Bus ID"
+        }, 
+        {
+            "location": "/cplay/multibutton/#message-bus-events", 
+            "text": "Constant  Value      DEVICE_BUTTON_EVT_DOWN  1    DEVICE_BUTTON_EVT_UP  2    DEVICE_BUTTON_EVT_CLICK  3    DEVICE_BUTTON_EVT_LONG_CLICK  4    DEVICE_BUTTON_EVT_HOLD  5    DEVICE_BUTTON_EVT_DOUBLE_CLICK  6", 
+            "title": "Message Bus Events"
+        }, 
+        {
+            "location": "/cplay/multibutton/#api", 
+            "text": "", 
+            "title": "API"
+        }, 
+        {
+            "location": "/cplay/multibutton/#constructor", 
+            "text": "", 
+            "title": "Constructor"
+        }, 
+        {
+            "location": "/cplay/multibutton/#multibutton-uint16_t-button1-uint16_t-button2-uint16_t-id", 
+            "text": "", 
+            "title": "MultiButton( uint16_t button1,  uint16_t button2,  uint16_t id)"
+        }, 
+        {
+            "location": "/cplay/multibutton/#description", 
+            "text": "Constructor.  Create a representation of a virtual button, that generates events based upon the combination of two given buttons.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/multibutton/#parameters", 
+            "text": "uint16_t  button1 - the unique ID of the first button to watch.  uint16_t  button2 - the unique ID of the second button to watch.  uint16_t  id - the unique  EventModel  id of this  MultiButton  instance.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/multibutton/#example", 
+            "text": "multiButton(DEVICE_ID_BUTTON_A, DEVICE_ID_BUTTON_B, DEVICE_ID_BUTTON_AB);", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/multibutton/#ispressed", 
+            "text": "", 
+            "title": "isPressed"
+        }, 
+        {
+            "location": "/cplay/multibutton/#int-ispressed", 
+            "text": "", 
+            "title": "int isPressed()"
+        }, 
+        {
+            "location": "/cplay/multibutton/#description_1", 
+            "text": "Tests if this  MultiButton  instance is virtually pressed.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/multibutton/#returns", 
+            "text": "1 if both physical buttons are pressed simultaneously.", 
+            "title": "Returns"
+        }, 
+        {
+            "location": "/cplay/multibutton/#example_1", 
+            "text": "if(buttonAB.isPressed())\n display.scroll( Pressed! );", 
+            "title": "Example"
+        }, 
+        {
+            "location": "/cplay/multibutton/#seteventconfiguration", 
+            "text": "", 
+            "title": "setEventConfiguration"
+        }, 
+        {
+            "location": "/cplay/multibutton/#void-seteventconfiguration-buttoneventconfiguration-config", 
+            "text": "", 
+            "title": "void setEventConfiguration( ButtonEventConfiguration config)"
+        }, 
+        {
+            "location": "/cplay/multibutton/#description_2", 
+            "text": "Changes the event configuration of this button to the given ButtonEventConfiguration. All subsequent events generated by this button will then be informed by this configuration.", 
+            "title": "Description"
+        }, 
+        {
+            "location": "/cplay/multibutton/#parameters_1", 
+            "text": "ButtonEventConfiguration  config - The new configuration for this button. Legal values are DEVICE_BUTTON_ALL_EVENTS or DEVICE_BUTTON_SIMPLE_EVENTS.", 
+            "title": "Parameters"
+        }, 
+        {
+            "location": "/cplay/multibutton/#example_2", 
+            "text": "// Configure a button to generate all possible events.\n buttonAB.setEventConfiguration(DEVICE_BUTTON_ALL_EVENTS);\n\n // Configure a button to suppress DEVICE_BUTTON_EVT_CLICK and DEVICE_BUTTON_EVT_LONG_CLICK events.\n buttonAB.setEventConfiguration(DEVICE_BUTTON_SIMPLE_EVENTS);", 
+            "title": "Example"
+        }
+    ]
+}
