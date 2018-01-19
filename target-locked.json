@@ -42,13 +42,13 @@
     "generate_hex": true, 
     "libraries": [
         {
-            "branch": "497e4128240f7c009a21d501e05023bebdfdf0d4", 
+            "branch": "3faeb2b99e0d3257061687676334408d956aedfa", 
             "name": "codal-core", 
             "type": "git", 
             "url": "https://github.com/lancaster-university/codal-core"
         }, 
         {
-            "branch": "d1caa9dac5cfbd334d2e9ed46a70f12ffb8229f9", 
+            "branch": "9100ba3f433129b176c535311afb5fad3b2f9e26", 
             "name": "mbed-classic", 
             "type": "git", 
             "url": "https://github.com/lancaster-university/mbed-classic"
@@ -69,6 +69,6 @@
     "linker_flags": "-Wl,--no-wchar-size-warning,-wrap,main", 
     "post_process": "python ./utils/uf2conv.py -o <OUTPUT_HEX_DESTINATION>/<OUTPUT_HEX_NAME>.uf2 -c <OUTPUT_BIN_LOCATION>", 
     "processor": "SAMD21G18A", 
-    "snapshot_version": "v1.3.0", 
+    "snapshot_version": "v1.3.1", 
     "toolchain": "ARM_GCC"
 }
