@@ -1,0 +1,31 @@
+extra_css:
+- css/extra.css
+google_analytics:
+- UA-76156484-1
+- auto
+markdown_extensions:
+- toc:
+    permalink: true
+- admonition: null
+pages:
+- General:
+  - Introduction: index.md
+  - Hardware: device.md
+- cplay:
+  - Overview: cplay.md
+  - i2c: cplay/i2c.md
+  - serial: cplay/serial.md
+  - messageBus: cplay/messageBus.md
+  - buttons: cplay/button.md
+  - accelerometer: cplay/accelerometer.md
+  - thermometer: cplay/thermometer.md
+  - io: cplay/io.md
+- _buttonAB: cplay/multibutton.md
+repo_url: https://github.com/lancaster-university/codal-circuit-playground/
+site_description: Full documentation on the CODAL runtime which provides an easy
+  to use environment for programming the CircuitPlayground Express in the C/C++ language, written
+  by Lancaster University.
+site_name: CODAL Circuit Playground
+theme_dir: theme
+versioning:
+  runtime: v2.0.0-rc4
