@@ -42,7 +42,7 @@
     "generate_hex": true, 
     "libraries": [
         {
-            "branch": "c1280524f508c6150f51b77c130eb467976b4cf6", 
+            "branch": "6cb58657216b4ce81dac2dd24a6d113b0f58d781", 
             "name": "codal-core", 
             "type": "git", 
             "url": "https://github.com/lancaster-university/codal-core"
@@ -69,6 +69,6 @@
     "linker_flags": "-Wl,--no-wchar-size-warning,-wrap,main", 
     "post_process": "python ./utils/uf2conv.py -o <OUTPUT_HEX_DESTINATION>/<OUTPUT_HEX_NAME>.uf2 -c <OUTPUT_BIN_LOCATION>", 
     "processor": "SAMD21G18A", 
-    "snapshot_version": "v1.4.0", 
+    "snapshot_version": "v1.4.0-msc.0", 
     "toolchain": "ARM_GCC"
 }
