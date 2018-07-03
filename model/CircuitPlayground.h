@@ -44,6 +44,7 @@ DEALINGS IN THE SOFTWARE.
 #include "MultiButton.h"
 #include "MbedPin.h"
 #include "MbedI2C.h"
+#include "CPlayI2C.h"
 #include "MbedSPI.h"
 #include "LIS3DH.h"
 #include "LinearAnalogSensor.h"
