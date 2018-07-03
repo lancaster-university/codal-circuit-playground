@@ -91,7 +91,7 @@ namespace codal
         Button                      buttonC;
         MultiButton                 buttonAB;
 
-        mbed::I2C                   i2c;
+        CPlayI2C                    i2c;
         mbed::SPI                   flashSPI;
         CoordinateSpace             coordinateSpace;
         LIS3DH                      accelerometer;
