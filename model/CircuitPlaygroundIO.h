@@ -73,32 +73,32 @@ namespace codal
     {
         public:
 
-        mbed::Pin          pin[0];
-        mbed::Pin          a0;
-        mbed::Pin          a1;
-        mbed::Pin          a2;
-        mbed::Pin          a3;
-        mbed::Pin          a4;
-        mbed::Pin          a5;
-        mbed::Pin          a6;
-        mbed::Pin          a7;
-        mbed::Pin          speaker;
-        mbed::Pin          microphoneData;
-        mbed::Pin          microphoneClock;
-        mbed::Pin          led;
-        mbed::Pin          int1;
-        mbed::Pin          temperature;
-        mbed::Pin          light;
-        mbed::Pin          buttonA;
-        mbed::Pin          buttonB;
-        mbed::Pin          buttonC;
-        mbed::Pin          sda;
-        mbed::Pin          scl;
-        mbed::Pin          neopixel;
-        mbed::Pin          flashMISO;
-        mbed::Pin          flashMOSI;
-        mbed::Pin          flashSCLK;
-        mbed::Pin          flashSSEL;
+        codal::_mbed::Pin          pin[0];
+        codal::_mbed::Pin          a0;
+        codal::_mbed::Pin          a1;
+        codal::_mbed::Pin          a2;
+        codal::_mbed::Pin          a3;
+        codal::_mbed::Pin          a4;
+        codal::_mbed::Pin          a5;
+        codal::_mbed::Pin          a6;
+        codal::_mbed::Pin          a7;
+        codal::_mbed::Pin          speaker;
+        codal::_mbed::Pin          microphoneData;
+        codal::_mbed::Pin          microphoneClock;
+        codal::_mbed::Pin          led;
+        codal::_mbed::Pin          int1;
+        codal::_mbed::Pin          temperature;
+        codal::_mbed::Pin          light;
+        codal::_mbed::Pin          buttonA;
+        codal::_mbed::Pin          buttonB;
+        codal::_mbed::Pin          buttonC;
+        codal::_mbed::Pin          sda;
+        codal::_mbed::Pin          scl;
+        codal::_mbed::Pin          neopixel;
+        codal::_mbed::Pin          flashMISO;
+        codal::_mbed::Pin          flashMOSI;
+        codal::_mbed::Pin          flashSCLK;
+        codal::_mbed::Pin          flashSSEL;
 
         /**
           * Constructor.

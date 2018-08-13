@@ -85,7 +85,7 @@ namespace codal
 
         MessageBus                  messageBus;
         CPlayTimer                  timer;
-        mbed::Serial                serial;
+        _mbed::Serial               serial;
         CircuitPlaygroundIO         io;
         Button                      buttonA;
         Button                      buttonB;
@@ -93,7 +93,7 @@ namespace codal
         MultiButton                 buttonAB;
 
         CPlayI2C                    i2c;
-        mbed::SPI                   flashSPI;
+        _mbed::SPI                  flashSPI;
         CoordinateSpace             coordinateSpace;
         LIS3DH                      accelerometer;
         NonLinearAnalogSensor       thermometer;

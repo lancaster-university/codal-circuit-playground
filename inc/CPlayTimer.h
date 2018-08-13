@@ -35,7 +35,7 @@ DEALINGS IN THE SOFTWARE.
 
 namespace codal
 {
-    class CPlayTimer : codal::mbed::Timer
+    class CPlayTimer : codal::_mbed::Timer
     {
     public:
 

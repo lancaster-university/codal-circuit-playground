@@ -34,7 +34,7 @@ namespace mb=::mbed;
 using namespace codal;
 
 
-CPlayI2C::CPlayI2C(codal::Pin& sda, codal::Pin& scl) : codal::mbed::I2C(sda, scl)
+CPlayI2C::CPlayI2C(codal::Pin& sda, codal::Pin& scl) : codal::_mbed::I2C(sda, scl)
 {
 }
 

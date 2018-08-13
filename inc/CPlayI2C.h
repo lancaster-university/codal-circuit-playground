@@ -31,7 +31,7 @@ DEALINGS IN THE SOFTWARE.
 
 namespace codal
 {
-    class CPlayI2C : public codal::mbed::I2C
+    class CPlayI2C : public codal::_mbed::I2C
     {
     public:
 

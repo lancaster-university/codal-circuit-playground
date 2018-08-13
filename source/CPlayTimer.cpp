@@ -34,7 +34,7 @@ using namespace codal;
 /**
  * Constructor for a generic system clock interface.
  */
-CPlayTimer::CPlayTimer() : codal::mbed::Timer()
+CPlayTimer::CPlayTimer() : codal::_mbed::Timer()
 {
 }
 
