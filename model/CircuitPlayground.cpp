@@ -121,6 +121,15 @@ void cpu_clock_init(void) {
     gclk_sync();
 }
 
+int target_seed_random(uint32_t rand)
+{
+    return codal::seed_random(rand);
+}
+
+int target_random(int max)
+{
+    return codal::random(max);
+}
 
 /**
   * Constructor.
@@ -131,7 +140,7 @@ void cpu_clock_init(void) {
 CircuitPlayground::CircuitPlayground() :
     messageBus(),
     timer(),
-    serial(TXD, RXD),
+    serial(io.a7, io.a6),
     io(),
     buttonA(io.buttonA, DEVICE_ID_BUTTON_A, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
     buttonB(io.buttonB, DEVICE_ID_BUTTON_B, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
