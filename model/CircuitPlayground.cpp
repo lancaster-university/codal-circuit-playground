@@ -54,6 +54,17 @@ static void dfll_sync(void)
 #define NVM_SW_CALIB_DFLL48M_COARSE_VAL 58
 #define NVM_SW_CALIB_DFLL48M_FINE_VAL 64
 
+
+int target_seed_random(uint32_t rand)
+{
+    return codal::seed_random(rand);
+}
+
+int target_random(int max)
+{
+    return codal::random(max);
+}
+
 //
 // TODO: Refactor this into a CPU control or power class...
 //
@@ -131,7 +142,7 @@ void cpu_clock_init(void) {
 CircuitPlayground::CircuitPlayground() :
     messageBus(),
     timer(),
-    serial(TXD, RXD),
+    serial(io.a7, io.a6),
     io(),
     buttonA(io.buttonA, DEVICE_ID_BUTTON_A, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
     buttonB(io.buttonB, DEVICE_ID_BUTTON_B, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
