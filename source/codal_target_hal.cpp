@@ -46,6 +46,11 @@ void target_wait(uint32_t milliseconds)
     wait_ms(milliseconds);
 }
 
+void target_wait_us(unsigned long us)
+{
+    wait_us(us);
+}
+
 void target_reset()
 {
     NVIC_SystemReset();
