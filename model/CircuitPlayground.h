@@ -85,8 +85,8 @@ namespace codal
 
         MessageBus                  messageBus;
         CPlayTimer                  timer;
-        _mbed::Serial               serial;
         CircuitPlaygroundIO         io;
+        _mbed::Serial               serial;
         Button                      buttonA;
         Button                      buttonB;
         Button                      buttonC;
