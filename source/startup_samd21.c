@@ -30,6 +30,7 @@
 #include <stdint.h>
 
 #include "sam.h"
+#include "clocks.h"
 
 /* Initialize segments */
 extern uint32_t _sfixed;
@@ -239,6 +240,9 @@ void Reset_Handler(void)
 
 	/* Overwriting the default value of the NVMCTRL.CTRLB.MANW bit (errata reference 13134) */
 	NVMCTRL->CTRLB.bit.MANW = 1;
+    NVMCTRL->CTRLB.bit.RWS = 1;
+
+    clock_init();
 
 	/* Initialize the C library */
 	__libc_init_array();
