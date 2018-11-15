@@ -141,9 +141,8 @@ void cpu_clock_init(void) {
   */
 CircuitPlayground::CircuitPlayground() :
     messageBus(),
-    timer(),
+    timer(TC3, TC3_IRQn),
     io(),
-    serial(io.a7, io.a6),
     buttonA(io.buttonA, DEVICE_ID_BUTTON_A, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
     buttonB(io.buttonB, DEVICE_ID_BUTTON_B, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
     buttonC(io.buttonC, DEVICE_ID_BUTTON_C, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_LOW, PullMode::Up),
