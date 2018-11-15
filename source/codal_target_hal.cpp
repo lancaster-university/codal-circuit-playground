@@ -53,6 +53,12 @@ void target_reset()
 {
     NVIC_SystemReset();
 }
+// 128 bits starting from here...
+uint32_t* const serial_start = (uint32_t *)0x0080A00C;
+uint32_t target_get_serial()
+{
+    return *serial_start;
+}
 
 void target_panic(int statusCode)
 {
