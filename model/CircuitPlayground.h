@@ -79,8 +79,8 @@ namespace codal
 
         public:
 
-        MessageBus                  messageBus;
         SAMDTimer                   timer;
+        MessageBus                  messageBus;
         CircuitPlaygroundIO         io;
         Button                      buttonA;
         Button                      buttonB;

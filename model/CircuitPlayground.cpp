@@ -34,6 +34,11 @@ using namespace codal;
 RawSerial *SERIAL_DEBUG;
 #endif
 
+extern "C"
+{
+    #include "clocks.h"
+}
+
 void cplay_dmesg_flush();
 CircuitPlayground* cplay_device_instance = NULL;
 
@@ -140,8 +145,8 @@ void cpu_clock_init(void) {
   * that represent various device drivers used to control aspects of the micro:bit.
   */
 CircuitPlayground::CircuitPlayground() :
+    timer(TC4, TC4_IRQn),
     messageBus(),
-    timer(TC3, TC3_IRQn),
     io(),
     buttonA(io.buttonA, DEVICE_ID_BUTTON_A, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
     buttonB(io.buttonB, DEVICE_ID_BUTTON_B, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
@@ -158,7 +163,11 @@ CircuitPlayground::CircuitPlayground() :
     cplay_device_instance = this;
     // Clear our status
     status = 0;
+
     cpu_clock_init();
+    clock_init();
+
+    timer.enable();
 
     codal_dmesg_set_flush_fn(cplay_dmesg_flush);
 
