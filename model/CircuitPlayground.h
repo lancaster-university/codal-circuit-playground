@@ -53,6 +53,10 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalFiber.h"
 #include "MessageBus.h"
 
+#include "ZSingleWireSerial.h"
+#include "JACDAC.h"
+#include "JDProtocol.h"
+
 namespace codal
 {
     /**
@@ -93,6 +97,10 @@ namespace codal
         LIS3DH                      accelerometer;
         NonLinearAnalogSensor       thermometer;
         AnalogSensor                lightSensor;
+
+        ZSingleWireSerial           sws;
+        JACDAC                      jacdac;
+        JDProtocol                  protocol;
 
         /**
           * Constructor.

@@ -56,7 +56,10 @@ CircuitPlayground::CircuitPlayground() :
     coordinateSpace(SIMPLE_CARTESIAN, false, COORDINATE_SPACE_ROTATED_0),
     accelerometer(i2c, io.int1, coordinateSpace),
     thermometer(io.temperature, DEVICE_ID_THERMOMETER, 20, 10000, 3380, 10000, 273.5),
-    lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR)
+    lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR),
+    sws(io.a7),
+    jacdac(io.a7, sws),
+    protocol(jacdac)
 {
 
     cplay_device_instance = this;
