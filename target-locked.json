@@ -2,13 +2,10 @@
     "architecture": "CORTEX_M0_PLUS", 
     "asm_flags": "-fno-exceptions -fno-unwind-tables --specs=nosys.specs", 
     "c_flags": "-std=c99 --specs=nosys.specs", 
-    "cmake_definitions": {
-        "MBED_LEGACY_TARGET_DEFINITIONS": "ADAFRUIT_CP_G18A;Atmel;SAM_CortexM0P;SAMD21", 
-        "MBED_LEGACY_TOOLCHAIN": "GCC_ARM;"
-    }, 
     "config": {
         "BOOTLOADER_END_ADDR": "0x00002000", 
         "BOOTLOADER_START_ADDR": "0x00000000", 
+        "CODAL_CPU_MHZ": 48, 
         "CODAL_DEBUG": 0, 
         "CODAL_TIMESTAMP": "uint64_t", 
         "DEVICE_COMPONENT_COUNT": 30, 
@@ -23,54 +20,48 @@
         "DEVICE_STACK_BASE": "DEVICE_SRAM_END", 
         "DEVICE_STACK_SIZE": 2048, 
         "DEVICE_TAG": 0, 
-        "DEVICE_USB": 1, 
+        "DEVICE_USB": 0, 
         "DEVICE_USB_ENDPOINTS": 8, 
         "EVENT_LISTENER_DEFAULT_FLAGS": "MESSAGE_BUS_LISTENER_QUEUE_IF_BUSY", 
         "MESSAGE_BUS_LISTENER_MAX_QUEUE_DEPTH": 10, 
         "PROCESSOR_WORD_TYPE": "uint32_t", 
+        "PROTOTYPE_SERCOM_I2CM_SYNC": "SERCOM1", 
+        "PROTOTYPE_SERCOM_SPI_M_SYNC": "SERCOM0", 
+        "PROTOTYPE_SERCOM_USART_ASYNC": "SERCOM2", 
+        "SAMD21": 1, 
+        "SAMD_PIN_ARRAY": 1, 
         "SCHEDULER_TICK_PERIOD_US": 6000, 
         "TARGET_DEBUG_CLASS": "NOT_IMPLEMENTED", 
         "USB_DEFAULT_PID": "0x2402", 
         "USB_DEFAULT_VID": "0x03EB", 
         "USB_EP_FLAG_NO_AUTO_ZLP": "0x01", 
         "USB_MAX_PKT_SIZE": 64, 
-        "USE_ACCEL_LSB": 0
+        "USE_ACCEL_LSB": 0, 
+        "USE_FULL_ASSERT": 1
     }, 
     "cpp_flags": "-std=c++11 -fwrapv -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-unwind-tables -Wl,--gc-sections -Wl,--sort-common -Wl,--sort-section=alignment", 
     "cpu_opts": "-mcpu=cortex-m0plus -mthumb", 
-    "definitions": "-DCONF_CLOCKS_H_INCLUDED -DGCLK_PERIPHERAL_CLOCK=GCLK_GENERATOR_3 -DDEVICE_ANALOGIN -DDEVICE_ANALOGOUT -DDEVICE_I2C -DDEVICE_I2CSLAVE -DDEVICE_I2C_ASYNCH -DDEVICE_INTERRUPTIN -DDEVICE_PORTIN -DDEVICE_PORTINOUT -DDEVICE_PORTOUT -DDEVICE_RTC -DDEVICE_SERIAL -DDEVICE_SERIAL_ASYNCH -DDEVICE_SERIAL_FC -DDEVICE_SLEEP -DDEVICE_SPI -DDEVICE_PWMOUT -DDEVICE_SPISLAVE -DDEVICE_SPI_ASYNCH -DCONF_CLOCKS_H_INCLUDED -DGCLK_PERIPHERAL_CLOCK=GCLK_GENERATOR_3 -D__SAMD21G18A__ -D__CORTEX_M0PLUS -D__MBED__=1  -DTOOLCHAIN_GCC -DTOOLCHAIN_GCC_ARM -DMBED_OPERATORS -DTARGET_ADAFRUIT_CP_G18A -DI2C_MASTER_CALLBACK_MODE=true -DEXTINT_CALLBACK_MODE=true -DUSART_CALLBACK_MODE=true -DTC_ASYNC=true", 
+    "definitions": "-DSAMDX1 -D__SAMD21G18A__", 
     "device": "CIRCUIT_PLAYGROUND", 
     "generate_bin": true, 
     "generate_hex": true, 
     "libraries": [
         {
-            "branch": "1be49b36c2c1a0a950eb1b330e70fa27696b4550", 
+            "branch": "0bb2e8d9e4d2b3b3fadea3a03d8a2d05e6b85504", 
             "name": "codal-core", 
             "type": "git", 
             "url": "https://github.com/lancaster-university/codal-core"
         }, 
         {
-            "branch": "7264420adbec119a1a6090287badc80651ba3fc1", 
-            "name": "mbed-classic", 
+            "branch": "5126b0c2ed64566be9c30e57c46cbbdab0ef2a10", 
+            "name": "codal-samd", 
             "type": "git", 
-            "url": "https://github.com/lancaster-university/mbed-classic"
-        }, 
-        {
-            "branch": "a2f467d212411c02cc4e7eddb7b94fecd2ff45c8", 
-            "name": "codal-samd21", 
-            "type": "git", 
-            "url": "https://github.com/lancaster-university/codal-samd21"
-        }, 
-        {
-            "branch": "af4af97bd76be8f7f713dac55b791ea972a18b69", 
-            "name": "codal-mbed", 
-            "type": "git", 
-            "url": "https://github.com/lancaster-university/codal-mbed"
+            "url": "https://github.com/lancaster-university/codal-samd"
         }
     ], 
-    "linker_flags": "-Wl,--no-wchar-size-warning,-wrap,main", 
+    "linker_flags": "-Wl,--no-wchar-size-warning", 
     "post_process": "python ./utils/uf2conv.py -o <OUTPUT_HEX_DESTINATION>/<OUTPUT_HEX_NAME>.uf2 -c <OUTPUT_BIN_LOCATION>", 
     "processor": "SAMD21G18A", 
-    "snapshot_version": "v1.5.4", 
+    "snapshot_version": "v1.5.4-samd-peripherals.0", 
     "toolchain": "ARM_GCC"
 }
