@@ -71,6 +71,7 @@ uint32_t target_get_serial()
     return *serial_start;
 }
 
+__attribute__((weak))
 void target_panic(int statusCode)
 {
     target_disable_irq();
