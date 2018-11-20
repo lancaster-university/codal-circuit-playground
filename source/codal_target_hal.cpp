@@ -56,6 +56,7 @@ void target_reset()
     NVIC_SystemReset();
 }
 
+__attribute__((weak))
 void target_panic(int statusCode)
 {
     target_disable_irq();
