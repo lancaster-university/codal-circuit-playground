@@ -61,7 +61,7 @@
         {
             "name":"codal-samd",
             "url":"https://github.com/lancaster-university/codal-samd",
-            "branch":"master",
+            "branch":"samd21",
             "type":"git"
         }
     ]
