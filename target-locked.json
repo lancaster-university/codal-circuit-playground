@@ -47,13 +47,13 @@
     "generate_hex": true, 
     "libraries": [
         {
-            "branch": "0bb2e8d9e4d2b3b3fadea3a03d8a2d05e6b85504", 
+            "branch": "a9e7e6bd13c1b3aaf5a162135f377000f5eb1c5e", 
             "name": "codal-core", 
             "type": "git", 
             "url": "https://github.com/lancaster-university/codal-core"
         }, 
         {
-            "branch": "5126b0c2ed64566be9c30e57c46cbbdab0ef2a10", 
+            "branch": "95822505d00313f759ac1727e7a1816e4c4a465a", 
             "name": "codal-samd", 
             "type": "git", 
             "url": "https://github.com/lancaster-university/codal-samd"
@@ -62,6 +62,6 @@
     "linker_flags": "-Wl,--no-wchar-size-warning", 
     "post_process": "python ./utils/uf2conv.py -o <OUTPUT_HEX_DESTINATION>/<OUTPUT_HEX_NAME>.uf2 -c <OUTPUT_BIN_LOCATION>", 
     "processor": "SAMD21G18A", 
-    "snapshot_version": "v1.5.4-samd-peripherals.0", 
+    "snapshot_version": "v1.5.4-samd-peripherals.1", 
     "toolchain": "ARM_GCC"
 }
