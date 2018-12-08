@@ -31,7 +31,7 @@
         "DEVICE_DMESG":1,
         "DEVICE_DMESG_BUFFER_SIZE":1024,
         "CODAL_DEBUG":0,
-        "DEVICE_USB":0,
+        "DEVICE_USB":1,
         "BOOTLOADER_START_ADDR": "0x00000000",
         "BOOTLOADER_END_ADDR": "0x00002000",
         "PROCESSOR_WORD_TYPE":"uint32_t",
