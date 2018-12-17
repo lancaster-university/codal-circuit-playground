@@ -30,7 +30,6 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalHeapAllocator.h"
 #include "CodalDevice.h"
 #include "ErrorNo.h"
-#include "SAMDTimer.h"
 #include "Matrix4.h"
 #include "CodalCompat.h"
 #include "CodalComponent.h"
@@ -47,6 +46,8 @@ DEALINGS IN THE SOFTWARE.
 #include "LinearAnalogSensor.h"
 #include "NonLinearAnalogSensor.h"
 #include "TouchSensor.h"
+#include "SAMDTCTimer.h"
+#include "SAMDTCCTimer.h"
 
 #include "CircuitPlaygroundIO.h"
 
@@ -82,8 +83,8 @@ namespace codal
         uint8_t                     status;
 
         public:
-
-        SAMDTimer                   timer;
+        SAMDTCTimer                 tcTimer;
+        Timer                       timer;
         MessageBus                  messageBus;
         CircuitPlaygroundIO         io;
         Button                      buttonA;
@@ -98,9 +99,9 @@ namespace codal
         NonLinearAnalogSensor       thermometer;
         AnalogSensor                lightSensor;
 
-        ZSingleWireSerial           sws;
-        JACDAC                      jacdac;
-        JDProtocol                  protocol;
+        // ZSingleWireSerial           sws;
+        // JACDAC                      jacdac;
+        // JDProtocol                  protocol;
 
         /**
           * Constructor.
