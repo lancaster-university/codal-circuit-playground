@@ -48,6 +48,7 @@ DEALINGS IN THE SOFTWARE.
 #include "TouchSensor.h"
 #include "SAMDTCTimer.h"
 #include "SAMDTCCTimer.h"
+#include "SAMDSerial.h"
 
 #include "CircuitPlaygroundIO.h"
 
@@ -83,7 +84,7 @@ namespace codal
         uint8_t                     status;
 
         public:
-        SAMDTCTimer                 tcTimer;
+        SAMDTCCTimer                tccTimer;
         Timer                       timer;
         MessageBus                  messageBus;
         CircuitPlaygroundIO         io;

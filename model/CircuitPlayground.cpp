@@ -44,8 +44,8 @@ CircuitPlayground* cplay_device_instance = NULL;
   * that represent various device drivers used to control aspects of the micro:bit.
   */
 CircuitPlayground::CircuitPlayground() :
-    tcTimer(TC4, TC4_IRQn),
-    timer(tcTimer),
+    tccTimer(TCC0, TCC0_IRQn),
+    timer(tccTimer),
     messageBus(),
     io(),
     buttonA(io.buttonA, DEVICE_ID_BUTTON_A, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
