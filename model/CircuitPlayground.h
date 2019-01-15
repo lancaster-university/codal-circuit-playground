@@ -84,7 +84,7 @@ namespace codal
         uint8_t                     status;
 
         public:
-        SAMDTCCTimer                tccTimer;
+        SAMDTCTimer                 tcTimer;
         Timer                       timer;
         MessageBus                  messageBus;
         CircuitPlaygroundIO         io;
