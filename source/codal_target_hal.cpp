@@ -53,21 +53,11 @@ int target_random(int max)
 
 void target_wait_us(unsigned long us)
 {
-    if (us == 0)
+    if (us <= 1)
         return;
 
-    if (us < 3)
-        us = 3;
-
-    uint32_t n = (uint32_t)(us - 3) * (CODAL_CPU_CLOCK_SPEED / 1000000) / 3;
-    __asm__ __volatile__(
-        "1:              \n"
-        "   sub %0, #1   \n" // subtract 1 from %0 (n)
-        "   bne 1b       \n" // if result is not 0 jump to 1
-        : "+r" (n)           // '%0' is n variable with RW constraints
-        :                    // no input
-        :                    // no clobber
-    );
+    // for loop in system_timer_wait_cycles + plus multiply of us takes around 2 us.
+    codal::system_timer_wait_cycles(10 * (us- 2));
 }
 
 void target_wait(uint32_t milliseconds)
