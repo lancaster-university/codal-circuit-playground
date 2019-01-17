@@ -8,7 +8,6 @@
     "generate_hex":true,
     "config":{
         "CODAL_TIMESTAMP":"uint64_t",
-        "CODAL_CPU_CLOCK_SPEED":48000000,
         "USB_MAX_PKT_SIZE": 64,
         "DEVICE_USB_ENDPOINTS":8,
         "USB_DEFAULT_PID":"0x2402",
