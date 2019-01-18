@@ -51,7 +51,7 @@ int target_random(int max)
     return codal::random(max);
 }
 
-void target_wait_us(unsigned long us)
+void target_wait_us(uint32_t us)
 {
     codal::system_timer_wait_us(us);
 }
