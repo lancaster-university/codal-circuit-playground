@@ -51,7 +51,8 @@ int target_random(int max)
     return codal::random(max);
 }
 
-void target_wait_us(unsigned long us) {
+void target_wait_us(uint32_t us)
+{
     codal::system_timer_wait_us(us);
 }
 
@@ -64,6 +65,7 @@ void target_reset()
 {
     NVIC_SystemReset();
 }
+
 // 128 bits starting from here...
 uint32_t* const serial_start = (uint32_t *)0x0080A00C;
 uint32_t target_get_serial()
@@ -80,13 +82,6 @@ void target_panic(int statusCode)
     DMESG("*** CODAL PANIC : [%d]", statusCode);
     while (1)
     {
-    }
-#else
-    Serial pc(USBTX, USBRX);
-    while (1)
-    {
-        pc.printf("*** CODAL PANIC : [%.3d]\n", statusCode);
-        wait_ms(500);
     }
 #endif
 }
