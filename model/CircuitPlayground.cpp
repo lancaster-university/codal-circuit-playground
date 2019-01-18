@@ -73,8 +73,6 @@ CircuitPlayground::CircuitPlayground() :
     // Bring up fiber scheduler.
     scheduler_init(messageBus);
 
-    system_timer_calibrate_cycles();
-
     messageBus.listen(DEVICE_ID_MESSAGE_BUS_LISTENER, DEVICE_EVT_ANY, this, &CircuitPlayground::onListenerRegisteredEvent);
 
     for(int i = 0; i < DEVICE_COMPONENT_COUNT; i++)
