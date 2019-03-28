@@ -44,8 +44,9 @@ CircuitPlayground* cplay_device_instance = NULL;
   * that represent various device drivers used to control aspects of the micro:bit.
   */
 CircuitPlayground::CircuitPlayground() :
-    tcTimer(TC4, TC4_IRQn),
-    timer(tcTimer),
+    tc4(TC4, TC4_IRQn),
+    tc3(TC3, TC3_IRQn),
+    timer(tc3),
     messageBus(),
     io(),
     buttonA(io.buttonA, DEVICE_ID_BUTTON_A, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
@@ -57,11 +58,10 @@ CircuitPlayground::CircuitPlayground() :
     coordinateSpace(SIMPLE_CARTESIAN, false, COORDINATE_SPACE_ROTATED_0),
     accelerometer(i2c, io.int1, coordinateSpace),
     thermometer(io.temperature, DEVICE_ID_THERMOMETER, 20, 10000, 3380, 10000, 273.5),
-    lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR)
-
-    // sws(io.a7),
-    // jacdac(sws),
-    // protocol(jacdac)
+    lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR),
+    sws(io.a7),
+    bus(sws, tc4),
+    jacdac(bus)
 {
 
     cplay_device_instance = this;

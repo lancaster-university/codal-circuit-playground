@@ -68,9 +68,9 @@ void target_reset()
 
 // 128 bits starting from here...
 uint32_t* const serial_start = (uint32_t *)0x0080A00C;
-uint32_t target_get_serial()
+uint64_t target_get_serial()
 {
-    return *serial_start;
+    return *((uint64_t*)serial_start);
 }
 
 __attribute__((weak))

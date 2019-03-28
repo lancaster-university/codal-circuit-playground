@@ -57,7 +57,6 @@ DEALINGS IN THE SOFTWARE.
 
 #include "ZSingleWireSerial.h"
 #include "JACDAC.h"
-#include "JDProtocol.h"
 
 namespace codal
 {
@@ -84,7 +83,8 @@ namespace codal
         uint8_t                     status;
 
         public:
-        SAMDTCTimer                 tcTimer;
+        SAMDTCTimer                 tc4;
+        SAMDTCTimer                 tc3;
         Timer                       timer;
         MessageBus                  messageBus;
         CircuitPlaygroundIO         io;
@@ -100,9 +100,9 @@ namespace codal
         NonLinearAnalogSensor       thermometer;
         AnalogSensor                lightSensor;
 
-        // ZSingleWireSerial           sws;
-        // JACDAC                      jacdac;
-        // JDProtocol                  protocol;
+        ZSingleWireSerial           sws;
+        JDPhysicalLayer             bus;
+        JACDAC                      jacdac;
 
         /**
           * Constructor.
