@@ -60,7 +60,7 @@ CircuitPlayground::CircuitPlayground() :
     thermometer(io.temperature, DEVICE_ID_THERMOMETER, 20, 10000, 3380, 10000, 273.5),
     lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR),
     sws(io.a7),
-    bus(sws, tc4),
+    bus(sws, tc4, NULL, &io.led),
     jacdac(bus)
 {
 
