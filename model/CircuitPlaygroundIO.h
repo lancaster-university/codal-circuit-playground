@@ -25,9 +25,8 @@ DEALINGS IN THE SOFTWARE.
 #ifndef CIRCUIT_PLAYGROUND_IO_H
 #define CIRCUIT_PLAYGROUND_IO_H
 
-#include "mbed.h"
 #include "CodalConfig.h"
-#include "MbedPin.h"
+#include "ZPin.h"
 
 //
 // Component IDs for each pin.
@@ -73,32 +72,32 @@ namespace codal
     {
         public:
 
-        codal::_mbed::Pin          pin[0];
-        codal::_mbed::Pin          a0;
-        codal::_mbed::Pin          a1;
-        codal::_mbed::Pin          a2;
-        codal::_mbed::Pin          a3;
-        codal::_mbed::Pin          a4;
-        codal::_mbed::Pin          a5;
-        codal::_mbed::Pin          a6;
-        codal::_mbed::Pin          a7;
-        codal::_mbed::Pin          speaker;
-        codal::_mbed::Pin          microphoneData;
-        codal::_mbed::Pin          microphoneClock;
-        codal::_mbed::Pin          led;
-        codal::_mbed::Pin          int1;
-        codal::_mbed::Pin          temperature;
-        codal::_mbed::Pin          light;
-        codal::_mbed::Pin          buttonA;
-        codal::_mbed::Pin          buttonB;
-        codal::_mbed::Pin          buttonC;
-        codal::_mbed::Pin          sda;
-        codal::_mbed::Pin          scl;
-        codal::_mbed::Pin          neopixel;
-        codal::_mbed::Pin          flashMISO;
-        codal::_mbed::Pin          flashMOSI;
-        codal::_mbed::Pin          flashSCLK;
-        codal::_mbed::Pin          flashSSEL;
+        ZPin          pin[0];
+        ZPin          a0;
+        ZPin          a1;
+        ZPin          a2;
+        ZPin          a3;
+        ZPin          a4;
+        ZPin          a5;
+        ZPin          a6;
+        ZPin          a7;
+        ZPin          speaker;
+        ZPin          microphoneData;
+        ZPin          microphoneClock;
+        ZPin          led;
+        ZPin          int1;
+        ZPin          temperature;
+        ZPin          light;
+        ZPin          buttonA;
+        ZPin          buttonB;
+        ZPin          buttonC;
+        ZPin          sda;
+        ZPin          scl;
+        ZPin          neopixel;
+        ZPin          flashMISO;
+        ZPin          flashMOSI;
+        ZPin          flashSCLK;
+        ZPin          flashSSEL;
 
         /**
           * Constructor.

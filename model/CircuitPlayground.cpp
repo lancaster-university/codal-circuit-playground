@@ -37,102 +37,6 @@ RawSerial *SERIAL_DEBUG;
 void cplay_dmesg_flush();
 CircuitPlayground* cplay_device_instance = NULL;
 
-static void gclk_sync(void)
-{
-    while (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY)
-        ;
-}
-
-static void dfll_sync(void)
-{
-    while ((SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY) == 0)
-        ;
-}
-
-#undef ENABLE
-
-#define NVM_SW_CALIB_DFLL48M_COARSE_VAL 58
-#define NVM_SW_CALIB_DFLL48M_FINE_VAL 64
-
-
-int target_seed_random(uint32_t rand)
-{
-    return codal::seed_random(rand);
-}
-
-int target_random(int max)
-{
-    return codal::random(max);
-}
-
-//
-// TODO: Refactor this into a CPU control or power class...
-//
-void cpu_clock_init(void) {
-
-    NVMCTRL->CTRLB.bit.RWS = 1;
-
-    /* Configure OSC8M as source for GCLK_GEN 2 */
-    GCLK->GENDIV.reg = GCLK_GENDIV_ID(2);  // Read GENERATOR_ID - GCLK_GEN_2
-    gclk_sync();
-
-    GCLK->GENCTRL.reg = GCLK_GENCTRL_ID(2) | GCLK_GENCTRL_SRC_OSC8M_Val | GCLK_GENCTRL_GENEN;
-    gclk_sync();
-
-    // Turn on DFLL with USB correction and sync to internal 8 mhz oscillator
-    SYSCTRL->DFLLCTRL.reg = SYSCTRL_DFLLCTRL_ENABLE;
-    dfll_sync();
-
-    #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
-    SYSCTRL_DFLLVAL_Type dfllval_conf = {0};
-    uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP4)
-                + (NVM_SW_CALIB_DFLL48M_COARSE_VAL / 32))
-            >> (NVM_SW_CALIB_DFLL48M_COARSE_VAL % 32))
-        & ((1 << 6) - 1);
-    if (coarse == 0x3f) {
-        coarse = 0x1f;
-    }
-    dfllval_conf.bit.COARSE  = coarse;
-    // TODO(tannewt): Load this from a well known flash location so that it can be
-    // calibrated during testing.
-    dfllval_conf.bit.FINE    = 0x1ff;
-
-    SYSCTRL->DFLLMUL.reg = SYSCTRL_DFLLMUL_CSTEP( 0x1f / 4 ) | // Coarse step is 31, half of the max value
-        SYSCTRL_DFLLMUL_FSTEP( 10 ) |
-        48000;
-
-    SYSCTRL->DFLLVAL.reg = dfllval_conf.reg;
-    SYSCTRL->DFLLCTRL.reg = 0;
-    dfll_sync();
-    SYSCTRL->DFLLCTRL.reg = SYSCTRL_DFLLCTRL_MODE |
-        SYSCTRL_DFLLCTRL_CCDIS |
-        SYSCTRL_DFLLCTRL_USBCRM | /* USB correction */
-        SYSCTRL_DFLLCTRL_BPLCKC;
-    dfll_sync();
-    SYSCTRL->DFLLCTRL.reg |= SYSCTRL_DFLLCTRL_ENABLE ;
-    dfll_sync();
-
-    GCLK_CLKCTRL_Type clkctrl={0};
-    uint16_t temp;
-    GCLK->CLKCTRL.bit.ID = 2; // GCLK_ID - DFLL48M Reference
-    temp = GCLK->CLKCTRL.reg;
-    clkctrl.bit.CLKEN = 1;
-    clkctrl.bit.WRTLOCK = 0;
-    clkctrl.bit.GEN = GCLK_CLKCTRL_GEN_GCLK0_Val;
-    GCLK->CLKCTRL.reg = (clkctrl.reg | temp);
-
-    // Configure DFLL48M as source for GCLK_GEN 0
-    GCLK->GENDIV.reg = GCLK_GENDIV_ID(0);
-    gclk_sync();
-
-    // Add GCLK_GENCTRL_OE below to output GCLK0 on the SWCLK pin.
-    GCLK->GENCTRL.reg =
-        GCLK_GENCTRL_ID(0) | GCLK_GENCTRL_SRC_DFLL48M | GCLK_GENCTRL_IDC | GCLK_GENCTRL_GENEN;
-
-    gclk_sync();
-}
-
-
 /**
   * Constructor.
   *
@@ -140,10 +44,11 @@ void cpu_clock_init(void) {
   * that represent various device drivers used to control aspects of the micro:bit.
   */
 CircuitPlayground::CircuitPlayground() :
+    tc4(TC4, TC4_IRQn),
+    tc3(TC3, TC3_IRQn),
+    timer(tc3),
     messageBus(),
-    timer(),
     io(),
-    serial(io.a7, io.a6),
     buttonA(io.buttonA, DEVICE_ID_BUTTON_A, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
     buttonB(io.buttonB, DEVICE_ID_BUTTON_B, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_HIGH, PullMode::Down),
     buttonC(io.buttonC, DEVICE_ID_BUTTON_C, DEVICE_BUTTON_ALL_EVENTS, ACTIVE_LOW, PullMode::Up),
@@ -153,13 +58,15 @@ CircuitPlayground::CircuitPlayground() :
     coordinateSpace(SIMPLE_CARTESIAN, false, COORDINATE_SPACE_ROTATED_0),
     accelerometer(i2c, io.int1, coordinateSpace),
     thermometer(io.temperature, DEVICE_ID_THERMOMETER, 20, 10000, 3380, 10000, 273.5),
-    lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR)
+    lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR),
+    sws(io.a7),
+    bus(sws, tc4, NULL, &io.led),
+    jacdac(bus)
 {
 
     cplay_device_instance = this;
     // Clear our status
     status = 0;
-    cpu_clock_init();
 
     codal_dmesg_set_flush_fn(cplay_dmesg_flush);
 
@@ -173,6 +80,7 @@ CircuitPlayground::CircuitPlayground() :
         if(CodalComponent::components[i])
             CodalComponent::components[i]->init();
     }
+
 
     //
     // Device specific configuraiton

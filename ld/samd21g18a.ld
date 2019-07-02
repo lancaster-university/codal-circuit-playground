@@ -90,6 +90,7 @@ SECTIONS
     {
         . = ALIGN(4);
         _srelocate = .;
+        __data_start__ = .;
         *(.ramfunc .ramfunc.*);
         *(.data .data.*);
         . = ALIGN(4);

@@ -25,13 +25,11 @@ DEALINGS IN THE SOFTWARE.
 #ifndef CIRCUIT_PLAYGROUND_H
 #define CIRCUIT_PLAYGROUND_H
 
-#include "mbed.h"
 
 #include "CodalConfig.h"
 #include "CodalHeapAllocator.h"
 #include "CodalDevice.h"
 #include "ErrorNo.h"
-#include "CPlayTimer.h"
 #include "Matrix4.h"
 #include "CodalCompat.h"
 #include "CodalComponent.h"
@@ -42,20 +40,23 @@ DEALINGS IN THE SOFTWARE.
 
 #include "Button.h"
 #include "MultiButton.h"
-#include "MbedPin.h"
-#include "MbedI2C.h"
-#include "CPlayI2C.h"
-#include "MbedSPI.h"
+#include "ZI2C.h"
+#include "ZSPI.h"
 #include "LIS3DH.h"
 #include "LinearAnalogSensor.h"
 #include "NonLinearAnalogSensor.h"
 #include "TouchSensor.h"
+#include "SAMDTCTimer.h"
+#include "SAMDTCCTimer.h"
+#include "SAMDSerial.h"
 
-#include "MbedSerial.h"
 #include "CircuitPlaygroundIO.h"
 
 #include "CodalFiber.h"
 #include "MessageBus.h"
+
+#include "ZSingleWireSerial.h"
+#include "JACDAC.h"
 
 namespace codal
 {
@@ -82,22 +83,26 @@ namespace codal
         uint8_t                     status;
 
         public:
-
+        SAMDTCTimer                 tc4;
+        SAMDTCTimer                 tc3;
+        Timer                       timer;
         MessageBus                  messageBus;
-        CPlayTimer                  timer;
         CircuitPlaygroundIO         io;
-        _mbed::Serial               serial;
         Button                      buttonA;
         Button                      buttonB;
         Button                      buttonC;
         MultiButton                 buttonAB;
 
-        CPlayI2C                    i2c;
-        _mbed::SPI                  flashSPI;
+        ZI2C                        i2c;
+        ZSPI                        flashSPI;
         CoordinateSpace             coordinateSpace;
         LIS3DH                      accelerometer;
         NonLinearAnalogSensor       thermometer;
         AnalogSensor                lightSensor;
+
+        ZSingleWireSerial           sws;
+        JDPhysicalLayer             bus;
+        JACDAC                      jacdac;
 
         /**
           * Constructor.
