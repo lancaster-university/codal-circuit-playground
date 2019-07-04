@@ -62,6 +62,6 @@
     "linker_flags": "-Wl,--no-wchar-size-warning", 
     "post_process": "python ./utils/uf2conv.py -o <OUTPUT_HEX_DESTINATION>/<OUTPUT_HEX_NAME>.uf2 -c <OUTPUT_BIN_LOCATION>", 
     "processor": "SAMD21G18A", 
-    "snapshot_version": "v1.5.7", 
+    "snapshot_version": "v2.0.0", 
     "toolchain": "ARM_GCC"
 }
