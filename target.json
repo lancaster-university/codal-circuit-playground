@@ -55,13 +55,13 @@
         {
             "name":"codal-core",
             "url":"https://github.com/lancaster-university/codal-core",
-            "branch":"jacdac-v0",
+            "branch":"master",
             "type":"git"
         },
         {
             "name":"codal-samd",
             "url":"https://github.com/lancaster-university/codal-samd",
-            "branch":"i2c_hack",
+            "branch":"master",
             "type":"git"
         }
     ]
