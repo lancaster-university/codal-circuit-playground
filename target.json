@@ -46,7 +46,7 @@
         "PROTOTYPE_SERCOM_USART_ASYNC": "SERCOM2"
     },
     "definitions":"-DSAMDX1 -D__SAMD21G18A__",
-    "cpu_opts":"-mcpu=cortex-m0plus -mthumb",
+    "cpu_opts":"-mcpu=cortex-m0plus -mthumb -masm-syntax-unified",
     "asm_flags":"-fno-exceptions -fno-unwind-tables --specs=nosys.specs",
     "c_flags":"-std=c99 --specs=nosys.specs",
     "cpp_flags":"-std=c++11 -fwrapv -fno-rtti -fno-threadsafe-statics -fno-exceptions -fno-unwind-tables -Wl,--gc-sections -Wl,--sort-common -Wl,--sort-section=alignment",
