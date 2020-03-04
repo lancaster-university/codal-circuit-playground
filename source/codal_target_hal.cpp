@@ -26,14 +26,20 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalDmesg.h"
 #include "CodalCompat.h"
 
+static int8_t irq_disabled;
 void target_enable_irq()
 {
-    __enable_irq();
+    irq_disabled--;
+    if (irq_disabled <= 0) {
+        irq_disabled = 0;
+        __enable_irq();
+    }
 }
 
 void target_disable_irq()
 {
     __disable_irq();
+    irq_disabled++;
 }
 
 void target_wait_for_event()
