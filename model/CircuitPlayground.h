@@ -56,7 +56,6 @@ DEALINGS IN THE SOFTWARE.
 #include "MessageBus.h"
 
 #include "ZSingleWireSerial.h"
-#include "JACDAC.h"
 
 namespace codal
 {
@@ -101,8 +100,6 @@ namespace codal
         AnalogSensor                lightSensor;
 
         ZSingleWireSerial           sws;
-        JDPhysicalLayer             bus;
-        JACDAC                      jacdac;
 
         /**
           * Constructor.

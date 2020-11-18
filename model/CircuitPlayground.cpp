@@ -59,9 +59,7 @@ CircuitPlayground::CircuitPlayground() :
     accelerometer(i2c, io.int1, coordinateSpace),
     thermometer(io.temperature, DEVICE_ID_THERMOMETER, 20, 10000, 3380, 10000, 273.5),
     lightSensor(io.light, DEVICE_ID_LIGHT_SENSOR),
-    sws(io.a7),
-    bus(sws, tc4, NULL, &io.led),
-    jacdac(bus)
+    sws(io.a7)
 {
 
     cplay_device_instance = this;
@@ -133,7 +131,7 @@ void CircuitPlayground::onListenerRegisteredEvent(Event evt)
         case DEVICE_ID_GESTURE:
             // A listener has been registered for the accelerometer.
             // The accelerometer uses lazy instantiation, we just need to read the data once to start it running.
-            accelerometer.updateSample();
+            accelerometer.update();
             break;
 
         case DEVICE_ID_THERMOMETER:
